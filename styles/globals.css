@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .custom-footer {
+    @apply grid grid-flow-row md:grid-flow-col gap-x-4 gap-y-10 w-full;
+    @apply place-items-start items-center text-sm p-3 bg-primary z-10;
+  }
+  .custom-footer > * {
+    @apply grid grid-flow-col gap-2 sm:gap-4;
+  }
+
+  .custom-navbar {
+    @apply flex items-center p-2 min-h-min w-full bg-primary z-10;
+  }
+  .custom-navbar > * {
+    @apply w-1/2 justify-start inline-flex items-center;
+  }
+
+  .contact-link {
+    @apply text-xs text-blue-600 visited:text-purple-600;
+    @apply hover:brightness-75 underline block mt-3 truncate;
+  }
+
+  .clamp-description div {
+    @apply line-clamp-3;
+  }
+
+  .clamp-description .ant-card-meta-description {
+    @apply h-16;
+  }
+
+  .custom-button {
+    @apply rounded-lg p-3 shadow border-0;
+    @apply text-sm font-semibold uppercase outline-none;
+    @apply flex items-center justify-center;
+  }
+
+  span.custom-button {
+    @apply p-0;
+  }
+
+  .custom-button button {
+    @apply flex items-center justify-center rounded-none;
+  }
+
+  .custom-primary-button {
+    @apply bg-primary hover:bg-primary-focus ;
+  }
+
+  .custom-primary-button, .custom-secondary-button > span {
+    @apply text-sm font-semibold uppercase;
+  }
+
+  .custom-link-button > span {
+    @apply text-sm text-primary visited:text-purple-600 hover:brightness-75 underline;
+  }
+
+  .custom-menu-link {
+    @apply w-full text-left rounded px-4 py-3;
+  }
+}
+
+:root {
+  color-scheme: light;
+  --pf: 41.124 74.167% 42.353%;
+  --sf: 49.901 94.393% 46.431%;
+  --af: 24 67% 52%;
+  --nf: 240 33.333% 11.294%;
+  --b2: 0 0% 90%;
+  --b3: 0 0% 81%;
+  --in: 198 93% 60%;
+  --su: 158 64% 52%;
+  --wa: 43 96% 56%;
+  --er: 0 91% 71%;
+  --bc: 0 0% 20%;
+  --ac: 23 34% 13%;
+  --nc: 240 60.274% 82.824%;
+  --inc: 198 100% 12%;
+  --suc: 158 100% 10%;
+  --wac: 43 100% 11%;
+  --erc: 0 100% 14%;
+  --tw-bg-opacity: 1;
+  --rounded-box: 1rem;
+  --rounded-btn: 0.5rem;
+  --rounded-badge: 1.9rem;
+  --animation-btn: 0.25s;
+  --animation-input: 0.2s;
+  --btn-text-case: uppercase;
+  --btn-focus-scale: 0.95;
+  --border-btn: 1px;
+  --tab-border: 1px;
+  --tab-radius: 0.5rem;
+  --p: 41.124 74.167% 52.941%;
+  --pc: 240 33.333% 14.118%;
+  --s: 49.901 94.393% 58.039%;
+  --sc: 240 33.333% 14.118%;
+  --a: 24 67% 59%;
+  --n: 240 33.333% 14.118%;
+  --b1: 0 0% 100%;
+}
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-width: 18rem;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    color-scheme: dark;
+  }
+  body {
+    color: white;
+    background: black;
+  }
+}
