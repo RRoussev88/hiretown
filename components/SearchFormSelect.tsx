@@ -4,8 +4,8 @@ import { useSearchParams } from "next/navigation";
 
 import type { SearchFormState, SelectState } from "./SearchForm";
 import { SearchSelect } from "./SearchSelect";
-import { useFetchAndSelect } from "../hooks";
-import { trpc, RouterInputs } from "../trpc";
+import { useFetchAndSelect } from "hooks";
+import { trpc, RouterInputs } from "trpc";
 
 type SearchFormSelectProps = {
   selectorName: string;
@@ -41,11 +41,11 @@ export const SearchFormSelect: FC<SearchFormSelectProps> = ({
       depState
     );
 
-  const searchedParamValue = searchParams.get(searchParam);
+  const searchedParamValue = searchParams?.get(searchParam);
 
   useEffect(() => {
     if (isSuccess && shouldFetchRef.current) {
-      const depParamValue = searchParams.get(dependencyParam ?? "");
+      const depParamValue = searchParams?.get(dependencyParam ?? "");
       if (!dependencyParam || depParamValue === dependencyValue) {
         setDepState((prevState) => ({
           ...prevState,

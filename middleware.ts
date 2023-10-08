@@ -10,29 +10,30 @@ export async function middleware(request: NextRequest) {
 
   pbClient.authStore.loadFromCookie(request.headers.get("cookie") ?? "");
 
-  if (!pbClient.authStore.isValid) {
-    return NextResponse.redirect(new URL("/", request.url));
-  }
-
   const userId = pbClient.authStore.model?.id;
 
-  const userRoles: UserRole[] = await pbClient
-    .collection(DataCollections.USER_ROLES)
-    .getFullList(1, {
-      filter: `user="${userId}"&&(role.name="ADMIN"||role.name="SUPER ADMIN")`,
-    });
-  // If the user is Admin - allow him to continue without anymore checks
-  if (userRoles.length) {
-    return NextResponse.next();
+  if (pbClient.authStore.isValid) {
+    const userRoles: UserRole[] = await pbClient
+      .collection(DataCollections.USER_ROLES)
+      .getFullList(1, {
+        filter: `user="${userId}"&&(role.name="ADMIN"||role.name="SUPER ADMIN")`,
+      });
+    // If the user is Admin - allow him to continue without anymore checks
+    if (userRoles.length) {
+      return NextResponse.next();
+    }
   }
 
   const spltPathname = request.nextUrl.pathname.split("/");
   if (
-    request.nextUrl.pathname.startsWith("/businesses/") &&
-    spltPathname.length > 3
+    spltPathname.length > 5 &&
+    request.nextUrl.pathname.startsWith("/profile/activity/businesses/")
   ) {
-    const businessId = spltPathname[2];
+    if (!pbClient.authStore.isValid) {
+      return NextResponse.redirect(new URL("/", request.url));
+    }
 
+    const businessId = spltPathname[4];
     // Check if the current user has the required permissions to edit this business
     const permissions: UserBusiness[] = await pbClient
       .collection(DataCollections.USER_BUSINESSES)
@@ -40,7 +41,7 @@ export async function middleware(request: NextRequest) {
         filter: `user="${userId}"&&business="${businessId}"`,
       });
 
-    if (!permissions) {
+    if (!permissions.length) {
       return NextResponse.redirect(
         new URL(`/businesses/${businessId}`, request.url)
       );

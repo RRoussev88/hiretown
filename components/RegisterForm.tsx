@@ -4,10 +4,10 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, type FC } from "react";
 
-import { AuthContext } from "../context/AuthContext";
-import { useValidate, useValidatedInput } from "../hooks";
-import { trpc } from "../trpc";
-import { emailSchema, passwordSchema } from "../utils";
+import { AuthContext } from "context/AuthContext";
+import { useValidate, useValidatedInput } from "hooks";
+import { trpc } from "trpc";
+import { emailSchema, passwordSchema } from "utils";
 
 type RegisterFormProps = {
   isOpen: boolean;

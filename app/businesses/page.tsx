@@ -1,5 +1,5 @@
-import { BusinessesList, SearchForm } from "../../components";
-import { BusinessesFilterParams } from "../../types";
+import { BusinessesList, SearchForm } from "components";
+import { BusinessesFilterParams } from "types";
 
 export default async function BusinessesPage({
   searchParams,

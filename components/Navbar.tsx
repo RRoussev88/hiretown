@@ -6,9 +6,9 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useContext, useState, type FC } from "react";
-import { AuthContext } from "../context/AuthContext";
-import { GlobalContext } from "../context/GlobalContext";
-import { StorageKeys } from "../utils";
+import { AuthContext } from "context/AuthContext";
+import { GlobalContext } from "context/GlobalContext";
+import { StorageKeys } from "utils";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 

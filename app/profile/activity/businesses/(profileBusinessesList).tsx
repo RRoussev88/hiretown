@@ -2,8 +2,8 @@
 import { Alert, List, Skeleton } from "antd";
 import { useContext, type FC } from "react";
 
-import { BusinessCard, BusinessListItem } from "@/components/.";
-import { AuthContext } from "@/context/AuthContext";
+import { BusinessCard, BusinessListItem } from "components";
+import { AuthContext } from "context/AuthContext";
 import { trpc } from "trpc";
 import { StorageKeys } from "utils";
 
