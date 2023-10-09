@@ -84,14 +84,20 @@ export const RegisterForm: FC<RegisterFormProps> = ({
 
   //Clean state and close modal successfull signin
   useEffect(() => {
-    if (isSigninSuccess) {
+    const resetState = () => {
       setEmail("");
       setPassword("");
       setPasswordConfirm("");
       setIsLoginTried(false);
+    };
+
+    if (isSigninSuccess) {
+      resetState();
       onClose();
       router.push("/profile");
     }
+
+    return resetState;
   }, [
     isSigninSuccess,
     setEmail,

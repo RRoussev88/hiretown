@@ -2,7 +2,7 @@
 import { Button, Form, Input, Modal, Tag } from "antd";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { FC, useContext, useEffect, useState } from "react";
+import { type FC, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/AuthContext";
 import { useValidate } from "hooks";
@@ -12,12 +12,14 @@ import { emailSchema, passwordSchema } from "utils";
 type LoginFormProps = {
   isOpen: boolean;
   onClose: () => void;
+  onOpenForgotPassForm: () => void;
   onOpenRegisterForm: () => void;
 };
 
 export const LoginForm: FC<LoginFormProps> = ({
   isOpen,
   onClose,
+  onOpenForgotPassForm,
   onOpenRegisterForm,
 }) => {
   const [form] = Form.useForm();
@@ -56,13 +58,19 @@ export const LoginForm: FC<LoginFormProps> = ({
 
   //Clean state and close modal successfull signin
   useEffect(() => {
-    if (isSuccess) {
+    const resetState = () => {
       setEmail("");
       setPassword("");
       setIsLoginTried(false);
+    };
+
+    if (isSuccess) {
+      resetState();
       onClose();
       router.push("/profile");
     }
+
+    return resetState;
   }, [isSuccess, setEmail, setPassword, onClose, router]);
 
   return (
@@ -142,6 +150,15 @@ export const LoginForm: FC<LoginFormProps> = ({
         onClick={onOpenRegisterForm}
       >
         No account yet? Click here to Sign up
+      </Button>
+      <Button
+        block
+        type="link"
+        className="custom-link-button"
+        size="large"
+        onClick={onOpenForgotPassForm}
+      >
+        Forgot password
       </Button>
     </Modal>
   );

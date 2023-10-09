@@ -6,6 +6,7 @@ export * from "./BusinessForm";
 export * from "./CustomSelect";
 export * from "./Footer";
 export * from "./HoursInputRow";
+export * from "./ForgotPasswordForm";
 export { LoginForm } from "./LoginForm";
 export { Navbar } from "./Navbar";
 export { RegisterForm } from "./RegisterForm";

@@ -46,11 +46,12 @@
   }
 
   .custom-primary-button {
-    @apply bg-primary hover:bg-primary-focus ;
+    @apply bg-primary hover:bg-primary-focus;
   }
 
-  .custom-primary-button, .custom-secondary-button > span {
-    @apply text-sm font-semibold uppercase;
+  .custom-primary-button,
+  .custom-secondary-button > span {
+    @apply text-sm font-semibold uppercase truncate;
   }
 
   .custom-link-button > span {

@@ -9,12 +9,14 @@ import { useContext, useState, type FC } from "react";
 import { AuthContext } from "context/AuthContext";
 import { GlobalContext } from "context/GlobalContext";
 import { StorageKeys } from "utils";
+import { ForgotPasswordForm } from "./ForgotPasswordForm";
 import { LoginForm } from "./LoginForm";
 import { RegisterForm } from "./RegisterForm";
 
 export const Navbar: FC = () => {
   const [isLoginOpen, setIsLoginOpen] = useState(false);
   const [isRegisterOpen, setIsRegisterOpen] = useState(false);
+  const [isForgotPassOpen, setIsForgotPassOpen] = useState(false);
 
   const path = usePathname();
   const { [StorageKeys.CURRENT_USER]: user, logoutUser } =
@@ -74,12 +76,24 @@ export const Navbar: FC = () => {
 
   return (
     <div className="custom-navbar">
+      <ForgotPasswordForm
+        isOpen={isForgotPassOpen}
+        onClose={() => setIsForgotPassOpen(false)}
+        onOpenLoginForm={() => {
+          setIsForgotPassOpen(false);
+          setIsLoginOpen(true);
+        }}
+      />
       <LoginForm
         isOpen={isLoginOpen}
         onClose={() => setIsLoginOpen(false)}
         onOpenRegisterForm={() => {
           setIsLoginOpen(false);
           setIsRegisterOpen(true);
+        }}
+        onOpenForgotPassForm={() => {
+          setIsLoginOpen(false);
+          setIsForgotPassOpen(true);
         }}
       />
       <RegisterForm

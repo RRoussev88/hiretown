@@ -16,12 +16,6 @@ const ProfileOverviewPage: NextPage = () => {
   const { isLoading, error, mutate, reset } = trpc.updateUser.useMutation({
     onSuccess: () => setEditedProperty(""),
   });
-  const {
-    mutate: requestPasswordChange,
-    isError: isRequestError,
-    error: requestError,
-    isSuccess: isRequestSuccess,
-  } = trpc.requestPasswordChange.useMutation();
   const { [StorageKeys.CURRENT_USER]: user } = useContext(AuthContext);
 
   const handleUpdate = async (
@@ -32,19 +26,12 @@ const ProfileOverviewPage: NextPage = () => {
     mutate({ userId: user.id, property, value });
   };
 
-  const contextHolder = useToaster(
-    isRequestError,
-    isRequestSuccess,
-    requestError?.message ?? "Error sending password change email"
-  );
-
   useEffect(() => {
     !editedProperty && reset();
   }, [editedProperty, reset]);
 
   return (
     <section className="w-full flex flex-col">
-      {contextHolder}
       <p className="mb-5 text-2xl text-neutral-content">Profile Overview</p>
       <article className="w-full sm:w-9/12 mx-auto">
         <EditAvatar
@@ -77,14 +64,6 @@ const ProfileOverviewPage: NextPage = () => {
           editedProperty={editedProperty}
           setEditedProperty={setEditedProperty}
         />
-        <Button
-          type="default"
-          className="custom-primary-button"
-          size="large"
-          onClick={() => requestPasswordChange(user?.email ?? "")}
-        >
-          Request password change
-        </Button>
       </article>
     </section>
   );
