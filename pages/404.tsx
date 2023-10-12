@@ -1,7 +1,9 @@
 import "../styles/globals.css";
 import type { NextPage } from "next";
 import Image from "next/image";
-import { Footer } from "../components";
+
+import { Footer } from "components";
+import backgroundImage from "public/auto_repair.jpeg";
 
 const NotFound: NextPage = () => (
   <main
@@ -9,9 +11,12 @@ const NotFound: NextPage = () => (
     className="bg-base-200 min-h-screen flex flex-col"
   >
     <Image
-      className="bg-cover bg-no-repeat z-0 brightness-50"
-      src="/auto_repair.jpeg"
+      className="w-full h-auto bg-cover bg-no-repeat z-0 brightness-50 object-cover"
+      src={backgroundImage}
+      placeholder="blur"
       alt="Background"
+      sizes="100vw"
+      priority
       fill
     />
     <div className="flex flex-col flex-auto shrink-0 items-center justify-center mx-auto z-10">

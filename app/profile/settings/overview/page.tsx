@@ -1,10 +1,8 @@
 "use client";
 import type { NextPage } from "next";
-import { Button } from "antd";
 import { useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/AuthContext";
-import { useToaster } from "hooks";
 import { trpc } from "trpc";
 import { FILES_URL, StorageKeys } from "utils";
 import { EditAvatar } from "./(editAvatar)";

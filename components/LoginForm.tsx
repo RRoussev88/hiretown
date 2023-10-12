@@ -1,6 +1,7 @@
 "use client";
 import { Button, Form, Input, Modal, Tag } from "antd";
 import clsx from "clsx";
+import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { type FC, useContext, useEffect, useState } from "react";
 
@@ -143,7 +144,6 @@ export const LoginForm: FC<LoginFormProps> = ({
         </Button>
       </Form>
       <Button
-        block
         type="link"
         className="custom-link-button"
         size="large"
@@ -152,7 +152,6 @@ export const LoginForm: FC<LoginFormProps> = ({
         No account yet? Click here to Sign up
       </Button>
       <Button
-        block
         type="link"
         className="custom-link-button"
         size="large"

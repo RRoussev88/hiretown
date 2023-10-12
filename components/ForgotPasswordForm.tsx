@@ -23,7 +23,7 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
   const [isLoginTried, setIsLoginTried] = useState(false);
   const [email, setEmail, isEmailValid, emailError] = useValidate(emailSchema);
 
-  const { mutate, isError, error, isLoading, isSuccess } =
+  const { mutate, isError, error, isLoading, isSuccess, reset } =
     trpc.requestPasswordChange.useMutation();
 
   const hasEmailError =
@@ -41,6 +41,7 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     const resetState = () => {
       setEmail("");
       setIsLoginTried(false);
+      reset();
     };
 
     if (isSuccess) {
@@ -50,7 +51,7 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     }
 
     return resetState;
-  }, [isSuccess, setEmail, onClose, onOpenLoginForm]);
+  }, [isSuccess, setEmail, onClose, onOpenLoginForm, reset]);
 
   return (
     <Modal
@@ -100,7 +101,7 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
           size="large"
           onClick={handleLogin}
         >
-          Send password reset email
+          Send reset email
         </Button>
       </Form>
     </Modal>
