@@ -111,9 +111,10 @@ const performPasswordChangeRequest = async (
       .collection(DataCollections.USERS)
       // SES sandbox mode will only send emails to confirmed emails
       .requestPasswordReset(
-        process.env.NODE_ENV === "production"
-          ? email
-          : "marsianeca_ss@hotmail.com"
+        "marsianeca_ss@hotmail.com"
+        // process.env.NODE_ENV === "production"
+        //   ? email
+        //   : "marsianeca_ss@hotmail.com"
       );
 
     return data;

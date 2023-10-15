@@ -16,7 +16,8 @@ export const initPocketBase = async (
       "set-cookie",
       pbClient.authStore.exportToCookie({
         httpOnly: false,
-        secure: process.env.NODE_ENV === "production",
+        // secure: process.env.NODE_ENV === "production",
+        secure: false,
       })
     );
   });
