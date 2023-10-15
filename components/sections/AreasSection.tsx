@@ -4,7 +4,7 @@ import { Alert, Skeleton } from "antd";
 import Image from "next/image";
 import { FC } from "react";
 
-import { useToaster } from "hooks";
+import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { City, Country, Division, Region } from "types";
 
@@ -19,7 +19,7 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
     error,
   } = trpc.businessAreas.useQuery({ businessId });
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error loading areas"

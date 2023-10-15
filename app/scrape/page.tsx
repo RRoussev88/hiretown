@@ -2,17 +2,11 @@
 import PocketBase from "pocketbase";
 import { FC, useEffect, useRef, useState } from "react";
 
-import { Search } from "../../components";
-import { useFetchAndSelect } from "../../hooks";
-import { trpc } from "../../trpc";
-import type {
-  City,
-  Country,
-  Division,
-  GeoAPIResponse,
-  Region,
-} from "../../types";
-import { BACKEND_URL, DataCollections } from "../../utils";
+import { Search } from "components";
+import { useFetchAndSelect } from "hooks";
+import { trpc } from "trpc";
+import type { City, Country, Division, GeoAPIResponse, Region } from "types";
+import { BACKEND_URL, DataCollections } from "utils";
 
 const pbClient = new PocketBase(BACKEND_URL);
 

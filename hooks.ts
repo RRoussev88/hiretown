@@ -74,7 +74,7 @@ export const useValidate = <Out = any>(
   ];
 };
 
-export const useToaster = (
+export const useErrorToaster = (
   isError: boolean,
   isSuccess: boolean,
   errorMessage: string
@@ -128,7 +128,7 @@ export const useFetchAndSelect = <
     }
   }, [isSuccess, autoSelect, items]);
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? errorMessage

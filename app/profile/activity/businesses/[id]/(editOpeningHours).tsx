@@ -2,7 +2,7 @@ import { Button } from "antd";
 import { type FC, useState } from "react";
 
 import { HoursInputRow } from "@/components/.";
-import { useToaster } from "hooks";
+import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { OpeningHours } from "types";
 import { weekDays } from "utils";
@@ -46,7 +46,7 @@ export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
       openingHours?.[day as keyof OpeningHours][1] !== closing
   );
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error saving opening hours"

@@ -109,7 +109,7 @@ const performPasswordChangeRequest = async (
   try {
     const data = await pbClient
       .collection(DataCollections.USERS)
-      // Pocketbase will only send emails to emails existing in its DB
+      // SES sandbox mode will only send emails to confirmed emails
       .requestPasswordReset(
         process.env.NODE_ENV === "development"
           ? "marsianeca_ss@hotmail.com"
@@ -119,6 +119,35 @@ const performPasswordChangeRequest = async (
     return data;
   } catch (error) {
     throw new APIError(error, "Password change request failed");
+  }
+};
+
+const performPasswordChangeConfirm = async (
+  pbClient: Pocketbase,
+  token: string,
+  password: string,
+  passwordConfirm: string
+) => {
+  if (!token) {
+    throw new APIError("Valid token is required");
+  }
+
+  if (password.length < 6) {
+    throw new APIError("Valid password is required");
+  }
+
+  if (password != passwordConfirm) {
+    throw new APIError("Password and confirm password do not match");
+  }
+
+  try {
+    const data = await pbClient
+      .collection(DataCollections.USERS)
+      .confirmPasswordReset(token, password, passwordConfirm);
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, "Password change confirm failed");
   }
 };
 
@@ -186,5 +215,21 @@ export const authRouter = router({
     .input(z.string())
     .mutation(({ ctx, input }) =>
       performPasswordChangeRequest(ctx.pbClient, input)
+    ),
+  confirmPasswordChange: procedure
+    .input(
+      z.object({
+        token: z.string(),
+        password: z.string(),
+        passwordConfirm: z.string(),
+      })
+    )
+    .mutation(({ ctx, input }) =>
+      performPasswordChangeConfirm(
+        ctx.pbClient,
+        input.token,
+        input.password,
+        input.passwordConfirm
+      )
     ),
 });

@@ -1,11 +1,11 @@
 "use client";
-import { Button, Form, Input, Modal, Tag } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect, useState, type FC } from "react";
 
 import { AuthContext } from "context/AuthContext";
-import { useValidate, useValidatedInput } from "hooks";
+import { useErrorToaster, useValidate, useValidatedInput } from "hooks";
 import { trpc } from "trpc";
 import { emailSchema, passwordSchema } from "utils";
 
@@ -72,6 +72,18 @@ export const RegisterForm: FC<RegisterFormProps> = ({
     mutateSignup({ email, password, passwordConfirm });
   };
 
+  const errorSigninToaster = useErrorToaster(
+    isSigninError,
+    isSigninSuccess,
+    signinError?.message ?? "Error signing user in"
+  );
+
+  const errorSignupToaster = useErrorToaster(
+    isSignupError,
+    isSignupSuccess,
+    signupError?.message ?? "Error registering user"
+  );
+
   // Call signin on successfull signup
   useEffect(() => {
     isSignupSuccess && mutateSignin({ email, password });
@@ -116,6 +128,8 @@ export const RegisterForm: FC<RegisterFormProps> = ({
       onCancel={onClose}
       footer={null}
     >
+      {errorSigninToaster}
+      {errorSignupToaster}
       <Form
         form={form}
         layout="vertical"
@@ -178,11 +192,6 @@ export const RegisterForm: FC<RegisterFormProps> = ({
             onChange={(event) => setPasswordConfirm(event.target.value)}
           />
         </Form.Item>
-        {(isSignupError || isSigninError) && (
-          <Tag color="red" className="text-error w-full mb-4">
-            {(signupError ?? signinError)?.message}
-          </Tag>
-        )}
         <Button
           block
           disabled={isLoading}

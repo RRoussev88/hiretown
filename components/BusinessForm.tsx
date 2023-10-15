@@ -2,7 +2,7 @@
 import { Button, Form, Input } from "antd";
 import { useEffect, useState, type FC } from "react";
 
-import { useToaster } from "hooks";
+import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Business, BusinessPayload } from "types";
 import { PHONE_REGEX } from "utils";
@@ -70,7 +70,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
     trimmedFormValues.contactPhone !== business?.contactPhone.trim() ||
     trimmedFormValues.contactWebsite !== business?.contactWebsite.trim();
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isErrorCreate || isErrorUpdate,
     isSuccessCreate || isSuccessUpdate,
     (errorCreate || errorUpdate)?.message ?? "Error saving a business"

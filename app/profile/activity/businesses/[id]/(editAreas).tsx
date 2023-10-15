@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useState, type FC } from "react";
 
 import { CustomSelect } from "@/components/.";
-import { useToaster } from "hooks";
+import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { BusinessArea, City, Country, Division, Region } from "types";
 
@@ -45,7 +45,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
 
   const isLoading = isLoadingRead || isLoadingCreate || isLoadingDelete;
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isErrorRead || isErrorCreate || isErrorDelete,
     isSuccessRead || isSuccessCreate || isSuccessDelete,
     (errorRead || errorCreate || errorDelete)?.message ?? "Error updating areas"

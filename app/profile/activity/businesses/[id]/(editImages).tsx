@@ -1,6 +1,6 @@
 import { type FC } from "react";
 
-import { useToaster } from "hooks";
+import { useErrorToaster } from "hooks";
 import { AlbumImages } from "./(albumImages)";
 import { trpc } from "trpc";
 import { BusinessImage, ImageAlbum, ImageUploadPayload } from "types";
@@ -19,7 +19,7 @@ export const EditImages: FC<EditImagesProps> = ({
   const { mutate, isLoading, isSuccess, isError, error } =
     trpc.updateBusinessImages.useMutation({ onSuccess });
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error saving images"

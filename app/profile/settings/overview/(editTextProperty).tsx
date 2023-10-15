@@ -45,7 +45,6 @@ export const EditTextProperty: FC<EditTextPropertyProps> = ({
 
   const handleSave = () => {
     if (initialValueStr === propertyValue) return;
-    // TODO: Send a confirmation code on email change
     if (propertyName.toLowerCase() === "email") {
       setEmail(propertyValue);
       if (!isEmailValid) return;

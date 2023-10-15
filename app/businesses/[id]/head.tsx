@@ -1,4 +1,4 @@
-import { BaseHead } from "../../../components";
+import { BaseHead } from "components";
 
 const Head = () => <BaseHead title="Business details" />;
 

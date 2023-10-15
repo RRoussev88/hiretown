@@ -1,7 +1,7 @@
 "use client";
-import { Button, Form, Input, Modal, Tag } from "antd";
+import { Button, Form, Input, Modal, notification } from "antd";
 import clsx from "clsx";
-import { useEffect, useState, type FC } from "react";
+import { useState, type FC } from "react";
 
 import { useValidate } from "hooks";
 import { trpc } from "trpc";
@@ -19,12 +19,32 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
   onOpenLoginForm,
 }) => {
   const [form] = Form.useForm();
+  const [api, notificationContext] = notification.useNotification();
 
   const [isLoginTried, setIsLoginTried] = useState(false);
   const [email, setEmail, isEmailValid, emailError] = useValidate(emailSchema);
 
-  const { mutate, isError, error, isLoading, isSuccess, reset } =
-    trpc.requestPasswordChange.useMutation();
+  const { mutate, isLoading, isSuccess, reset } =
+    trpc.requestPasswordChange.useMutation({
+      onSettled: (_, error) => {
+        if (error) {
+          api.error({ message: "Error", description: error.message });
+        } else {
+          api.info({
+            message: "Email sent",
+            description: "Reset password link was sent to the provided email",
+          });
+
+          setTimeout(() => {
+            setEmail("");
+            setIsLoginTried(false);
+            reset();
+            onClose();
+            onOpenLoginForm();
+          }, 5000);
+        }
+      },
+    });
 
   const hasEmailError =
     isLoginTried && !isEmailValid && !!emailError.errors.length;
@@ -36,23 +56,6 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
     mutate(email);
   };
 
-  //Clean state and close modal successfull request password change
-  useEffect(() => {
-    const resetState = () => {
-      setEmail("");
-      setIsLoginTried(false);
-      reset();
-    };
-
-    if (isSuccess) {
-      resetState();
-      onClose();
-      onOpenLoginForm();
-    }
-
-    return resetState;
-  }, [isSuccess, setEmail, onClose, onOpenLoginForm, reset]);
-
   return (
     <Modal
       title="Reset your password"
@@ -62,6 +65,7 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
       onCancel={onClose}
       footer={null}
     >
+      {notificationContext}
       <Form
         form={form}
         layout="vertical"
@@ -87,14 +91,9 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
             onChange={(event) => setEmail(event.target.value)}
           />
         </Form.Item>
-        {isError && (
-          <Tag color="red" className="text-error w-full mb-4">
-            {error.message}
-          </Tag>
-        )}
         <Button
           block
-          disabled={isLoading}
+          disabled={isLoading || isSuccess}
           loading={isLoading}
           type="default"
           className="custom-primary-button"

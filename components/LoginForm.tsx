@@ -1,12 +1,11 @@
 "use client";
-import { Button, Form, Input, Modal, Tag } from "antd";
+import { Button, Form, Input, Modal } from "antd";
 import clsx from "clsx";
-import Link from "next/link"
 import { useRouter } from "next/navigation";
 import { type FC, useContext, useEffect, useState } from "react";
 
 import { AuthContext } from "context/AuthContext";
-import { useValidate } from "hooks";
+import { useErrorToaster, useValidate } from "hooks";
 import { trpc } from "trpc";
 import { emailSchema, passwordSchema } from "utils";
 
@@ -48,6 +47,12 @@ export const LoginForm: FC<LoginFormProps> = ({
     mutate({ email, password });
   };
 
+  const errorToaster = useErrorToaster(
+    isError,
+    isSuccess,
+    error?.message ?? "Error signing in"
+  );
+
   useEffect(() => {
     !isOpen && reset();
   }, [isOpen, reset]);
@@ -83,6 +88,7 @@ export const LoginForm: FC<LoginFormProps> = ({
       onCancel={onClose}
       footer={null}
     >
+      {errorToaster}
       <Form
         form={form}
         layout="vertical"
@@ -126,11 +132,6 @@ export const LoginForm: FC<LoginFormProps> = ({
             onChange={(event) => setPassword(event.target.value)}
           />
         </Form.Item>
-        {isError && (
-          <Tag color="red" className="text-error w-full mb-4">
-            {error.message}
-          </Tag>
-        )}
         <Button
           block
           disabled={isLoading}

@@ -11,7 +11,7 @@ import {
   ServicesSection,
   SocialLinksSection,
 } from "@/components/.";
-import { useBusinessAlbumImages, useToaster } from "hooks";
+import { useBusinessAlbumImages, useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { BusinessImage } from "types";
 import { DEFAULT_ALBUM_NAME, FILES_URL } from "utils";
@@ -35,7 +35,7 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
 
   const albumImages = useBusinessAlbumImages(business);
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error fetching business"

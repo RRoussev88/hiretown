@@ -8,7 +8,7 @@ import type {
 } from "antd/es/upload";
 
 import { Cancel, Save } from "components";
-import { useBeforeUpload, useToaster } from "hooks";
+import { useBeforeUpload, useErrorToaster } from "hooks";
 import Image from "next/image";
 import { useEffect, useState, type FC } from "react";
 import { ImageUploadPayload } from "types";
@@ -35,7 +35,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
   const [imageUrl, setImageUrl] = useState<string>(initialValue ?? "");
   const [uploadedFile, setuploadedFile] = useState<RcFile>();
 
-  const contextHolder = useToaster(!!errorMessage, isLoading, errorMessage);
+  const contextHolder = useErrorToaster(!!errorMessage, isLoading, errorMessage);
 
   const handleChange: UploadProps["onChange"] = async (
     info: UploadChangeParam<UploadFile>

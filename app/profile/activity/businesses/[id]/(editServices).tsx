@@ -2,7 +2,7 @@ import { Button, Transfer } from "antd";
 import { type FC, useState } from "react";
 
 import { CustomSelect } from "@/components/.";
-import { useToaster } from "hooks";
+import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Service } from "types";
 
@@ -44,7 +44,7 @@ export const EditServices: FC<EditServicesProps> = ({
     JSON.stringify(businessServiceIds.sort()) !==
     JSON.stringify(targetKeys.sort());
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error saving services"

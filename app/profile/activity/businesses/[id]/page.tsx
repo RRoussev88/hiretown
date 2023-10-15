@@ -3,7 +3,7 @@ import { Alert, Button, Skeleton, Space } from "antd";
 import type { NextPage } from "next";
 
 import { BusinessForm } from "@/components/.";
-import { useBusinessAlbumImages, useToaster } from "hooks";
+import { useBusinessAlbumImages, useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { BusinessService, Service } from "types";
 import { EditAreas } from "./(editAreas)";
@@ -26,7 +26,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
   } = trpc.business.useQuery(params.id);
   const albumImages = useBusinessAlbumImages(business);
 
-  const contextHolder = useToaster(
+  const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error fetching business"
