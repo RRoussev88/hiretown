@@ -32,7 +32,7 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
       </h4>
       {contextHolder}
       <Skeleton loading={isFetching}>
-        {!businessAreas?.items.length ? (
+        {!!businessAreas?.items.length ? (
           businessAreas?.items.map((area) => {
             const country = area.expand.country as Country;
             const region = area.expand.region as Region;

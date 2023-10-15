@@ -6,14 +6,12 @@ import { UserBusiness, UserRole } from "types";
 import { BACKEND_URL, DataCollections } from "utils";
 
 export async function middleware(request: NextRequest) {
-  console.log("middleware");
   const pbClient = new PocketBase(BACKEND_URL);
 
   pbClient.authStore.loadFromCookie(request.headers.get("cookie") ?? "");
 
   const userId = pbClient.authStore.model?.id;
 
-  console.log("auth store", pbClient.authStore);
   if (pbClient.authStore.isValid) {
     try {
       const userRoles: UserRole[] = await pbClient
@@ -25,9 +23,7 @@ export async function middleware(request: NextRequest) {
       if (userRoles.length) {
         return NextResponse.next();
       }
-    } catch (error) {
-      console.log("Error getting user roles", error);
-    }
+    } catch {}
   }
 
   const spltPathname = request.nextUrl.pathname.split("/");
@@ -59,7 +55,6 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  console.log("next response");
   return NextResponse.next();
 }
 
