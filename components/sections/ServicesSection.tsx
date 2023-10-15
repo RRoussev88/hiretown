@@ -13,8 +13,8 @@ export const ServicesSection: FC<ServicesSectionProps> = ({
     </h4>
     {Object.entries(
       businessServices.reduce((acc, curr) => {
-        const service = curr.expand.service as Service;
-        const category = service.expand.category as ServiceCategory;
+        const service = curr.expand?.service as Service;
+        const category = service.expand?.category as ServiceCategory;
         return {
           ...acc,
           [category.name]: [...(acc[category.name] ?? []), service],

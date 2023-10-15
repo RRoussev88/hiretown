@@ -19,7 +19,7 @@ export const OffersSection: FC<OffersSectionProps> = ({ offers }) => (
           <p>
             Price: {offer.price}&nbsp;{offer.currency}
           </p>
-          <p>for {(offer.expand.unitOfMeasure as UnitOfMeasure).name}</p>
+          <p>for {(offer.expand?.unitOfMeasure as UnitOfMeasure).name}</p>
         </div>
       </div>
     ))}
