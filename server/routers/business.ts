@@ -50,7 +50,13 @@ const createBusiness = async (
   try {
     const business: Business = await pbClient
       .collection(DataCollections.BUSINESSES)
-      .create(businessPayload);
+      .create({
+        ...businessPayload,
+        openingHours: {
+          ...defaultOpeningHours,
+          ...businessPayload.openingHours,
+        },
+      });
 
     const user = pbClient.authStore.model;
 
@@ -98,7 +104,7 @@ const updateBusiness = async (
         ...businessPayload,
         openingHours: {
           ...defaultOpeningHours,
-          ...(businessPayload.openingHours ?? {}),
+          ...businessPayload.openingHours,
         },
       });
 
