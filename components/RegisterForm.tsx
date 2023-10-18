@@ -2,7 +2,7 @@
 import { Button, Form, Input, Modal } from "antd";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState, type FC } from "react";
+import { Fragment, useContext, useEffect, useState, type FC } from "react";
 
 import { AuthContext } from "context/AuthContext";
 import { useErrorToaster, useValidate, useValidatedInput } from "hooks";
@@ -86,8 +86,13 @@ export const RegisterForm: FC<RegisterFormProps> = ({
 
   // Call signin on successfull signup
   useEffect(() => {
-    isSignupSuccess && mutateSignin({ email, password });
-  }, [isSignupSuccess, email, password, mutateSignin]);
+    console.log("isSigninSuccess: ", isSigninSuccess);
+    isSignupSuccess &&
+      !isSigninSuccess &&
+      email &&
+      password &&
+      mutateSignin({ email, password });
+  }, [isSignupSuccess, isSigninSuccess, email, password, mutateSignin]);
 
   // Log user when sign in is successful
   useEffect(() => {
@@ -128,8 +133,8 @@ export const RegisterForm: FC<RegisterFormProps> = ({
       onCancel={onClose}
       footer={null}
     >
-      {errorSigninToaster}
-      {errorSignupToaster}
+      <Fragment key="login">{errorSigninToaster}</Fragment>
+      <Fragment key="register">{errorSignupToaster}</Fragment>
       <Form
         form={form}
         layout="vertical"

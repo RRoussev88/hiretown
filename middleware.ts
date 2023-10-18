@@ -28,7 +28,7 @@ export async function middleware(request: NextRequest) {
 
   const spltPathname = request.nextUrl.pathname.split("/");
   if (
-    spltPathname.length > 5 &&
+    spltPathname.length > 4 &&
     request.nextUrl.pathname.startsWith("/profile/activity/businesses/")
   ) {
     if (!pbClient.authStore.isValid) {

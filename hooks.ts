@@ -194,12 +194,12 @@ export const useLogoutUser = () => {
   const router = useRouter();
   const utils = trpc.useContext();
   const { mutate: logoutMutation } = trpc.logout.useMutation({
-    onSuccess: async (isLoggedIn: boolean) => {
+    onSettled: async (isLoggedIn?: boolean) => {
       if (!isLoggedIn) {
         await utils.getToken.invalidate();
         await utils.getUser.invalidate();
-        router.replace("/");
       }
+      router.replace("/");
     },
   });
 
