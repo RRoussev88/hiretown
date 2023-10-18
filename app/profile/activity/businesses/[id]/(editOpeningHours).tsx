@@ -1,11 +1,11 @@
 import { Button } from "antd";
-import { type FC, useState } from "react";
+import { type FC, useMemo, useState } from "react";
 
 import { HoursInputRow } from "@/components/.";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { OpeningHours } from "types";
-import { weekDays } from "utils";
+import { defaultOpeningHours, weekDays } from "utils";
 
 type EditOpeningHoursProps = {
   businessId: string;
@@ -13,23 +13,22 @@ type EditOpeningHoursProps = {
   onSuccess?: () => void;
 };
 
-const defaultOpeningHours: OpeningHours = {
-  Monday: ["", ""],
-  Tuesday: ["", ""],
-  Wednesday: ["", ""],
-  Thursday: ["", ""],
-  Friday: ["", ""],
-  Saturday: ["", ""],
-  Sunday: ["", ""],
-};
-
 export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
   businessId,
   openingHours,
   onSuccess,
 }) => {
-  const [openingHoursState, setHoursState] = useState(
-    openingHours ?? defaultOpeningHours
+  const initialHours = openingHours ?? defaultOpeningHours;
+  const [openingHoursState, setHoursState] = useState(initialHours);
+
+  const hasChanges = useMemo(
+    () =>
+      Object.entries(openingHoursState).some(
+        ([day, [opening, closing]]) =>
+          initialHours?.[day as keyof OpeningHours][0] !== opening ||
+          initialHours?.[day as keyof OpeningHours][1] !== closing
+      ),
+    [initialHours, openingHoursState]
   );
 
   const {
@@ -40,19 +39,13 @@ export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
     error,
   } = trpc.updateBusiness.useMutation({ onSuccess });
 
-  const hasChanges = Object.entries(openingHoursState).some(
-    ([day, [opening, closing]]) =>
-      openingHours?.[day as keyof OpeningHours][0] !== opening ||
-      openingHours?.[day as keyof OpeningHours][1] !== closing
-  );
-
   const contextHolder = useErrorToaster(
     isError,
     isSuccess,
     error?.message ?? "Error saving opening hours"
   );
 
-  const clearChanges = () => setHoursState(openingHours ?? defaultOpeningHours);
+  const clearChanges = () => setHoursState(initialHours);
 
   const handleSave = () =>
     updateBusiness({

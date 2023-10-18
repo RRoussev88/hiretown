@@ -177,3 +177,13 @@ export const allowedFileTypes = [
 ];
 
 export const DEFAULT_ALBUM_NAME = "default";
+
+export const defaultOpeningHours: OpeningHours = {
+  Monday: ["", ""],
+  Tuesday: ["", ""],
+  Wednesday: ["", ""],
+  Thursday: ["", ""],
+  Friday: ["", ""],
+  Saturday: ["", ""],
+  Sunday: ["", ""],
+};

@@ -86,7 +86,6 @@ export const RegisterForm: FC<RegisterFormProps> = ({
 
   // Call signin on successfull signup
   useEffect(() => {
-    console.log("isSigninSuccess: ", isSigninSuccess);
     isSignupSuccess &&
       !isSigninSuccess &&
       email &&

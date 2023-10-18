@@ -15,6 +15,7 @@ import {
   DataCollections,
   defaultResponse,
   DEFAULT_ALBUM_NAME,
+  defaultOpeningHours,
 } from "utils";
 import {
   procedure,
@@ -87,13 +88,19 @@ const updateBusiness = async (
   pbClient: Pocketbase,
   businessId: string,
   businessPayload: Partial<BusinessPayload> & {
-    openingHours?: Partial<OpeningHours>;
+    openingHours: Partial<OpeningHours>;
   }
 ) => {
   try {
     const updatedBusiness: Business = await pbClient
       .collection(DataCollections.BUSINESSES)
-      .update(businessId, businessPayload);
+      .update(businessId, {
+        ...businessPayload,
+        openingHours: {
+          ...defaultOpeningHours,
+          ...(businessPayload.openingHours ?? {}),
+        },
+      });
 
     return updatedBusiness;
   } catch (error) {
@@ -291,7 +298,7 @@ export const businessRouter = router({
             Saturday: z.tuple([z.string(), z.string()]),
             Sunday: z.tuple([z.string(), z.string()]),
           })
-          .optional(),
+          .or(z.object({})),
       })
     )
     .mutation(({ ctx, input }) =>
