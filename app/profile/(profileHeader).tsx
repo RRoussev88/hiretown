@@ -49,7 +49,7 @@ export const ProfileHeader: FC<{
       <Button
         type="default"
         className="grid content-center mr-auto lg:hidden"
-        icon={<MenuOutlined rev style={{ fontSize: 24 }} />}
+        icon={<MenuOutlined rev="" style={{ fontSize: 24 }} />}
         size="large"
         onClick={() => handleOpenDrawer((prevState) => !prevState)}
       />

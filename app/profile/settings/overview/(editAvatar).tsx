@@ -103,7 +103,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
           />
         ) : (
           <div>
-            {isLoading ? <LoadingOutlined rev /> : <PlusOutlined rev />}
+            {isLoading ? <LoadingOutlined rev="" /> : <PlusOutlined rev="" />}
             <div className="mt-2">Upload</div>
           </div>
         )}

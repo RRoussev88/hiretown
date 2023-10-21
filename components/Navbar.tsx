@@ -108,13 +108,14 @@ export const Navbar: FC = () => {
         <Button
           type="text"
           size="large"
-          className="w-40 flex items-center justify-evenly font-semibold"
+          style={{ display: "flex", fontWeight: 600 }}
+          className="w-40 justify-evenly"
           icon={
             <Image
               src="/brandIcon.png"
               alt="Brand image"
-              width={30}
-              height={30}
+              width={28}
+              height={28}
             />
           }
           href="/"
@@ -128,7 +129,7 @@ export const Navbar: FC = () => {
             <a onClick={(e) => e.preventDefault()}>
               <Space>
                 Profile
-                <DownOutlined rev />
+                <DownOutlined rev="" />
               </Space>
             </a>
           </Dropdown>
@@ -137,18 +138,20 @@ export const Navbar: FC = () => {
           <a onClick={(e) => e.preventDefault()}>
             <Space>
               {locale}
-              <DownOutlined rev />
+              <DownOutlined rev="" />
             </Space>
           </a>
         </Dropdown>
-        <Dropdown menu={cascadingMenu}>
-          <Button
-            type="text"
-            className="grid content-center lg:hidden"
-            icon={<MenuOutlined rev style={{ fontSize: 24 }} />}
-            size="large"
-          />
-        </Dropdown>
+        <div className="lg:hidden">
+          <Dropdown menu={cascadingMenu}>
+            <Button
+              type="text"
+              className="grid content-center"
+              icon={<MenuOutlined rev="" style={{ fontSize: 24 }} />}
+              size="large"
+            />
+          </Dropdown>
+        </div>
       </div>
     </div>
   );

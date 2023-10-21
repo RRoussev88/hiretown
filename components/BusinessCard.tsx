@@ -31,7 +31,7 @@ export const BusinessCard: FC<{
   const showConfirm = () => {
     confirm({
       title: `Do you Want to delete ${business.name}?`,
-      icon: <ExclamationCircleFilled rev />,
+      icon: <ExclamationCircleFilled rev="" />,
       footer: [
         <div key="footer" className="pt-4 flex justify-between">
           <Button
@@ -84,14 +84,14 @@ export const BusinessCard: FC<{
           ? [
               <EditOutlined
                 key="edit"
-                rev
+                rev=""
                 onClick={() =>
                   router.push(`/profile/activity/businesses/${business.id}`)
                 }
               />,
               <DeleteOutlined
                 key="delete"
-                rev
+                rev=""
                 onClick={showConfirm}
               />,
             ]

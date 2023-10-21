@@ -170,7 +170,7 @@ export const SearchForm: FC = () => {
       </div>
       <Button
         type="default"
-        icon={<SearchOutlined rev />}
+        icon={<SearchOutlined rev="" />}
         size="large"
         disabled={isLoadingData || !state.service.name || !state.city.name}
         loading={isLoadingData}

@@ -20,7 +20,7 @@ const Home: NextPage = () => (
         Get the job around your property done
       </h1>
       <p className="mb-5 text-secondary">
-        Start by searching a Hire in your location
+        Start by searching a Hire near you
       </p>
       <SearchForm />
     </div>

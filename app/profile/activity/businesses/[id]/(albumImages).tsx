@@ -142,7 +142,7 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
         onPreview={handlePreview}
       >
         <div>
-          <UploadOutlined rev />
+          <UploadOutlined rev="" />
           <div className="mt-2">Upload</div>
         </div>
       </Upload>
