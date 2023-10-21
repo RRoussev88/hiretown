@@ -94,7 +94,7 @@ export const SearchFormSelect: FC<SearchFormSelectProps> = ({
   }, [setSelectedState, searchParam, selected, isFetching]);
 
   return (
-    <div className="w-full sm:w-1/2">
+    <div className="w-full">
       {contextHolder}
       <SearchSelect
         label={selectorName}

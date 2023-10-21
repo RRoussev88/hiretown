@@ -53,7 +53,7 @@ export const SearchSelect: FC<SearchSelectProps> = ({
       showSearch
       size="large"
       disabled={disabled}
-      className="w-52 sm:w-64"
+      className="w-full"
       placeholder="Search to Select"
       optionFilterProp="children"
       filterOption={(input, option) =>

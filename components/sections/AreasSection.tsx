@@ -52,19 +52,19 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
                   {country.name}
                   {!!region && (
                     <span>
-                      <ArrowRightOutlined rev="region" className="mx-3" />
+                      <ArrowRightOutlined rev className="mx-3" />
                       {region.name}
                     </span>
                   )}
                   {!!division && (
                     <span>
-                      <ArrowRightOutlined rev="division" className="mx-3" />
+                      <ArrowRightOutlined rev className="mx-3" />
                       {division.name}
                     </span>
                   )}
                   {!!city && (
                     <span>
-                      <ArrowRightOutlined rev="city" className="mx-3" />
+                      <ArrowRightOutlined rev className="mx-3" />
                       {city.name}
                     </span>
                   )}

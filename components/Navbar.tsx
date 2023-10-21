@@ -75,7 +75,7 @@ export const Navbar: FC = () => {
   };
 
   return (
-    <div className="custom-navbar">
+    <div className="custom-navbar font-semibold">
       <ForgotPasswordForm
         isOpen={isForgotPassOpen}
         onClose={() => setIsForgotPassOpen(false)}
@@ -108,7 +108,7 @@ export const Navbar: FC = () => {
         <Button
           type="text"
           size="large"
-          className="w-40 inline-flex items-center justify-center"
+          className="w-40 flex items-center justify-evenly font-semibold"
           icon={
             <Image
               src="/brandIcon.png"
@@ -122,36 +122,30 @@ export const Navbar: FC = () => {
           Hiretown
         </Button>
       </div>
-      <div className="justify-end">
+      <div className="justify-end gap-3">
         {!path?.startsWith("/profile") && (
-          <Dropdown
-            menu={userMenu}
-            className="max-lg:hidden mx-3 font-semibold"
-          >
+          <Dropdown menu={userMenu} className="max-lg:hidden">
             <a onClick={(e) => e.preventDefault()}>
               <Space>
                 Profile
-                <DownOutlined rev="1" />
+                <DownOutlined rev />
               </Space>
             </a>
           </Dropdown>
         )}
-        <Dropdown
-          menu={localeMenu}
-          className="max-lg:hidden mx-3 font-semibold"
-        >
+        <Dropdown menu={localeMenu} className="max-lg:hidden">
           <a onClick={(e) => e.preventDefault()}>
             <Space>
               {locale}
-              <DownOutlined rev="2" />
+              <DownOutlined rev />
             </Space>
           </a>
         </Dropdown>
-        <Dropdown menu={cascadingMenu} className="lg:hidden mx-3 font-semibold">
+        <Dropdown menu={cascadingMenu}>
           <Button
             type="text"
-            className="grid content-center"
-            icon={<MenuOutlined rev="navbar-menu" style={{ fontSize: 24 }} />}
+            className="grid content-center lg:hidden"
+            icon={<MenuOutlined rev style={{ fontSize: 24 }} />}
             size="large"
           />
         </Dropdown>

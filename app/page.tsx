@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import Image from "next/image";
-import Link from "next/link";
 
 import { SearchForm } from "components";
 import backgroundImage from "public/trimming.jpeg";
@@ -18,9 +17,11 @@ const Home: NextPage = () => (
     />
     <div className="text-center text-primary p-0 m-6 sm:m-12 z-10">
       <h1 className="mb-5 text-2xl sm:text-5xl font-bold">
-        Welcome to&nbsp;<Link href="/">Hiretown</Link>
+        Get the job around your property done
       </h1>
-      <p className="mb-5">Get started by searching a Hire</p>
+      <p className="mb-5 text-secondary">
+        Start by searching a Hire in your location
+      </p>
       <SearchForm />
     </div>
   </article>

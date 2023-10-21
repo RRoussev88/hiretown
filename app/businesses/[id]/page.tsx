@@ -94,30 +94,32 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
         width={576}
         height={346}
       />
-      {Array.from(albumImages).map(([album, images]) => (
-        <div
-          key={album.id}
-          className="border border-slate-300 shadow rounded-md p-2 my-6 w-full max-h-96 overflow-y-auto"
-        >
-          {album.name !== DEFAULT_ALBUM_NAME && (
-            <p className="block pb-2 text-lg font-semibold text-neutral-content">
-              {album.name}
-            </p>
-          )}
-          <Image.PreviewGroup key={album.id}>
-            {images.map((image) => (
-              <Image
-                id={`image-${image.id}`}
-                key={image.id}
-                src={`${FILES_URL}/${image.collectionId}/${image.id}/${image.image}?thumb=576x346`}
-                alt="Business image"
-                width={240}
-                height={208}
-              />
-            ))}
-          </Image.PreviewGroup>
-        </div>
-      ))}
+      {Array.from(albumImages)
+        .filter(([_, images]) => images.length)
+        .map(([album, images]) => (
+          <div
+            key={album.id}
+            className="border border-slate-300 shadow rounded-md p-2 my-6 w-full max-h-96 overflow-y-auto"
+          >
+            {album.name !== DEFAULT_ALBUM_NAME && (
+              <p className="block pb-2 text-lg font-semibold text-neutral-content">
+                {album.name}
+              </p>
+            )}
+            <Image.PreviewGroup key={album.id}>
+              {images.map((image) => (
+                <Image
+                  id={`image-${image.id}`}
+                  key={image.id}
+                  src={`${FILES_URL}/${image.collectionId}/${image.id}/${image.image}?thumb=576x346`}
+                  alt="Business image"
+                  width={240}
+                  height={208}
+                />
+              ))}
+            </Image.PreviewGroup>
+          </div>
+        ))}
       {!!business.description && <p className="my-6">{business.description}</p>}
       <ContactsSection business={business} />
       {!!business.expand["businessServices(business)"]?.length && (

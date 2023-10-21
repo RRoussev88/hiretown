@@ -35,7 +35,11 @@ export const EditAvatar: FC<EditAvatarProps> = ({
   const [imageUrl, setImageUrl] = useState<string>(initialValue ?? "");
   const [uploadedFile, setuploadedFile] = useState<RcFile>();
 
-  const contextHolder = useErrorToaster(!!errorMessage, isLoading, errorMessage);
+  const contextHolder = useErrorToaster(
+    !!errorMessage,
+    isLoading,
+    errorMessage
+  );
 
   const handleChange: UploadProps["onChange"] = async (
     info: UploadChangeParam<UploadFile>
@@ -99,11 +103,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
           />
         ) : (
           <div>
-            {isLoading ? (
-              <LoadingOutlined rev="avatar" />
-            ) : (
-              <PlusOutlined rev="avatar" />
-            )}
+            {isLoading ? <LoadingOutlined rev /> : <PlusOutlined rev />}
             <div className="mt-2">Upload</div>
           </div>
         )}

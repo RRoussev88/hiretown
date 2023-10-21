@@ -138,19 +138,19 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
                 {country.name}
                 {!!region && (
                   <span>
-                    <ArrowRightOutlined rev="region" className="mx-3" />
+                    <ArrowRightOutlined rev className="mx-3" />
                     {region.name}
                   </span>
                 )}
                 {!!division && (
                   <span>
-                    <ArrowRightOutlined rev="division" className="mx-3" />
+                    <ArrowRightOutlined rev className="mx-3" />
                     {division.name}
                   </span>
                 )}
                 {!!city && (
                   <span>
-                    <ArrowRightOutlined rev="city" className="mx-3" />
+                    <ArrowRightOutlined rev className="mx-3" />
                     {city.name}
                   </span>
                 )}
@@ -171,7 +171,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
                   disabled={isLoading}
                   className="custom-button bg-error"
                 >
-                  {!isLoadingDelete && <DeleteOutlined rev="delete" />}
+                  {!isLoadingDelete && <DeleteOutlined rev />}
                 </Button>
               </Popconfirm>
             </div>

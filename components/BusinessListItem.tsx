@@ -29,7 +29,7 @@ export const BusinessListItem: FC<{
   const showConfirm = () => {
     confirm({
       title: `Do you Want to delete ${business.name}?`,
-      icon: <ExclamationCircleFilled rev="exclamation" />,
+      icon: <ExclamationCircleFilled rev />,
       footer: [
         <div key="footer" className="pt-4 flex justify-between">
           <Button
@@ -66,10 +66,10 @@ export const BusinessListItem: FC<{
                 key="edit"
                 href={`/profile/activity/businesses/${business.id}`}
               >
-                <EditOutlined rev="edit" size={16} />
+                <EditOutlined rev size={16} />
               </a>,
               <a key="delete">
-                <DeleteOutlined rev="delete" size={16} onClick={showConfirm} />
+                <DeleteOutlined rev size={16} onClick={showConfirm} />
               </a>,
             ]
           : []

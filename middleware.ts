@@ -24,6 +24,8 @@ export async function middleware(request: NextRequest) {
         return NextResponse.next();
       }
     } catch {}
+  } else if (request.nextUrl.pathname.startsWith("/profile/")) {
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   const spltPathname = request.nextUrl.pathname.split("/");
@@ -31,10 +33,6 @@ export async function middleware(request: NextRequest) {
     spltPathname.length > 4 &&
     request.nextUrl.pathname.startsWith("/profile/activity/businesses/")
   ) {
-    if (!pbClient.authStore.isValid) {
-      return NextResponse.redirect(new URL("/", request.url));
-    }
-
     const businessId = spltPathname[4];
     const businessResponse = NextResponse.redirect(
       new URL(`/businesses/${businessId}`, request.url)

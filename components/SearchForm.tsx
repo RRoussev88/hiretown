@@ -107,7 +107,7 @@ export const SearchForm: FC = () => {
   };
 
   return (
-    <form className="rounded-md p-4 bg-base-100 shadow-xl text-accent flex flex-col gap-3 max-w-xl">
+    <form className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex flex-col gap-3 sm:max-w-xl">
       <div className="flex flex-row max-sm:flex-col gap-3">
         <SearchFormSelect
           selectorName="Category"
@@ -170,7 +170,7 @@ export const SearchForm: FC = () => {
       </div>
       <Button
         type="default"
-        icon={<SearchOutlined rev="search" />}
+        icon={<SearchOutlined rev />}
         size="large"
         disabled={isLoadingData || !state.service.name || !state.city.name}
         loading={isLoadingData}
