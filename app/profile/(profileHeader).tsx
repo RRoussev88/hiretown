@@ -34,7 +34,7 @@ export const ProfileHeader: FC<{
           <span className="text-3xl">{avatarAbbr}</span>
         )}
       </div>
-      <div className="self-center">
+      <div className="self-center text-neutral-content">
         {!!user?.name && <h3 className="text-2xl">{user?.name}</h3>}
         <p className="text-base">{user?.email}</p>
         <Button

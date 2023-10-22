@@ -1,8 +1,8 @@
 import type { NextPage } from "next";
 
 const ProfileSearchesPage: NextPage = () => (
-  <section className="w-full flex flex-col">
-    <p className="mb-5 text-2xl text-neutral-content">Search History</p>
+  <section className="w-full flex flex-col text-neutral-content">
+    <p className="mb-5 text-2xl">Search History</p>
     <p>Coming Soon</p>
   </section>
 );

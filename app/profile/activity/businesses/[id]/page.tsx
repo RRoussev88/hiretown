@@ -34,7 +34,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
 
   if (!business) {
     return (
-      <div className="w-full mx-auto my-6">
+      <div className="w-full sm:w-9/12 mx-auto my-6">
         {contextHolder}
         {isFetching ? (
           <div className="w-full sm:w-9/12 mx-auto flex flex-col gap-6">
@@ -67,7 +67,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
   return (
     <section className="w-full flex flex-col">
       {contextHolder}
-      <div className="flex flex-wrap justify-between">
+      <div className="w-full sm:w-9/12 mx-auto flex flex-wrap justify-between">
         <p className="mb-5 text-2xl text-neutral-content">Edit Business</p>
         <Button
           size="large"

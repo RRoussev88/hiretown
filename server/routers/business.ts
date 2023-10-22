@@ -131,8 +131,8 @@ const getBusinessImage = async (pbClient: Pocketbase, businessId: string) => {
     const image: BusinessImage = await pbClient
       .collection(DataCollections.BUSINESS_IMAGES)
       .getFirstListItem(
-        `album.business="${businessId}"` +
-          `&&album.name="${DEFAULT_ALBUM_NAME}"&&isSelected=true`
+        `album.business="${businessId}"&&album.name="${DEFAULT_ALBUM_NAME}"`,
+        { sort: "isSelected,created" }
       );
 
     return image;

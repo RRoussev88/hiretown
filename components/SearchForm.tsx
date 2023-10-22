@@ -107,7 +107,10 @@ export const SearchForm: FC = () => {
   };
 
   return (
-    <form className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex flex-col gap-3 sm:max-w-xl">
+    <form
+      className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex flex-col
+                  gap-3 max-w-[248px] sm:max-w-[536px]"
+    >
       <div className="flex flex-row max-sm:flex-col gap-3">
         <SearchFormSelect
           selectorName="Category"

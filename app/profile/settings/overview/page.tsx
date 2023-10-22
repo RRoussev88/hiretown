@@ -29,8 +29,8 @@ const ProfileOverviewPage: NextPage = () => {
   }, [editedProperty, reset]);
 
   return (
-    <section className="w-full flex flex-col">
-      <p className="mb-5 text-2xl text-neutral-content">Profile Overview</p>
+    <section className="w-full flex flex-col text-neutral-content">
+      <p className="w-full sm:w-9/12 mx-auto mb-5 text-2xl">Profile Overview</p>
       <article className="w-full sm:w-9/12 mx-auto">
         <EditAvatar
           errorMessage={editedProperty === "Avatar" ? error?.message ?? "" : ""}

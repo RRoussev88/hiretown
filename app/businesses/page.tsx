@@ -8,7 +8,7 @@ export default async function BusinessesPage({
 }) {
   return (
     <article className="grid">
-      <section className="mx-auto mb-6 sm:mb-12">
+      <section className="mb-6 sm:mb-12">
         <SearchForm />
       </section>
       <BusinessesList searchParams={searchParams} />
