@@ -1,13 +1,9 @@
 import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
-import type { APIResponse, ImageUploadPayload, BusinessImage } from "types";
+import type { APIResponse, BusinessImage, ImageUploadPayload } from "types";
 import { APIError, DataCollections, defaultResponse } from "utils";
-import {
-  businessProtectedProcedure,
-  protectedProcedure,
-  router,
-} from "../trpc";
+import { businessProtectedProcedure, procedure, router } from "../trpc";
 
 const fetchImages = async (pbClient: Pocketbase, albumId?: string) => {
   if (!albumId) {
@@ -94,10 +90,10 @@ const updateBusinessImages = async (
 };
 
 export const imagesRouter = router({
-  images: protectedProcedure
+  images: procedure
     .input(z.string())
     .query(({ ctx, input }) => fetchImages(ctx.pbClient, input)),
-  businessImages: protectedProcedure
+  businessImages: procedure
     .input(z.string())
     .query(({ ctx, input }) => fetchBusinessImages(ctx.pbClient, input)),
   updateBusinessImages: businessProtectedProcedure
