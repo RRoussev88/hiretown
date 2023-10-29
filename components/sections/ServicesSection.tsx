@@ -8,7 +8,7 @@ export const ServicesSection: FC<ServicesSectionProps> = ({
   businessServices,
 }) => (
   <section className="my-6">
-    <h4 className="text-lg font-bold text-neutral-content mb-6 border-b-2 border-slate-300">
+    <h4 className="text-lg font-bold mb-6 border-b-2 border-slate-300 text-primary">
       Services
     </h4>
     {Object.entries(
@@ -22,10 +22,10 @@ export const ServicesSection: FC<ServicesSectionProps> = ({
       }, {} as Record<string, Service[]>)
     ).map(([categoryName, services]) => (
       <div className="mb-6" key={categoryName}>
-        <h5 className="font-bold text-primary">{categoryName}</h5>
+        <h5 className="font-bold">{categoryName}</h5>
         {services.map((service) => (
           <div className="ml-3 mt-3" key={service.id}>
-            <h6 className="font-bold underline mb-1">{service.name}</h6>
+            <h6 className="font-bold underline mb-1 text-accent">{service.name}</h6>
             <p>{service.description}</p>
           </div>
         ))}

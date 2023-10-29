@@ -9,7 +9,7 @@ export const OpeningHoursSection: FC<OpeningHoursSectionProps> = ({
   openingHours,
 }) => (
   <section className="border border-slate-300 shadow rounded-md p-6 my-6 table w-full">
-    <h4 className="text-lg font-bold text-neutral-content mb-6">
+    <h4 className="text-lg font-bold text-primary mb-6">
       Opening hours
     </h4>
     {weekDays.map((day) => (

@@ -21,7 +21,7 @@ export const ProfileBusinessesHeader: FC = () => {
       >
         <BusinessForm onSuccess={handleCloseModal} />
       </Modal>
-      <p className="text-2xl text-neutral-content">My Businesses</p>
+      <p className="text-2xl text-primary-content">My Businesses</p>
       <Button
         onClick={() => setIsCreateOpen(true)}
         type="default"

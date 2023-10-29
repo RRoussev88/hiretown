@@ -32,8 +32,8 @@ export const EditImages: FC<EditImagesProps> = ({
   ) => mutate({ businessId, albumId, imagePayloads, deleteImages });
 
   return (
-    <section className="w-full sm:w-9/12 mx-auto my-6">
-      <h4 className="text-lg font-bold text-neutral-content my-6 border-b-2 border-slate-300">
+    <section className="w-full my-6">
+      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
         Images
       </h4>
       {contextHolder}

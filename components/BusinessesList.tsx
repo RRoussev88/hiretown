@@ -1,5 +1,5 @@
 "use client";
-import { Alert, List, Skeleton } from "antd";
+import { Alert, List } from "antd";
 import type { FC } from "react";
 
 import { trpc } from "trpc";
@@ -44,40 +44,40 @@ export const BusinessesList: FC<BusinessesListProps> = ({ searchParams }) => {
       {!isFetching && isError && (
         <Alert message={error?.message} type="error" showIcon />
       )}
-      <>
-        <div className="flex flex-wrap gap-4 sm:hidden">
-          <Skeleton loading={isFetching}>
-            {!isFetching &&
-              !error &&
-              !!businessesData?.items.length &&
-              businessesData?.items.map((business) => (
-                <BusinessCard key={business.id} business={business} />
-              ))}
-            {!isFetching &&
-              !error &&
-              !!businessesData &&
-              !businessesData.items.length && (
-                <Alert showIcon type="info" message={emptyText} />
-              )}
-          </Skeleton>
-        </div>
-        <List
-          bordered
-          itemLayout="vertical"
-          size="large"
-          className="max-sm:hidden"
-          locale={{ emptyText }}
-          loading={isFetching}
-          dataSource={businessesData?.items}
-          renderItem={(business) => (
-            <BusinessListItem
-              key={business.id}
-              business={business}
-              isLoading={isFetching}
-            />
-          )}
-        />
-      </>
+      {!isFetching &&
+        !error &&
+        !!businessesData &&
+        !businessesData.items.length && (
+          <Alert
+            showIcon
+            type="info"
+            message={emptyText}
+            className="sm:hidden"
+          />
+        )}
+      <div className="flex flex-wrap gap-4 sm:hidden justify-center">
+        {!error &&
+          !!businessesData?.items.length &&
+          businessesData?.items.map((business) => (
+            <BusinessCard key={business.id} business={business} />
+          ))}
+      </div>
+      <List
+        bordered
+        itemLayout="vertical"
+        size="large"
+        className="max-sm:hidden w-full max-w-4xl mx-auto"
+        locale={{ emptyText }}
+        loading={isFetching}
+        dataSource={businessesData?.items}
+        renderItem={(business) => (
+          <BusinessListItem
+            key={business.id}
+            business={business}
+            isLoading={isFetching}
+          />
+        )}
+      />
     </section>
   );
 };

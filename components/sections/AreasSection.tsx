@@ -27,7 +27,7 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
 
   return (
     <section className="my-6">
-      <h4 className="text-lg font-bold text-neutral-content mb-6 border-b-2 border-slate-300">
+      <h4 className="text-lg font-bold text-primary mb-6 border-b-2 border-slate-300">
         Available In
       </h4>
       {contextHolder}

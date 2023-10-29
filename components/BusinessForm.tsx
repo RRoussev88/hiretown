@@ -120,7 +120,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
       form={form}
       layout="vertical"
       size="large"
-      className="w-full sm:w-9/12 mx-auto"
+      className="w-full"
       disabled={isLoading}
       validateMessages={validateMessages}
     >
@@ -131,7 +131,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
       <Form.Item name="description">
         <Input.TextArea name="description" placeholder="Description" />
       </Form.Item>
-      <h4 className="text-lg font-bold text-neutral-content my-6 border-b-2 border-slate-300">
+      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
         Contacts
       </h4>
       <Form.Item name="address">

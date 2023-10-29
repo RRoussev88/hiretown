@@ -8,7 +8,7 @@ type ContactsSectionProps = { business: Business };
 
 export const ContactsSection: FC<ContactsSectionProps> = ({ business }) => (
   <section className="my-6">
-    <h4 className="text-lg font-bold text-neutral-content mb-6 border-b-2 border-slate-300">
+    <h4 className="text-lg font-bold text-primary mb-6 border-b-2 border-slate-300">
       Contacts
     </h4>
     {!!business.address && (
@@ -20,7 +20,10 @@ export const ContactsSection: FC<ContactsSectionProps> = ({ business }) => (
     {!!business.contactEmail && (
       <p className="mb-6">
         <AtSign />
-        <Link className="link ml-2" href={`mailto:${business.contactEmail}`}>
+        <Link
+          className="link ml-2 visited:text-neutral-content underline underline-offset-4"
+          href={`mailto:${business.contactEmail}`}
+        >
           {business.contactEmail}
         </Link>
       </p>
@@ -28,7 +31,10 @@ export const ContactsSection: FC<ContactsSectionProps> = ({ business }) => (
     {!!business.contactPhone && (
       <p className="mb-6">
         <Phone />
-        <Link className="link ml-2" href={`tel:${business.contactPhone}`}>
+        <Link
+          className="link ml-2 visited:text-neutral-content underline underline-offset-4"
+          href={`tel:${business.contactPhone}`}
+        >
           {business.contactPhone}
         </Link>
       </p>
@@ -36,7 +42,10 @@ export const ContactsSection: FC<ContactsSectionProps> = ({ business }) => (
     {!!business.contactWebsite && (
       <p className="mb-6">
         <Globe />
-        <Link className="link ml-2" href={business.contactWebsite}>
+        <Link
+          className="link ml-2 visited:text-neutral-content underline underline-offset-4"
+          href={business.contactWebsite}
+        >
           {business.contactWebsite}
         </Link>
       </p>

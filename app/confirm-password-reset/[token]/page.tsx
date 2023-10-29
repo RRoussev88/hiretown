@@ -63,7 +63,7 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
 
   return (
     <section className="border border-slate-300 shadow rounded-md p-6 w-full max-w-sm mx-auto">
-      <h4 className="text-lg font-bold text-neutral-content mb-6 border-b-2 border-slate-300">
+      <h4 className="text-lg font-bold text-primary-content mb-6 border-b-2 border-slate-300">
         Change your password
       </h4>
       {notificationContext}

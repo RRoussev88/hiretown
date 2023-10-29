@@ -26,7 +26,7 @@ export const ProfileBusinessesList: FC = () => {
         <Alert message={error.message} type="error" showIcon />
       )}
       <>
-        <div className="flex flex-wrap gap-4 sm:hidden">
+        <div className="flex flex-wrap gap-4 sm:hidden justify-center">
           <Skeleton loading={isFetching}>
             {!isFetching &&
               !error &&

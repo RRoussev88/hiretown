@@ -65,8 +65,8 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
     deleteBusinessArea({ businessId, areaId });
 
   return (
-    <section className="w-full sm:w-9/12 mx-auto my-6">
-      <h4 className="text-lg font-bold text-neutral-content my-6 border-b-2 border-slate-300">
+    <section className="w-full my-6">
+      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
         Areas
       </h4>
       {contextHolder}

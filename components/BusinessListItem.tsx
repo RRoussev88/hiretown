@@ -77,7 +77,7 @@ export const BusinessListItem: FC<{
       key={business.id}
       extra={
         isFetching || isLoading ? (
-          <Skeleton.Image />
+          <Skeleton.Image style={{ width: 240, height: 208 }} />
         ) : (
           <Image
             src={

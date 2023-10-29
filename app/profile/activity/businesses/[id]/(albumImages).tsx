@@ -110,7 +110,7 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
     <div className="border border-slate-300 shadow rounded-md p-2 w-full">
       <div className="flex justify-between w-full pb-2">
         {album.name !== DEFAULT_ALBUM_NAME && (
-          <span className="text-neutral-content">{album.name}</span>
+          <span className="text-accent">{album.name}</span>
         )}
         <Space.Compact size="large">
           <Button

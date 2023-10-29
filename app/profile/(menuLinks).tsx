@@ -10,8 +10,8 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
   return (
     <ul
       className={clsx(
-        "flex flex-col p-4 w-80 bg-base-100 text-base-content divide-y divide-y-reverse h-min",
-        { "max-lg:hidden rounded-lg shadow border border-slate-300": isInline }
+        "absolute left-0 flex flex-col p-4 w-72 bg-base-100 text-base-content divide-y divide-y-reverse h-min",
+        { "max-2xl:hidden rounded-lg shadow border border-slate-300": isInline }
       )}
     >
       <li />

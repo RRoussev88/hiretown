@@ -1,14 +1,15 @@
+"use client";
 import { MenuOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import Image from "next/image";
-import { Dispatch, SetStateAction, useContext, type FC } from "react";
+import { useContext, useState, type FC } from "react";
 
 import { AuthContext } from "context/AuthContext";
 import { FILES_URL, StorageKeys } from "utils";
+import { MenuDrawer } from "./(menuDrawer)";
 
-export const ProfileHeader: FC<{
-  handleOpenDrawer: Dispatch<SetStateAction<boolean>>;
-}> = ({ handleOpenDrawer }) => {
+export const ProfileHeader: FC = () => {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const { [StorageKeys.CURRENT_USER]: user, logoutUser } =
     useContext(AuthContext);
 
@@ -19,8 +20,11 @@ export const ProfileHeader: FC<{
     : user?.email.split("@")[0].slice(0, 4).toUpperCase();
 
   return (
-    <div className="mb-2 sm:mb-5 flex flex-row-reverse lg:flex-row gap-x-3">
-      <div className="max-sm:hidden bg-neutral-focus text-neutral-content rounded-full w-24 h-24 border-solid border-2 border-primary flex justify-center items-center overflow-hidden">
+    <div className="mb-2 sm:mb-5 flex flex-row-reverse 2xl:flex-row gap-x-3">
+      <div
+        className="max-sm:hidden bg-neutral-focus text-neutral-content rounded-full w-24 h-24 
+      border-solid border-2 border-primary flex justify-center items-center overflow-hidden"
+      >
         {user?.avatar ? (
           <Image
             loader={({ src }) => src}
@@ -34,7 +38,7 @@ export const ProfileHeader: FC<{
           <span className="text-3xl">{avatarAbbr}</span>
         )}
       </div>
-      <div className="self-center text-neutral-content">
+      <div className="self-center text-primary-content">
         {!!user?.name && <h3 className="text-2xl">{user?.name}</h3>}
         <p className="text-base">{user?.email}</p>
         <Button
@@ -48,10 +52,14 @@ export const ProfileHeader: FC<{
       </div>
       <Button
         type="default"
-        className="grid content-center mr-auto lg:hidden"
+        className="grid content-center mr-auto 2xl:hidden"
         icon={<MenuOutlined rev="" style={{ fontSize: 24 }} />}
         size="large"
-        onClick={() => handleOpenDrawer((prevState) => !prevState)}
+        onClick={() => setIsDrawerOpen((prevState) => !prevState)}
+      />
+      <MenuDrawer
+        isDrawerOpen={isDrawerOpen}
+        setIsDrawerOpen={setIsDrawerOpen}
       />
     </div>
   );

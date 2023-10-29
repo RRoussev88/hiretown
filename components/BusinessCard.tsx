@@ -10,9 +10,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { type FC } from "react";
 
-import { trpc } from "../trpc";
-import type { Business } from "../types";
-import { FILES_URL } from "../utils";
+import { trpc } from "trpc";
+import type { Business } from "types";
+import { FILES_URL } from "utils";
 
 export const BusinessCard: FC<{
   business: Business;
@@ -64,7 +64,7 @@ export const BusinessCard: FC<{
       style={{ width: 240 }}
       cover={
         isFetching || isLoading ? (
-          <Skeleton.Image style={{ width: 240 }} />
+          <Skeleton.Image style={{ width: 240, height: 208 }} />
         ) : (
           <Image
             src={

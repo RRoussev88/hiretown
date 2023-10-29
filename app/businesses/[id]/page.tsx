@@ -54,9 +54,9 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
 
   if (!business) {
     return (
-      <div className="max-w-xl mx-auto my-6">
+      <div className="max-w-4xl mx-auto">
         {isFetching ? (
-          <div className="w-full mx-auto flex flex-col gap-6">
+          <div className="w-full flex flex-col gap-6">
             <Skeleton.Input active size="large" block />
             <br />
             <Skeleton.Input active size="large" block />
@@ -79,20 +79,20 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
   }
 
   return (
-    <div className="max-w-xl mx-auto my-6">
+    <div className="w-full max-w-4xl mx-auto text-primary-content">
       <h2 className="mb-6 text-primary-focus text-4xl">{business.name}</h2>
       {contextHolder}
       <Image
         src={
           selectedImage
-            ? `${FILES_URL}/${selectedImage.collectionId}/${selectedImage.id}/${selectedImage.image}?thumb=576x346`
+            ? `${FILES_URL}/${selectedImage.collectionId}/${selectedImage.id}/${selectedImage.image}?thumb=896x538`
             : "/mowing_guy.jpeg"
         }
         preview={false}
         className="mb-6 border border-slate-300 shadow rounded-md"
         alt="Business logo"
-        width={576}
-        height={346}
+        width={896}
+        height={538}
       />
       {Array.from(albumImages)
         .filter(([_, images]) => images.length)
@@ -102,7 +102,7 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
             className="border border-slate-300 shadow rounded-md p-2 my-6 w-full max-h-96 overflow-y-auto"
           >
             {album.name !== DEFAULT_ALBUM_NAME && (
-              <p className="block pb-2 text-lg font-semibold text-neutral-content">
+              <p className="block pb-2 text-lg font-semibold text-primary-content">
                 {album.name}
               </p>
             )}
