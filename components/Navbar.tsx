@@ -25,12 +25,6 @@ export const Navbar: FC = () => {
   const { [StorageKeys.SELECTED_LOCALE]: locale, changeLocale } =
     useContext(GlobalContext);
 
-  const loginItem = {
-    onClick: () => setIsLoginOpen(true),
-    label: <span className="font-bold">Login</span>,
-    key: "login",
-  };
-
   const userMenu: MenuProps = {
     items: user
       ? [
@@ -42,9 +36,19 @@ export const Navbar: FC = () => {
             ),
             key: "details",
           },
-          loginItem,
+          {
+            onClick: logoutUser,
+            label: <span className="font-bold">Logout</span>,
+            key: "logout",
+          },
         ]
-      : [loginItem],
+      : [
+          {
+            onClick: () => setIsLoginOpen(true),
+            label: <span className="font-bold">Login</span>,
+            key: "login",
+          },
+        ],
   };
 
   const localeMenu: MenuProps = {
