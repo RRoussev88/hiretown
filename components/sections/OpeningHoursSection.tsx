@@ -8,12 +8,12 @@ type OpeningHoursSectionProps = { openingHours: OpeningHours };
 export const OpeningHoursSection: FC<OpeningHoursSectionProps> = ({
   openingHours,
 }) => (
-  <section className="border border-slate-300 shadow rounded-md p-6 my-6 table w-full">
+  <section className="border border-slate-300 shadow rounded-md p-6 table w-full">
     <h4 className="text-lg font-bold text-primary mb-6">
       Opening hours
     </h4>
     {weekDays.map((day) => (
-      <p className="h-10 table-row" key={day}>
+      <p className="h-10 table-row hover:opacity-60" key={day}>
         <span className="table-cell align-bottom border-b-2 border-slate-300">
           {day}
         </span>

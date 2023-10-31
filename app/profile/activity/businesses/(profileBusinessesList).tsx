@@ -63,7 +63,6 @@ export const ProfileBusinessesList: FC = () => {
               key={business.id}
               business={business}
               showActions
-              isLoading={isFetching}
             />
           )}
         />

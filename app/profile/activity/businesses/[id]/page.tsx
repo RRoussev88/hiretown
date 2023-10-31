@@ -68,7 +68,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
     <section className="w-full flex flex-col text-primary-content">
       {contextHolder}
       <div className="w-full mx-auto flex flex-wrap justify-between">
-        <p className="mb-5 text-2xl text-primary">Edit Business</p>
+        <p className="mb-5 text-2xl font-semibold">Edit Business</p>
         <Button
           size="large"
           type="default"

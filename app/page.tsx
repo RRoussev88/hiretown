@@ -19,7 +19,7 @@ const Home: NextPage = () => (
       <h1 className="mb-5 text-2xl sm:text-5xl font-bold">
         Get the job around your property done
       </h1>
-      <p className="mb-5 text-secondary">
+      <p className="mb-5 text-secondary text-xl sm:text-2xl font-semibold">
         Start by searching a Hire near you
       </p>
       <SearchForm />

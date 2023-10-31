@@ -62,7 +62,7 @@ export const EditTextProperty: FC<EditTextPropertyProps> = ({
   return (
     <Form form={form} layout="vertical">
       <Form.Item
-        label={propertyName}
+        label={<span className="text-sm sm:text-base">{propertyName}</span>}
         validateStatus={clsx({ error: showErrorMessage }) as ""}
         help={
           (showErrorMessage && errorMessage) ||

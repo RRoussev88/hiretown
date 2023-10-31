@@ -16,8 +16,7 @@ import clsx from "clsx";
 export const BusinessListItem: FC<{
   business: Business;
   showActions?: boolean;
-  isLoading?: boolean;
-}> = ({ business, showActions, isLoading }) => {
+}> = ({ business, showActions }) => {
   const { confirm, destroyAll } = Modal;
 
   const { data: businessImage, isFetching } = trpc.businessImage.useQuery(
@@ -76,7 +75,7 @@ export const BusinessListItem: FC<{
       }
       key={business.id}
       extra={
-        isFetching || isLoading ? (
+        isFetching ? (
           <Skeleton.Image style={{ width: 240, height: 208 }} />
         ) : (
           <Image
@@ -93,12 +92,10 @@ export const BusinessListItem: FC<{
         )
       }
     >
-      <Skeleton loading={isFetching || isLoading}>
-        <List.Item.Meta
-          title={<p className="text-2xl">{business.name}</p>}
-          description={<p className="text-xl">{business.description}</p>}
-        />
-      </Skeleton>
+      <List.Item.Meta
+        title={<p className="text-2xl font-semibold">{business.name}</p>}
+        description={<p className="text-xl font-medium">{business.description}</p>}
+      />
     </List.Item>
   );
 

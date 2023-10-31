@@ -15,14 +15,14 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
       )}
     >
       <li />
-      <li className="mt-2 text-base text-base-300">Activity</li>
+      <li className="mt-2 text-base text-base-300 font-semibold">Activity</li>
       <li>
         <Button
           type="text"
           size="large"
           href="/profile/activity/searches"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/activity/searches"),
+            "bg-primary font-semibold": path?.startsWith("/profile/activity/searches"),
           })}
         >
           Search History
@@ -34,7 +34,7 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
           size="large"
           href="/profile/activity/businesses"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/activity/businesses"),
+            "bg-primary font-semibold": path?.startsWith("/profile/activity/businesses"),
           })}
         >
           My Businesses
@@ -46,7 +46,7 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
           size="large"
           href="/profile/activity/projects"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/activity/projects"),
+            "bg-primary font-semibold": path?.startsWith("/profile/activity/projects"),
           })}
         >
           My Projects
@@ -58,20 +58,20 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
           size="large"
           href="/profile/activity/messages"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/activity/messages"),
+            "bg-primary font-semibold": path?.startsWith("/profile/activity/messages"),
           })}
         >
           Messages
         </Button>
       </li>
-      <li className="mt-8 text-base text-base-300">Settings</li>
+      <li className="mt-8 text-base text-base-300 font-semibold">Settings</li>
       <li>
         <Button
           type="text"
           size="large"
           href="/profile/settings/overview"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/settings/overview"),
+            "bg-primary font-semibold": path?.startsWith("/profile/settings/overview"),
           })}
         >
           Profile Overview
@@ -83,7 +83,7 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
           size="large"
           href="/profile/settings/payment-methods"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/settings/payment-methods"),
+            "bg-primary font-semibold": path?.startsWith("/profile/settings/payment-methods"),
           })}
         >
           Payment Methods
@@ -95,7 +95,7 @@ export const MenuLinks: FC<{ isInline?: boolean }> = ({ isInline }) => {
           size="large"
           href="/profile/settings/notifications"
           className={clsx("custom-menu-link", {
-            "bg-primary": path?.startsWith("/profile/settings/notifications"),
+            "bg-primary font-semibold": path?.startsWith("/profile/settings/notifications"),
           })}
         >
           Notifications

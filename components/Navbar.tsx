@@ -25,53 +25,55 @@ export const Navbar: FC = () => {
   const { [StorageKeys.SELECTED_LOCALE]: locale, changeLocale } =
     useContext(GlobalContext);
 
+  const loginItem = {
+    onClick: () => setIsLoginOpen(true),
+    label: <span className="font-bold">Login</span>,
+    key: "login",
+  };
+
   const userMenu: MenuProps = {
     items: user
       ? [
           {
             label: (
-              <Link href="/profile" className="normal-case text-base">
+              <Link href="/profile" className="font-bold">
                 Details
               </Link>
             ),
             key: "details",
           },
-          {
-            onClick: logoutUser,
-            label: "Logout",
-            key: "logout",
-          },
+          loginItem,
         ]
-      : [
-          {
-            onClick: () => setIsLoginOpen(true),
-            label: "Login",
-            key: "login",
-          },
-        ],
+      : [loginItem],
   };
 
   const localeMenu: MenuProps = {
     items: [
-      { label: "EN", key: "EN" },
-      { label: "FR", key: "FR" },
-      { label: "DE", key: "DE" },
+      { label: <span className="font-bold">EN</span>, key: "EN" },
+      { label: <span className="font-bold">FR</span>, key: "FR" },
+      { label: <span className="font-bold">DE</span>, key: "DE" },
     ],
     onClick: (e) => changeLocale(e.key),
+  };
+
+  const localeItem = {
+    label: <span className="font-bold">Locale</span>,
+    key: "locale",
+    children: localeMenu.items,
   };
 
   const cascadingMenu: MenuProps = {
     items: !path?.startsWith("/profile")
       ? [
           {
-            label: "Profile",
+            label: <span className="font-bold">Profil</span>,
             key: "profile",
             type: "group",
             children: userMenu.items,
           },
-          { label: "Locale", key: "locale", children: localeMenu.items },
+          localeItem,
         ]
-      : [{ label: "Locale", key: "locale", children: localeMenu.items }],
+      : [localeItem],
   };
 
   return (
@@ -108,8 +110,8 @@ export const Navbar: FC = () => {
         <Button
           type="text"
           size="large"
-          style={{ display: "flex", fontWeight: 600 }}
-          className="w-40 justify-evenly"
+          style={{ display: "flex", fontWeight: 800, fontSize: 20 }}
+          className="w-50 justify-between"
           icon={
             <Image
               src="/brandIcon.png"
@@ -120,13 +122,13 @@ export const Navbar: FC = () => {
           }
           href="/"
         >
-          Hiretown
+          HIRETOWN
         </Button>
       </div>
       <div className="justify-end gap-3">
         {!path?.startsWith("/profile") && (
           <Dropdown menu={userMenu} className="max-lg:hidden">
-            <a onClick={(e) => e.preventDefault()}>
+            <a onClick={(e) => e.preventDefault()} className="font-bold">
               <Space>
                 Profile
                 <DownOutlined rev="" />
@@ -134,7 +136,7 @@ export const Navbar: FC = () => {
             </a>
           </Dropdown>
         )}
-        <Dropdown menu={localeMenu} className="max-lg:hidden">
+        <Dropdown menu={localeMenu} className="max-lg:hidden font-bold">
           <a onClick={(e) => e.preventDefault()}>
             <Space>
               {locale}

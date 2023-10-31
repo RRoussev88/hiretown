@@ -30,8 +30,8 @@ const ProfileOverviewPage: NextPage = () => {
 
   return (
     <section className="w-full flex flex-col text-primary-content">
-      <p className="w-full sm:w-9/12 mx-auto mb-5 text-2xl">Profile Overview</p>
-      <article className="w-full sm:w-9/12 mx-auto">
+      <p className="w-full mb-5 text-2xl font-semibold">Profile Overview</p>
+      <article className="w-full">
         <EditAvatar
           errorMessage={editedProperty === "Avatar" ? error?.message ?? "" : ""}
           initialValue={

@@ -79,7 +79,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
   return (
     <div>
       {contextHolder}
-      <p className="text-sm">Avatar</p>
+      <p className="text-sm sm:text-base">Avatar</p>
       <Upload
         action=""
         customRequest={dummyUploadRequest}

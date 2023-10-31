@@ -71,11 +71,7 @@ export const BusinessesList: FC<BusinessesListProps> = ({ searchParams }) => {
         loading={isFetching}
         dataSource={businessesData?.items}
         renderItem={(business) => (
-          <BusinessListItem
-            key={business.id}
-            business={business}
-            isLoading={isFetching}
-          />
+          <BusinessListItem key={business.id} business={business} />
         )}
       />
     </section>

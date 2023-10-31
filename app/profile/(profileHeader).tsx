@@ -39,8 +39,8 @@ export const ProfileHeader: FC = () => {
         )}
       </div>
       <div className="self-center text-primary-content">
-        {!!user?.name && <h3 className="text-2xl">{user?.name}</h3>}
-        <p className="text-base">{user?.email}</p>
+        {!!user?.name && <h3 className="text-2xl font-semibold">{user?.name}</h3>}
+        <p className="text-base font-semibold">{user?.email}</p>
         <Button
           type="default"
           className="custom-primary-button"

@@ -121,7 +121,10 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
           </div>
         ))}
       {!!business.description && <p className="my-6">{business.description}</p>}
-      <ContactsSection business={business} />
+      {(business.address ||
+        business.contactEmail ||
+        business.contactPhone ||
+        business.contactWebsite) && <ContactsSection business={business} />}
       {!!business.expand["businessServices(business)"]?.length && (
         <ServicesSection
           businessServices={business.expand["businessServices(business)"]}
@@ -133,16 +136,18 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
       {!!business.expand["areas(business)"]?.length && (
         <AreasSection businessId={business.id} />
       )}
-      {!!business.openingHours &&
-        // Check if any of the days is an array containing all nonempty items
-        Object.entries(business.openingHours).some(
-          ([_, value]) => Array.isArray(value) && value.every(Boolean)
-        ) && <OpeningHoursSection openingHours={business.openingHours} />}
-      {!!business.expand["socialLinks(business)"]?.length && (
-        <SocialLinksSection
-          businessLinks={business.expand["socialLinks(business)"]}
-        />
-      )}
+      <div className="w-full flex flex-col md:flex-row gap-3">
+        {!!business.openingHours &&
+          // Check if any of the days is an array containing all nonempty items
+          Object.entries(business.openingHours).some(
+            ([_, value]) => Array.isArray(value) && value.every(Boolean)
+          ) && <OpeningHoursSection openingHours={business.openingHours} />}
+        {!!business.expand["socialLinks(business)"]?.length && (
+          <SocialLinksSection
+            businessLinks={business.expand["socialLinks(business)"]}
+          />
+        )}
+      </div>
     </div>
   );
 };
