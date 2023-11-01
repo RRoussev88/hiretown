@@ -2,8 +2,7 @@ import type { NextRequest } from "next/server";
 import { NextResponse } from "next/server";
 import PocketBase from "pocketbase";
 
-import { UserBusiness, UserRole } from "types";
-import { BACKEND_URL, DataCollections } from "utils";
+import { BACKEND_URL } from "utils";
 
 export async function middleware(request: NextRequest) {
   const pbClient = new PocketBase(BACKEND_URL);
@@ -12,22 +11,29 @@ export async function middleware(request: NextRequest) {
 
   const userId = pbClient.authStore.model?.id;
 
-  console.log("Auth store: ", pbClient.authStore);
+  const requestInit = {
+    headers: {
+      Authorization: pbClient.authStore.token,
+      "Content-Type": "application/json",
+    },
+  };
 
   if (pbClient.authStore.isValid) {
     try {
-      const userRoles: UserRole[] = await pbClient
-        .collection(DataCollections.USER_ROLES)
-        .getFullList(1, {
-          filter: `user="${userId}"&&(role.name="ADMIN"||role.name="SUPER ADMIN")`,
-        });
+      const filter = encodeURIComponent(
+        `(user="${userId}" && (role.name="ADMIN"||role.name="SUPER ADMIN"))`
+      );
+      const res = await fetch(
+        `${BACKEND_URL}/api/collections/userRoles/records?filter=${filter}`,
+        requestInit
+      );
+      const data = await res.json();
+
       // If the user is Admin - allow him to continue without anymore checks
-      if (userRoles.length) {
+      if (data.items?.length) {
         return NextResponse.next();
       }
-    } catch (error) {
-      console.log("USER_ROLES error: ", error);
-    }
+    } catch {}
   } else if (request.nextUrl.pathname.startsWith("/profile/")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -41,15 +47,22 @@ export async function middleware(request: NextRequest) {
     const businessResponse = NextResponse.redirect(
       new URL(`/businesses/${businessId}`, request.url)
     );
-    // Check if the current user has the required permissions to edit this business
-    try {
-      const permissions: UserBusiness[] = await pbClient
-        .collection(DataCollections.USER_BUSINESSES)
-        .getFullList(1, {
-          filter: `user="${userId}"&&business="${businessId}"`,
-        });
+    console.log("user: ", userId);
+    console.log("businessId: ", businessId);
 
-      if (!permissions.length) {
+    try {
+      // Check if the current user has the required permissions to edit this business
+      const filter = encodeURIComponent(
+        `(user="${userId}" && business="${businessId}")`
+      );
+      const res = await fetch(
+        `${BACKEND_URL}/api/collections/userBusinesses/records?filter=${filter}`,
+        requestInit
+      );
+      const data = await res.json();
+      console.log("busiesses data: ", data);
+
+      if (!data.items?.length) {
         console.log("Second /businesses/:id redirect");
         return businessResponse;
       }
