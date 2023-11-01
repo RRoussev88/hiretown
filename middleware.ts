@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
   const requestInit = {
     headers: {
       Authorization: pbClient.authStore.token,
-      "Content-Type": "application/json",
+      // "Content-Type": "application/json",
     },
   };
   console.log("requestInit: ", requestInit);
@@ -28,6 +28,7 @@ export async function middleware(request: NextRequest) {
       );
       console.log("URL: ", url.toString());
       const res = await fetch(url, requestInit);
+      console.log("roles res: ", res);
       const data = await res.json();
       console.log("roles data: ", data);
 
@@ -35,7 +36,9 @@ export async function middleware(request: NextRequest) {
       if (data.items?.length) {
         return NextResponse.next();
       }
-    } catch {}
+    } catch (error) {
+      console.log(`USER_ROLES Error ${error}`);
+    }
   } else if (request.nextUrl.pathname.startsWith("/profile/")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -63,6 +66,7 @@ export async function middleware(request: NextRequest) {
       );
       console.log("URL: ", url.toString());
       const res = await fetch(url, requestInit);
+      console.log("business res: ", res);
       const data = await res.json();
       console.log("busiesses data: ", data);
 
