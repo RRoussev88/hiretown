@@ -17,17 +17,19 @@ export async function middleware(request: NextRequest) {
       "Content-Type": "application/json",
     },
   };
+  console.log("requestInit: ", requestInit);
 
   if (pbClient.authStore.isValid) {
     try {
-      const filter = encodeURIComponent(
+      const url = new URL(`${BACKEND_URL}/api/collections/userRoles/records`);
+      url.searchParams.set(
+        "filter",
         `(user="${userId}" && (role.name="ADMIN"||role.name="SUPER ADMIN"))`
       );
-      const res = await fetch(
-        `${BACKEND_URL}/api/collections/userRoles/records?filter=${filter}`,
-        requestInit
-      );
+      console.log("URL: ", url);
+      const res = await fetch(url, requestInit);
       const data = await res.json();
+      console.log("roles data: ", data);
 
       // If the user is Admin - allow him to continue without anymore checks
       if (data.items?.length) {
@@ -52,13 +54,15 @@ export async function middleware(request: NextRequest) {
 
     try {
       // Check if the current user has the required permissions to edit this business
-      const filter = encodeURIComponent(
+      const url = new URL(
+        `${BACKEND_URL}/api/collections/userBusinesses/records`
+      );
+      url.searchParams.set(
+        "filter",
         `(user="${userId}" && business="${businessId}")`
       );
-      const res = await fetch(
-        `${BACKEND_URL}/api/collections/userBusinesses/records?filter=${filter}`,
-        requestInit
-      );
+      console.log("URL: ", url);
+      const res = await fetch(url, requestInit);
       const data = await res.json();
       console.log("busiesses data: ", data);
 
