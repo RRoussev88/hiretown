@@ -12,6 +12,8 @@ export async function middleware(request: NextRequest) {
 
   const userId = pbClient.authStore.model?.id;
 
+  console.log("Auth store: ", pbClient.authStore);
+
   if (pbClient.authStore.isValid) {
     try {
       const userRoles: UserRole[] = await pbClient
@@ -23,7 +25,9 @@ export async function middleware(request: NextRequest) {
       if (userRoles.length) {
         return NextResponse.next();
       }
-    } catch {}
+    } catch (error) {
+      console.log("USER_ROLES error: ", error);
+    }
   } else if (request.nextUrl.pathname.startsWith("/profile/")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -50,7 +54,7 @@ export async function middleware(request: NextRequest) {
         return businessResponse;
       }
     } catch (error) {
-      console.log(`Error ${error}`);
+      console.log(`USER_BUSINESSES Error ${error}`);
       console.log(`Redirect /businesses/${businessId} userId=${userId}`);
       return businessResponse;
     }
