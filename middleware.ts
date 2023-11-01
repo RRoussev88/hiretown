@@ -21,12 +21,10 @@ export async function middleware(request: NextRequest) {
         });
       // If the user is Admin - allow him to continue without anymore checks
       if (userRoles.length) {
-        console.log("First next()");
         return NextResponse.next();
       }
     } catch {}
   } else if (request.nextUrl.pathname.startsWith("/profile/")) {
-    console.log("First / redirect");
     return NextResponse.redirect(new URL("/", request.url));
   }
 
@@ -52,7 +50,8 @@ export async function middleware(request: NextRequest) {
         return businessResponse;
       }
     } catch (error) {
-      console.log("Error /businesses/:id redirect");
+      console.log(`Error ${error}`);
+      console.log(`Redirect /businesses/${businessId} userId=${userId}`);
       return businessResponse;
     }
   }
