@@ -26,7 +26,7 @@ export async function middleware(request: NextRequest) {
         "filter",
         `(user="${userId}" && (role.name="ADMIN"||role.name="SUPER ADMIN"))`
       );
-      console.log("URL: ", url);
+      console.log("URL: ", url.toString());
       const res = await fetch(url, requestInit);
       const data = await res.json();
       console.log("roles data: ", data);
@@ -61,7 +61,7 @@ export async function middleware(request: NextRequest) {
         "filter",
         `(user="${userId}" && business="${businessId}")`
       );
-      console.log("URL: ", url);
+      console.log("URL: ", url.toString());
       const res = await fetch(url, requestInit);
       const data = await res.json();
       console.log("busiesses data: ", data);
