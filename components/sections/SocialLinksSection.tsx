@@ -16,7 +16,7 @@ export const SocialLinksSection: FC<SocialLinksSectionProps> = ({
         {iconsMap[socialLink.expand.platform.key] ??
           socialLink.expand.platform.title.slice(0, 5).toUpperCase() + ":"}
         <Link
-          className="link ml-2 visited:text-neutral-content underline underline-offset-4"
+          className="link ml-2 visited:text-neutral-content underline underline-offset-4 hover:opacity-60"
           href={socialLink.link}
         >
           {socialLink.link}

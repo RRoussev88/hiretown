@@ -1,9 +1,11 @@
 "use client";
 import { Alert, Button, Skeleton, Space } from "antd";
 import type { NextPage } from "next";
+import { useRouter } from "next/navigation";
 
 import { BusinessForm } from "@/components/.";
 import { useBusinessAlbumImages, useErrorToaster } from "hooks";
+import { useEffect } from "react";
 import { trpc } from "trpc";
 import type { BusinessService, Service } from "types";
 import { EditAreas } from "./(editAreas)";
@@ -16,6 +18,16 @@ type BusinessDetailsPageProps = { params: { id: string } };
 const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
   params,
 }) => {
+  const router = useRouter();
+
+  const {
+    data: hasPermission,
+    isFetching: isFetchingPermission,
+    isError: isPermissionError,
+    error: permissionError,
+    isSuccess: isPermissionSuccess,
+  } = trpc.hasPermission.useQuery(params.id);
+
   const {
     data: business,
     isFetching,
@@ -23,20 +35,26 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
     error,
     isSuccess,
     refetch,
-  } = trpc.business.useQuery(params.id);
+  } = trpc.business.useQuery(params.id, { enabled: hasPermission });
   const albumImages = useBusinessAlbumImages(business);
 
   const contextHolder = useErrorToaster(
-    isError,
-    isSuccess,
-    error?.message ?? "Error fetching business"
+    isError || isPermissionError,
+    isSuccess || isPermissionSuccess,
+    error?.message ?? permissionError?.message ?? "Error fetching business"
   );
+
+  useEffect(() => {
+    if (isPermissionSuccess && !hasPermission) {
+      router.replace(`/businesses/${params.id}`);
+    }
+  }, [hasPermission, isPermissionSuccess, router, params.id]);
 
   if (!business) {
     return (
       <div className="w-full mx-auto my-6">
         {contextHolder}
-        {isFetching ? (
+        {isFetching || isFetchingPermission ? (
           <div className="w-full mx-auto flex flex-col gap-6">
             <br />
             <Skeleton.Input active size="large" block />
