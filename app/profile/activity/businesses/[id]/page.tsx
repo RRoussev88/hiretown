@@ -12,6 +12,7 @@ import { EditAreas } from "./(editAreas)";
 import { EditImages } from "./(editImages)";
 import { EditOpeningHours } from "./(editOpeningHours)";
 import { EditServices } from "./(editServices)";
+import { EditLinks } from "./(editLinks)";
 
 type BusinessDetailsPageProps = { params: { id: string } };
 
@@ -45,6 +46,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
   );
 
   useEffect(() => {
+    // Guard for editing other user's the businesses
     if (isPermissionSuccess && !hasPermission) {
       router.replace(`/businesses/${params.id}`);
     }
@@ -117,6 +119,11 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
         onSuccess={refetch}
       />
       <EditAreas businessId={business.id} onSuccess={refetch} />
+      <EditLinks
+        businessId={business.id}
+        onSuccess={refetch}
+        links={business.expand["socialLinks(business)"] ?? []}
+      />
     </section>
   );
 };

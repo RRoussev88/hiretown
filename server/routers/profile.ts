@@ -1,8 +1,8 @@
 import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
-import type { APIResponse, UserBusiness } from "../../types";
-import { APIError, DataCollections } from "../../utils";
+import type { APIResponse, UserBusiness } from "types";
+import { APIError, DataCollections } from "utils";
 import { protectedProcedure, router } from "../trpc";
 
 const fetchProfileBusinesses = async (

@@ -4,6 +4,7 @@ import { imagesRouter } from "./images";
 import { locationsRouter } from "./locations";
 import { profileRouter } from "./profile";
 import { servicesRouter } from "./services";
+import { socialLinksRouter } from "./socialLinks";
 
 import { mergeRouters } from "../trpc";
 
@@ -13,7 +14,8 @@ export const appRouter = mergeRouters(
   imagesRouter,
   locationsRouter,
   servicesRouter,
-  profileRouter
+  profileRouter,
+  socialLinksRouter
 );
 
 // export type definition of API

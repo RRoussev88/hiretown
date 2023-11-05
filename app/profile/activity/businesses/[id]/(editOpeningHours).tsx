@@ -54,10 +54,8 @@ export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
     });
 
   return (
-    <section className="w-full my-6">
-      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
-        Opening hours
-      </h4>
+    <section className="w-full pt-12">
+      <h4 className="section-title">Opening hours</h4>
       {contextHolder}
       {weekDays.map((day) => (
         <HoursInputRow

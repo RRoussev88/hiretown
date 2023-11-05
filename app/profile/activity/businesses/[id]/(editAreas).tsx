@@ -65,10 +65,8 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
     deleteBusinessArea({ businessId, areaId });
 
   return (
-    <section className="w-full my-6">
-      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
-        Areas
-      </h4>
+    <section className="w-full pt-12">
+      <h4 className="section-title">Areas</h4>
       {contextHolder}
       <div className="flex flex-col gap-3">
         <div className="flex flex-col sm:flex-row gap-3">
@@ -126,7 +124,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
           const city = area.expand.city as City;
 
           return (
-            <div key={area.id} className="my-3 w-full flex justify-between">
+            <div key={area.id} className="pt-3 w-full flex justify-between">
               <div>
                 <Image
                   src={country.flagImageUri}

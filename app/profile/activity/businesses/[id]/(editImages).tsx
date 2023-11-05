@@ -32,10 +32,8 @@ export const EditImages: FC<EditImagesProps> = ({
   ) => mutate({ businessId, albumId, imagePayloads, deleteImages });
 
   return (
-    <section className="w-full my-6">
-      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
-        Images
-      </h4>
+    <section className="w-full pt-12">
+      <h4 className="section-title">Images</h4>
       {contextHolder}
       {Array.from(albumImages).map(([album, images]) => (
         <AlbumImages

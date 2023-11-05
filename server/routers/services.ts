@@ -7,8 +7,8 @@ import type {
   BusinessService,
   Service,
   ServiceCategory,
-} from "../../types";
-import { APIError, DataCollections } from "../../utils";
+} from "types";
+import { APIError, DataCollections } from "utils";
 import { procedure, businessProtectedProcedure, router } from "../trpc";
 
 const fetchCategories = async (pbClient: Pocketbase, searchTerm?: string) => {

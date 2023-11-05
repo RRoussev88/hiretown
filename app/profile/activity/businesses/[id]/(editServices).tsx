@@ -83,10 +83,8 @@ export const EditServices: FC<EditServicesProps> = ({
   };
 
   return (
-    <section className="w-full my-6">
-      <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
-        Services
-      </h4>
+    <section className="w-full pt-12">
+      <h4 className="section-title">Services</h4>
       {contextHolder}
       <div className="flex justify-between mb-2">
         <CustomSelect
