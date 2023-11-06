@@ -91,6 +91,20 @@ export const useErrorToaster = (
   return contextHolder;
 };
 
+export const useSuccessToaster = (
+  isSuccess: boolean,
+  successMessage: string
+) => {
+  const [api, contextHolder] = notification.useNotification();
+
+  useEffect(() => {
+    isSuccess &&
+      api.success({ message: "Success", description: successMessage });
+  }, [api, isSuccess, successMessage]);
+
+  return contextHolder;
+};
+
 export const useFetchAndSelect = <
   T extends CollectionRecord = any,
   P extends string = string,

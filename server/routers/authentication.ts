@@ -168,6 +168,50 @@ const getUser = async (pbClient: Pocketbase) => {
   }
 };
 
+const performEmailVerificationRequest = async (
+  pbClient: Pocketbase,
+  email: string
+) => {
+  if (!email) {
+    throw new APIError("Valid email is required");
+  }
+
+  try {
+    const data = await pbClient
+      .collection(DataCollections.USERS)
+      // SES sandbox mode will only send emails to confirmed emails
+      .requestVerification(
+        "marsianeca_ss@hotmail.com"
+        // process.env.NODE_ENV === "production"
+        //   ? email
+        //   : "marsianeca_ss@hotmail.com"
+      );
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, "Verify email request failed");
+  }
+};
+
+const performEmailVerificationConfirm = async (
+  pbClient: Pocketbase,
+  token: string
+) => {
+  if (!token) {
+    throw new APIError("Valid token is required");
+  }
+
+  try {
+    const data = await pbClient
+      .collection(DataCollections.USERS)
+      .confirmVerification(token);
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, "Password change confirm failed");
+  }
+};
+
 export const authRouter = router({
   signin: procedure
     .input(z.object({ email: z.string().email(), password: z.string().min(6) }))
@@ -232,5 +276,15 @@ export const authRouter = router({
         input.password,
         input.passwordConfirm
       )
+    ),
+  requestEmailVerification: procedure
+    .input(z.string())
+    .mutation(({ ctx, input }) =>
+      performEmailVerificationRequest(ctx.pbClient, input)
+    ),
+  confirmEmailVerification: procedure
+    .input(z.string())
+    .mutation(({ ctx, input }) =>
+      performEmailVerificationConfirm(ctx.pbClient, input)
     ),
 });

@@ -108,7 +108,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
           </div>
         )}
       </Upload>
-      <Space.Compact size="large" className="w-full mb-6">
+      <Space.Compact size="large" className="w-full">
         <Button
           type="default"
           className="bg-primary"

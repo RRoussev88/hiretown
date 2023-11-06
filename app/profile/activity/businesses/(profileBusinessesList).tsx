@@ -18,7 +18,7 @@ export const ProfileBusinessesList: FC = () => {
     userId: user?.id ?? "",
   });
 
-  const emptyText = 'No businesses found. Click "Create Business" to start';
+  const emptyText = 'No businesses found. Click "Create" to start';
 
   return (
     <section>
