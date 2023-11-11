@@ -52,10 +52,10 @@ const ProfileOverviewPage: NextPage = () => {
         <div className="flex justify-between flex-wrap gap-6">
           <div className="text-base sm:text-lg flex flex-col gap-6">
             {user?.verified ? (
-              <>
-                Email&nbsp;verified&nbsp;
-                <CheckCircleOutlined className="text-primary text-3xl" rev="" />
-              </>
+              <p className="flex gap-3 items-baseline">
+                <span>Email&nbsp;verified</span>
+                <CheckCircleOutlined className="text-success text-3xl" rev="" />
+              </p>
             ) : (
               <Button
                 className="custom-primary-button"
