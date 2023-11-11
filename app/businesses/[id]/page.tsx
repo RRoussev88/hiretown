@@ -54,7 +54,7 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
 
   if (!business) {
     return (
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto p-3 sm:p-6">
         {isFetching ? (
           <div className="w-full flex flex-col gap-6">
             <Skeleton.Input active size="large" block />
@@ -79,7 +79,7 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto text-primary-content">
+    <div className="w-full max-w-4xl mx-auto text-primary-content p-3 sm:p-6">
       <h2 className="mb-6 text-primary-focus text-4xl">{business.name}</h2>
       {contextHolder}
       <Image
@@ -89,17 +89,15 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
             : "/mowing_guy.jpeg"
         }
         preview={false}
-        className="mb-6 border border-slate-300 shadow rounded-md"
+        className="mb-3 sm:mb-6 border border-slate-300 shadow rounded-md"
         alt="Business logo"
-        width={896}
-        height={538}
       />
       {Array.from(albumImages)
         .filter(([_, images]) => images.length)
         .map(([album, images]) => (
           <div
             key={album.id}
-            className="border border-slate-300 shadow rounded-md p-2 my-6 w-full max-h-96 overflow-y-auto"
+            className="border border-slate-300 shadow rounded-md p-2 mb-3 sm:mb-6 w-full max-h-96 overflow-y-auto"
           >
             {album.name !== DEFAULT_ALBUM_NAME && (
               <p className="block pb-2 text-lg font-semibold text-primary-content">

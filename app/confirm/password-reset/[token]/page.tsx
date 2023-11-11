@@ -1,5 +1,5 @@
 "use client";
-import { Button, Form, Input, notification } from "antd";
+import { Button, Form, Input } from "antd";
 import clsx from "clsx";
 import { NextPage } from "next";
 import { useRouter } from "next/navigation";
@@ -16,7 +16,6 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
 }) => {
   const router = useRouter();
   const [form] = Form.useForm();
-  const [api, notificationContext] = notification.useNotification();
 
   const [isLoginTried, setIsLoginTried] = useState(false);
   const [password, setPassword, isPasswordValid, passwordError] =
@@ -24,17 +23,10 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
   const [passwordConfirm, setPasswordConfirm, isConfirmPassValid] =
     useValidatedInput((confirmPass) => confirmPass === password);
 
-  const { isLoading, isError, isSuccess, mutate, reset } =
+  const { isLoading, isError, error, isSuccess, mutate, reset } =
     trpc.confirmPasswordChange.useMutation({
-      onSettled: (_, error) => {
-        if (error) {
-          api.error({ message: "Error", description: error.message });
-        } else {
-          api.info({
-            message: "Password changed",
-            description: "Your password has been changed successfully",
-          });
-          
+      onSettled: (isConfirmed) => {
+        if (isConfirmed) {
           setTimeout(() => {
             setPassword("");
             setPasswordConfirm("");
@@ -54,7 +46,7 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
   const hasConfirmPasswordError =
     isError || (isLoginTried && isPasswordValid && !isConfirmPassValid);
 
-  const handleRegister = async () => {
+  const handleSavePassword = async () => {
     setIsLoginTried(true);
     if (!isPasswordValid || !isConfirmPassValid) return;
 
@@ -66,7 +58,6 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
       <h4 className="text-lg font-bold text-primary-content mb-6 border-b-2 border-slate-300">
         Change your password
       </h4>
-      {notificationContext}
       <Form
         form={form}
         layout="vertical"
@@ -112,7 +103,7 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
           />
         </Form.Item>
         <p className="text-md text-accent-focus">
-          Make sure it is at least 6 characters
+          Make sure it is at least 6 characters long
         </p>
         <Button
           block
@@ -121,11 +112,17 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
           type="default"
           className="custom-primary-button"
           size="large"
-          onClick={handleRegister}
+          onClick={handleSavePassword}
         >
           Change Password
         </Button>
       </Form>
+      {isError && <p className="text-error">{error.message}</p>}
+      {isSuccess && (
+        <p className="text-success">
+          Your password has been successfully changed
+        </p>
+      )}
     </section>
   );
 };

@@ -19,6 +19,8 @@ const ProfileOverviewPage: NextPage = () => {
   });
   const { mutate: requestVerification, isSuccess: isRequestSuccess } =
     trpc.requestEmailVerification.useMutation();
+  const { mutate: requestPasswordChange, isSuccess: isPassRequestSuccess } =
+    trpc.requestEmailVerification.useMutation();
   const { [StorageKeys.CURRENT_USER]: user } = useContext(AuthContext);
 
   const handleUpdate = async (
@@ -34,6 +36,11 @@ const ProfileOverviewPage: NextPage = () => {
     `Verification email sent to ${user?.email}`
   );
 
+  const passSuccessContext = useSuccessToaster(
+    isPassRequestSuccess,
+    `Change password email sent to ${user?.email}`
+  );
+
   useEffect(() => {
     !editedProperty && reset();
   }, [editedProperty, reset]);
@@ -43,7 +50,7 @@ const ProfileOverviewPage: NextPage = () => {
       <p className="w-full mb-5 text-2xl font-semibold">Profile Overview</p>
       <article className="w-full flex flex-col gap-6">
         <div className="flex justify-between flex-wrap gap-6">
-          <div className="text-base sm:text-lg">
+          <div className="text-base sm:text-lg flex flex-col gap-6">
             {user?.verified ? (
               <>
                 Email&nbsp;verified&nbsp;
@@ -61,6 +68,16 @@ const ProfileOverviewPage: NextPage = () => {
                 Send&nbsp;verification&nbsp;email
               </Button>
             )}
+            <Button
+              className="custom-primary-button"
+              size="large"
+              onClick={() => {
+                requestPasswordChange(user?.email ?? "");
+              }}
+            >
+              {passSuccessContext}
+              Change&nbsp;password
+            </Button>
           </div>
           <EditAvatar
             errorMessage={

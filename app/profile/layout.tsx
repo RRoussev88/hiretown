@@ -5,7 +5,7 @@ import { MenuLinks } from "./(menuLinks)";
 import { ProfileHeader } from "./(profileHeader)";
 
 const Profile: NextPage<{ children: ReactNode }> = ({ children }) => (
-  <section>
+  <section className="p-3 sm:p-6">
     <ProfileHeader />
     <div className="w-full flex gap-x-3 justify-center relative">
       <MenuLinks isInline />

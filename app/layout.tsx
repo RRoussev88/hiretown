@@ -18,7 +18,7 @@ export default function RootLayout({
           <GlobalProvider>
             <AuthProvider>
               <Navbar />
-              <main className="bg-base-200 flex-auto shrink-0 p-3 sm:p-6">{children}</main>
+              <main className="bg-base-200 flex-auto shrink-0">{children}</main>
             </AuthProvider>
           </GlobalProvider>
           <Footer />

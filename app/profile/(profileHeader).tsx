@@ -27,7 +27,6 @@ export const ProfileHeader: FC = () => {
       >
         {user?.avatar ? (
           <Image
-            loader={({ src }) => src}
             src={`${FILES_URL}/${user.collectionId}/${user.id}/${user.avatar}?thumb=100x100`}
             alt="Avatar image"
             width={100}

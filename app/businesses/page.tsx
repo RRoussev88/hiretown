@@ -7,7 +7,7 @@ export default async function BusinessesPage({
   searchParams: BusinessesFilterParams;
 }) {
   return (
-    <article className="grid">
+    <article className="grid p-3 sm:p-6">
       <section className="mb-6 sm:mb-12">
         <SearchForm />
       </section>

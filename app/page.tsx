@@ -5,7 +5,7 @@ import { SearchForm } from "components";
 import backgroundImage from "public/trimming.jpeg";
 
 const Home: NextPage = () => (
-  <article className="grid w-full place-items-center min-h-full">
+  <article className="grid w-full place-items-center min-h-full relative p-3 sm:p-6">
     <Image
       className="w-full h-auto bg-cover bg-no-repeat z-0 brightness-50 object-cover"
       src={backgroundImage}

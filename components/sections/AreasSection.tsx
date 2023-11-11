@@ -13,7 +13,7 @@ type AreasSectionProps = { businessId: string };
 export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
   const {
     data: businessAreas,
-    isFetching,
+    isLoading,
     isSuccess,
     isError,
     error,
@@ -31,7 +31,7 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
         Available In
       </h4>
       {contextHolder}
-      <Skeleton loading={isFetching}>
+      <Skeleton loading={isLoading}>
         {!!businessAreas?.items.length ? (
           businessAreas?.items.map((area) => {
             const country = area.expand.country as Country;
@@ -47,7 +47,7 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
                     alt={country.name}
                     className="inline-block mr-3"
                     width={20}
-                    height={20}
+                    height={12}
                   />
                   {country.name}
                   {!!region && (
