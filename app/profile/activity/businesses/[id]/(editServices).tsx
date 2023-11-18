@@ -19,7 +19,7 @@ export const EditServices: FC<EditServicesProps> = ({
 }) => {
   const businessServiceIds = services.map((service) => service.id);
   const { data: serviceOptions } = trpc.services.useQuery(
-    { pagination: { page: 1, size: 120 } },
+    {},
     { enabled: !!businessId }
   );
 
@@ -56,7 +56,7 @@ export const EditServices: FC<EditServicesProps> = ({
         !businessServiceCategoryId ||
         service.category === businessServiceCategoryId
     ),
-    ...(serviceOptions?.items.filter(
+    ...(serviceOptions?.filter(
       (service) =>
         !businessServiceIds.includes(service.id) &&
         (!serviceCategoryId || service.category === serviceCategoryId)

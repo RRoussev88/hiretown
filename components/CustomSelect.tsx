@@ -32,11 +32,12 @@ export const CustomSelect: FC<CustomSelectProps> = ({
       { ...filter, searchTerm }
     );
 
-  const handleChange = (id: string) => {
+  const handleSelect = (id: string) => {
     if (isSuccess) {
       const newSelected = data?.items.find((item) => item.id === id) ?? null;
       setSelected(newSelected);
       emitSelected?.(newSelected);
+      setSearchTerm("");
     }
   };
 
@@ -77,9 +78,9 @@ export const CustomSelect: FC<CustomSelectProps> = ({
         className="w-full"
         placeholder={selectorName}
         filterOption={handleFilter}
-        onChange={handleChange}
         onSearch={setSearchTerm}
         onClear={handleClear}
+        onSelect={handleSelect}
         options={options}
         value={selected?.id}
       />

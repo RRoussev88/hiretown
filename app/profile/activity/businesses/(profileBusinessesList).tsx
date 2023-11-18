@@ -9,7 +9,6 @@ import { StorageKeys } from "utils";
 
 export const ProfileBusinessesList: FC = () => {
   const { [StorageKeys.CURRENT_USER]: user } = useContext(AuthContext);
-  // TODO: Use scroll pagination
   const {
     data: businessesData,
     isFetching,
@@ -30,9 +29,9 @@ export const ProfileBusinessesList: FC = () => {
           <Skeleton loading={isFetching}>
             {!isFetching &&
               !error &&
-              !!businessesData?.items.length &&
-              businessesData?.items
-                .map((permission) => permission.expand["business"])
+              !!businessesData?.length &&
+              businessesData
+                ?.map((permission) => permission.expand["business"])
                 .map((business) => (
                   <BusinessCard
                     key={business.id}
@@ -43,7 +42,7 @@ export const ProfileBusinessesList: FC = () => {
             {!isFetching &&
               !error &&
               !!businessesData &&
-              !businessesData.items.length && (
+              !businessesData.length && (
                 <Alert showIcon type="info" message={emptyText} />
               )}
           </Skeleton>
@@ -55,7 +54,7 @@ export const ProfileBusinessesList: FC = () => {
           className="max-sm:hidden"
           loading={isFetching}
           locale={{ emptyText }}
-          dataSource={businessesData?.items.map(
+          dataSource={businessesData?.map(
             (permission) => permission.expand["business"]
           )}
           renderItem={(business) => (

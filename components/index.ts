@@ -12,6 +12,7 @@ export { Navbar } from "./Navbar";
 export { RegisterForm } from "./RegisterForm";
 export { SearchForm } from "./SearchForm";
 export { SearchFormSelect } from "./SearchFormSelect";
+export * from "./ServicesCategoriesSelect";
 export * from "./sections/AreasSection";
 export * from "./sections/ContactsSection";
 export * from "./sections/OffersSection";

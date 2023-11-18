@@ -2,20 +2,15 @@ import clsx from "clsx";
 import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
-import type {
-  APIResponse,
-  BusinessService,
-  Service,
-  ServiceCategory,
-} from "types";
+import type { BusinessService, Service, ServiceCategory } from "types";
 import { APIError, DataCollections } from "utils";
 import { procedure, businessProtectedProcedure, router } from "../trpc";
 
 const fetchCategories = async (pbClient: Pocketbase, searchTerm?: string) => {
   try {
-    const data: APIResponse<ServiceCategory> = await pbClient
+    const data: ServiceCategory[] = await pbClient
       .collection(DataCollections.SERVICE_CATEGORIES)
-      .getList(1, 0, {
+      .getFullList(20, {
         sort: "name",
         filter: searchTerm ? `name ~ "${searchTerm}"` : "",
       });
@@ -29,22 +24,25 @@ const fetchCategories = async (pbClient: Pocketbase, searchTerm?: string) => {
 const fetchServices = async (
   pbClient: Pocketbase,
   categoryName?: string,
-  searchTerm?: string,
-  pagination?: { page: number; size: number }
+  searchTerm?: string
 ) => {
   const filter =
     (categoryName ? `category.name="${categoryName}"` : "") +
     clsx({ "&&": !!categoryName && !!searchTerm }) +
     (searchTerm ? `name ~ "${searchTerm}"` : "");
   try {
-    const data: APIResponse<Service> = await pbClient
+    const data: Service[] = await pbClient
       .collection(DataCollections.SERVICES)
-      .getList(pagination?.page ?? 1, pagination?.size ?? 0, {
+      .getFullList(20, {
         sort: "category.name,name",
         filter,
       });
 
-    return data;
+    return data.sort((first, second) => {
+      if (first.name.startsWith("Other")) return 1;
+      if (second.name.startsWith("Other")) return -1;
+      return 0;
+    });
   } catch (error) {
     throw new APIError(error, "Failed to load services data");
   }
@@ -106,16 +104,10 @@ export const servicesRouter = router({
       z.object({
         categoryName: z.string().optional(),
         searchTerm: z.string().optional(),
-        pagination: z.object({ page: z.number(), size: z.number() }).optional(),
       })
     )
     .query(({ ctx, input }) =>
-      fetchServices(
-        ctx.pbClient,
-        input.categoryName,
-        input.searchTerm,
-        input.pagination
-      )
+      fetchServices(ctx.pbClient, input.categoryName, input.searchTerm)
     ),
   updateBusinessServices: businessProtectedProcedure
     .input(

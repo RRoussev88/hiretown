@@ -3,7 +3,6 @@ import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
 import type {
-  APIResponse,
   BaseRecord,
   BusinessArea,
   City,
@@ -88,9 +87,9 @@ const getRecordById = async <T = BaseRecord>(
 
 const fetchCountries = async (pbClient: Pocketbase, searchTerm?: string) => {
   try {
-    const data: APIResponse<Country> = await pbClient
+    const data: Country[] = await pbClient
       .collection(DataCollections.COUNTRIES)
-      .getList(1, 20, {
+      .getFullList(200, {
         sort: "name",
         filter: searchTerm ? `name ~ "${searchTerm}"` : "",
       });
@@ -111,9 +110,9 @@ const fetchRegions = async (
   }
 
   try {
-    const data: APIResponse<Region> = await pbClient
+    const data: Region[] = await pbClient
       .collection(DataCollections.REGIONS)
-      .getList(1, 20, {
+      .getFullList(200, {
         sort: "name",
         filter:
           `country.name="${countryName}"` +
@@ -141,9 +140,9 @@ const fetchDivisions = async (
     (searchTerm ? `&&name ~ "${searchTerm}"` : "");
 
   try {
-    const data: APIResponse<Division> = await pbClient
+    const data: Division[] = await pbClient
       .collection(DataCollections.DIVISIONS)
-      .getList(1, 20, { sort: "name", filter });
+      .getFullList(200, { sort: "name", filter });
 
     return data;
   } catch (error) {
@@ -171,9 +170,9 @@ const fetchCities = async (
     (searchTerm ? `&&name ~ "${searchTerm}"` : "");
 
   try {
-    const data: APIResponse<City> = await pbClient
+    const data: City[] = await pbClient
       .collection(DataCollections.CITIES)
-      .getList(1, 20, { sort: searchTerm ? "name" : "-population", filter });
+      .getFullList(200, { sort: searchTerm ? "name" : "-population", filter });
 
     return data;
   } catch (error) {
@@ -183,9 +182,9 @@ const fetchCities = async (
 
 const fetchBusinessAreas = async (pbClient: Pocketbase, businessId: string) => {
   try {
-    const data: APIResponse<BusinessArea> = await pbClient
+    const data: BusinessArea[] = await pbClient
       .collection(DataCollections.AREAS)
-      .getList(1, 20, {
+      .getFullList(200, {
         filter: `business="${businessId}"`,
         expand: "country,region,division,city",
       });

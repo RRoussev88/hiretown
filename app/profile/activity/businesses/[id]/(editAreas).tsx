@@ -117,7 +117,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
         Create
       </Button>
       <Skeleton loading={isLoadingRead}>
-        {businessAreas?.items.map((area: BusinessArea) => {
+        {businessAreas?.map((area: BusinessArea) => {
           const country = area.expand.country as Country;
           const region = area.expand.region as Region;
           const division = area.expand.division as Division;

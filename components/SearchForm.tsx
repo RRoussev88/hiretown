@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { type FC, useCallback, useReducer, useMemo } from "react";
 
 import { SearchFormSelect } from "./SearchFormSelect";
+import { ServicesCategoriesSelect } from "./ServicesCategoriesSelect";
 
 export type SelectState = {
   name?: string;
@@ -108,9 +109,10 @@ export const SearchForm: FC = () => {
 
   return (
     <form
-      className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex flex-col
-                  gap-3 max-w-[248px] sm:max-w-[536px]"
+      className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex
+                  flex-col gap-3 max-w-[248px] sm:max-w-[536px]"
     >
+      <ServicesCategoriesSelect />
       <div className="flex flex-row max-sm:flex-col gap-3">
         <SearchFormSelect
           selectorName="Category"
