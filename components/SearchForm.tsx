@@ -5,7 +5,7 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { type FC, useCallback, useReducer, useMemo } from "react";
 
-import { SearchFormSelect } from "./SearchFormSelect";
+import { CountryCitySelect } from "./CountryCitySelect";
 import { ServicesCategoriesSelect } from "./ServicesCategoriesSelect";
 
 export type SelectState = {
@@ -30,7 +30,7 @@ const initialState: SearchFormState = {
   division: { isLoading: false },
   city: { isLoading: false },
 };
-// TODO: Review all the form state logic. Maybe put everything to be managed by this component
+
 const stateReducer = (
   state: SearchFormState,
   action: { type: keyof SearchFormState; payload: SelectState }
@@ -56,30 +56,6 @@ export const SearchForm: FC = () => {
       state.division.isLoading,
       state.city.isLoading,
     ]
-  );
-
-  const servicesDependency = useMemo(
-    () => ({ categoryName: state.category.name }),
-    [state.category.name]
-  );
-
-  const regionsDependency = useMemo(
-    () => ({ countryName: state.country.name }),
-    [state.country.name]
-  );
-
-  const divisionsDependency = useMemo(
-    () => ({ countryName: state.country.name, regionName: state.region.name }),
-    [state.country.name, state.region.name]
-  );
-
-  const citiesDependency = useMemo(
-    () => ({
-      countryName: state.country.name,
-      regionName: state.region.name,
-      divisionName: state.division.name,
-    }),
-    [state.country.name, state.region.name, state.division.name]
   );
 
   const setSelectedFormState = useCallback(
@@ -112,67 +88,8 @@ export const SearchForm: FC = () => {
       className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex
                   flex-col gap-3 max-w-[248px] sm:max-w-[536px]"
     >
-      <ServicesCategoriesSelect />
-      <div className="flex flex-row max-sm:flex-col gap-3">
-        <SearchFormSelect
-          selectorName="Category"
-          optionsName="serviceCategories"
-          searchParam="category"
-          setSelectedState={setSelectedFormState}
-          allOption
-        />
-        <SearchFormSelect
-          selectorName="Service"
-          optionsName="services"
-          searchParam="service"
-          setSelectedState={setSelectedFormState}
-          dependency={servicesDependency}
-          dependencyValue={state.category.name}
-          dependencyParam="category"
-        />
-      </div>
-      <div className="flex flex-row max-sm:flex-col gap-3">
-        <SearchFormSelect
-          selectorName="Country"
-          optionsName="countries"
-          searchParam="country"
-          setSelectedState={setSelectedFormState}
-        />
-        <SearchFormSelect
-          selectorName="Region"
-          optionsName="regions"
-          searchParam="region"
-          setSelectedState={setSelectedFormState}
-          dependency={regionsDependency}
-          dependencyValue={state.country.name}
-          dependencyParam="country"
-          allOption
-          disable
-        />
-      </div>
-      <div className="flex flex-row max-sm:flex-col gap-3">
-        <SearchFormSelect
-          selectorName="Division"
-          optionsName="divisions"
-          searchParam="division"
-          setSelectedState={setSelectedFormState}
-          dependency={divisionsDependency}
-          dependencyValue={state.region.name}
-          dependencyParam="region"
-          allOption
-          disable
-        />
-        <SearchFormSelect
-          selectorName="City"
-          optionsName="cities"
-          searchParam="city"
-          setSelectedState={setSelectedFormState}
-          dependency={citiesDependency}
-          dependencyValue={state.country.name}
-          dependencyParam="country"
-          disable
-        />
-      </div>
+      <ServicesCategoriesSelect emitSelectedState={setSelectedFormState} />
+      <CountryCitySelect emitSelectedState={setSelectedFormState} />
       <Button
         type="default"
         icon={<SearchOutlined rev="" />}

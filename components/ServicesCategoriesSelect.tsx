@@ -1,12 +1,29 @@
 "use client";
 import { Select } from "antd";
 import { useErrorToaster } from "hooks";
-import { type FC, useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import {
+  type FC,
+  useMemo,
+  useState,
+  useEffect,
+  useCallback,
+  useRef,
+} from "react";
 
 import { trpc } from "trpc";
 import { SelectOption, Service, ServiceCategory } from "types";
+import type { SearchFormState, SelectState } from "./SearchForm";
 
-export const ServicesCategoriesSelect: FC = () => {
+type ServicesCategoriesSelectType = {
+  emitSelectedState: (type: keyof SearchFormState, obj: SelectState) => void;
+};
+
+export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
+  emitSelectedState,
+}) => {
+  const searchParams = useSearchParams();
+  const reselectRef = useRef<boolean>(false);
   const [selectedCategory, setSelectedCategory] =
     useState<ServiceCategory | null>(null);
   const [selectedService, setSelectedService] = useState<Service | null>(null);
@@ -28,10 +45,10 @@ export const ServicesCategoriesSelect: FC = () => {
 
   const categoryOptions = useMemo(
     () =>
-      categories?.map((item) => ({
-        key: item.id,
-        value: item.id,
-        label: item.name,
+      categories?.map((category) => ({
+        key: category.id,
+        value: category.id,
+        label: category.name,
       })),
     [categories]
   );
@@ -57,31 +74,76 @@ export const ServicesCategoriesSelect: FC = () => {
       "Error fetching categories or services"
   );
 
-  const handleSelectCategory = (id: string) => {
-    const newSelected = categories?.find((item) => item.id === id) ?? null;
-    setSelectedCategory(newSelected);
-    if (selectedService && selectedService.category !== newSelected?.id) {
-      setSelectedService(null);
+  const handleSelectCategory = useCallback(
+    (id: string) => {
+      const newSelected = categories?.find((item) => item.id === id) ?? null;
+      setSelectedCategory(newSelected);
+      if (selectedService && selectedService.category !== newSelected?.id) {
+        setSelectedService(null);
+      }
+    },
+    [categories, selectedService]
+  );
+
+  const handleSelectService = useCallback(
+    (id: string) => {
+      const newSelectedService =
+        services?.find((item) => item.id === id) ?? null;
+      setSelectedService(newSelectedService);
+
+      const newSelectedCategory =
+        categories?.find(
+          (category) => category.id === newSelectedService?.category
+        ) ?? null;
+      setSelectedCategory(newSelectedCategory);
+    },
+    [categories, services]
+  );
+
+  useEffect(() => {
+    emitSelectedState("category", {
+      name: selectedCategory?.name,
+      isLoading: isFetchingCategories,
+    });
+  }, [emitSelectedState, selectedCategory, isFetchingCategories]);
+
+  useEffect(() => {
+    emitSelectedState("service", {
+      name: selectedService?.name,
+      isLoading: isFetchingServices,
+    });
+  }, [emitSelectedState, selectedService, isFetchingServices]);
+
+  // In case there are search parameters to be populated in the selects
+  useEffect(() => {
+    if (!isSuccessCategories || !isSuccessServices) return;
+    if (reselectRef.current) return;
+    reselectRef.current = true;
+
+    const categoryParam = searchParams?.get("category");
+    if (categoryParam) {
+      const searchedCategory = categories?.find(
+        (category) => category.name === categoryParam
+      );
+      searchedCategory && handleSelectCategory(searchedCategory.id);
     }
 
-    // TODO: Emit the services state to the parent component.
-    // First try to use the select handlers. If it isnt ok - useEffect.
-
-    // emitSelected?.(newSelected);
-  };
-
-  const handleSelectService = (id: string) => {
-    const newSelectedService = services?.find((item) => item.id === id) ?? null;
-    setSelectedService(newSelectedService);
-
-    const newSelectedCategory =
-      categories?.find(
-        (category) => category.id === newSelectedService?.category
-      ) ?? null;
-    setSelectedCategory(newSelectedCategory);
-
-    // emitSelected?.(newSelected);
-  };
+    const serviceParam = searchParams?.get("service");
+    if (serviceParam) {
+      const searchedService = services?.find(
+        (service) => service.name === serviceParam
+      );
+      searchedService && handleSelectService(searchedService.id);
+    }
+  }, [
+    searchParams,
+    categories,
+    isSuccessCategories,
+    services,
+    isSuccessServices,
+    handleSelectCategory,
+    handleSelectService,
+  ]);
 
   const handleFilterOption = (input: string, option?: SelectOption) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
