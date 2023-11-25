@@ -3,23 +3,17 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { type FC, useCallback, useReducer, useMemo } from "react";
+import { useCallback, useMemo, useReducer, type FC } from "react";
 
-import { CountryCitySelect } from "./CountryCitySelect";
+import type { LocationSelectState, LocationType } from "types";
+import { LocationsSelect } from "./LocationsSelect";
 import { ServicesCategoriesSelect } from "./ServicesCategoriesSelect";
 
-export type SelectState = {
-  name?: string;
-  isLoading: boolean;
-};
-
-export type SearchFormState = {
-  category: SelectState;
-  service: SelectState;
-  country: SelectState;
-  region: SelectState;
-  division: SelectState;
-  city: SelectState;
+type SearchFormState = {
+  [key in LocationType]: LocationSelectState;
+} & {
+  category: LocationSelectState;
+  service: LocationSelectState;
 };
 
 const initialState: SearchFormState = {
@@ -33,7 +27,7 @@ const initialState: SearchFormState = {
 
 const stateReducer = (
   state: SearchFormState,
-  action: { type: keyof SearchFormState; payload: SelectState }
+  action: { type: keyof SearchFormState; payload: LocationSelectState }
 ) => ({ ...state, [action.type]: action.payload });
 
 export const SearchForm: FC = () => {
@@ -59,7 +53,7 @@ export const SearchForm: FC = () => {
   );
 
   const setSelectedFormState = useCallback(
-    (type: keyof SearchFormState, payload: SelectState) =>
+    (type: keyof SearchFormState, payload: LocationSelectState) =>
       dispatch({ type, payload }),
     [dispatch]
   );
@@ -89,7 +83,10 @@ export const SearchForm: FC = () => {
                   flex-col gap-3 max-w-[248px] sm:max-w-[536px]"
     >
       <ServicesCategoriesSelect emitSelectedState={setSelectedFormState} />
-      <CountryCitySelect emitSelectedState={setSelectedFormState} />
+      <LocationsSelect
+        selectClassNames="w-[216px] sm:w-[246px]"
+        emitSelectedState={setSelectedFormState}
+      />
       <Button
         type="default"
         icon={<SearchOutlined rev="" />}

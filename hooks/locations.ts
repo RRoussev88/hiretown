@@ -1,8 +1,14 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { trpc } from "trpc";
-import type { City, Country, Division, Region } from "types";
-import type { SearchFormState, SelectState } from "@/components/SearchForm";
+import type {
+  City,
+  Country,
+  Division,
+  LocationSelectState,
+  LocationType,
+  Region,
+} from "types";
 import { useSearchParams } from "next/navigation";
 
 export const useLocationsState = () => {
@@ -103,27 +109,6 @@ export const useLocationsState = () => {
       options: cityOptions,
     },
   };
-};
-
-export const useEmitLocationsState = (
-  emitCallback: (type: keyof SearchFormState, obj: SelectState) => void,
-  countryState: SelectState,
-  regionState: SelectState,
-  divisionState: SelectState,
-  cityState: SelectState
-) => {
-  useEffect(() => {
-    emitCallback("country", countryState);
-  }, [emitCallback, countryState]);
-  useEffect(() => {
-    emitCallback("region", regionState);
-  }, [emitCallback, regionState]);
-  useEffect(() => {
-    emitCallback("division", divisionState);
-  }, [emitCallback, divisionState]);
-  useEffect(() => {
-    emitCallback("city", cityState);
-  }, [emitCallback, cityState]);
 };
 
 type StatePopulate<T> = {

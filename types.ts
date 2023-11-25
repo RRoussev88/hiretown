@@ -260,6 +260,14 @@ export type BusinessArea = Area & {
   };
 };
 
+export type LocationSelectState = {
+  id?: string;
+  name?: string;
+  isLoading: boolean;
+};
+
+export type LocationType = "country" | "region" | "division" | "city";
+
 export type APIResponse<T = CollectionRecord> = ListResult<T>;
 
 export type GeoAPIResponse<T = object> = {

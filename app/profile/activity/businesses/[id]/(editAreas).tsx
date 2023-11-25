@@ -1,12 +1,36 @@
 import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Skeleton } from "antd";
 import Image from "next/image";
-import { useState, type FC } from "react";
+import { type FC, useCallback, useReducer, useMemo } from "react";
 
-import { CustomSelect } from "@/components/.";
+import { LocationsSelect } from "@/components/.";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
-import type { BusinessArea, City, Country, Division, Region } from "types";
+import type {
+  BusinessArea,
+  City,
+  Country,
+  Division,
+  LocationSelectState,
+  LocationType,
+  Region,
+} from "types";
+
+type EditAreasState = {
+  [key in LocationType]: LocationSelectState;
+};
+
+const initialState: EditAreasState = {
+  country: { isLoading: false },
+  region: { isLoading: false },
+  division: { isLoading: false },
+  city: { isLoading: false },
+};
+
+const stateReducer = (
+  state: EditAreasState,
+  action: { type: keyof EditAreasState; payload: LocationSelectState }
+) => ({ ...state, [action.type]: action.payload });
 
 type EditAreasProps = {
   businessId: string;
@@ -14,10 +38,7 @@ type EditAreasProps = {
 };
 
 export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
-  const [country, setCountry] = useState<Country | null>(null);
-  const [region, setRegion] = useState<Region | null>(null);
-  const [division, setDivision] = useState<Division | null>(null);
-  const [city, setCity] = useState<City | null>(null);
+  const [state, dispatch] = useReducer(stateReducer, initialState);
 
   const {
     data: businessAreas,
@@ -43,7 +64,25 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
     error: errorDelete,
   } = trpc.deleteBusinessArea.useMutation({ onSuccess });
 
-  const isLoading = isLoadingRead || isLoadingCreate || isLoadingDelete;
+  const isLoading = useMemo(
+    () =>
+      isLoadingRead ||
+      isLoadingCreate ||
+      isLoadingDelete ||
+      state.country.isLoading ||
+      state.region.isLoading ||
+      state.division.isLoading ||
+      state.city.isLoading,
+    [
+      isLoadingRead,
+      isLoadingCreate,
+      isLoadingDelete,
+      state.country.isLoading,
+      state.region.isLoading,
+      state.division.isLoading,
+      state.city.isLoading,
+    ]
+  );
 
   const contextHolder = useErrorToaster(
     isErrorRead || isErrorCreate || isErrorDelete,
@@ -51,14 +90,20 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
     (errorRead || errorCreate || errorDelete)?.message ?? "Error updating areas"
   );
 
+  const setSelectedFormState = useCallback(
+    (type: LocationType, payload: LocationSelectState) =>
+      dispatch({ type, payload }),
+    [dispatch]
+  );
+
   const handleSave = () =>
-    country &&
+    state.country.id &&
     updateBusinessAreas({
       businessId,
-      countryId: country.id,
-      regionId: region?.id,
-      divisionId: division?.id,
-      cityId: city?.id,
+      countryId: state.country.id,
+      regionId: state.region?.id,
+      divisionId: state.division?.id,
+      cityId: state.city?.id,
     });
 
   const handleDelete = (areaId: string) =>
@@ -69,48 +114,14 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
       <h4 className="section-title">Areas</h4>
       {contextHolder}
       <div className="flex flex-col gap-3">
-        <div className="flex flex-col sm:flex-row gap-3">
-          <CustomSelect
-            selectorName="Countries"
-            optionsName="countries"
-            emitSelected={setCountry}
-            className="w-full sm:w-1/2"
-          />
-          <CustomSelect
-            selectorName="Regions"
-            optionsName="regions"
-            emitSelected={setRegion}
-            className="w-full sm:w-1/2"
-            filter={{ countryName: country?.name }}
-          />
-        </div>
-        <div className="flex flex-col sm:flex-row gap-3">
-          <CustomSelect
-            selectorName="Divisions"
-            optionsName="divisions"
-            emitSelected={setDivision}
-            className="w-full sm:w-1/2"
-            filter={{ countryName: country?.name, regionName: region?.name }}
-          />
-          <CustomSelect
-            selectorName="Cities"
-            optionsName="cities"
-            emitSelected={setCity}
-            className="w-full sm:w-1/2"
-            filter={{
-              countryName: country?.name,
-              regionName: region?.name,
-              divisionName: division?.name,
-            }}
-          />
-        </div>
+        <LocationsSelect emitSelectedState={setSelectedFormState} />
       </div>
       <Button
         size="large"
         type="default"
         htmlType="button"
         loading={isLoading}
-        disabled={!businessId || isLoading || !country}
+        disabled={!businessId || isLoading || !state.country.id}
         className="custom-primary-button w-full my-3"
         onClick={handleSave}
       >

@@ -3,20 +3,27 @@ import { Select } from "antd";
 import { useErrorToaster } from "hooks";
 import { useSearchParams } from "next/navigation";
 import {
-  type FC,
-  useMemo,
-  useState,
-  useEffect,
   useCallback,
+  useEffect,
+  useMemo,
   useRef,
+  useState,
+  type FC,
 } from "react";
 
 import { trpc } from "trpc";
-import { SelectOption, Service, ServiceCategory } from "types";
-import type { SearchFormState, SelectState } from "./SearchForm";
+import type {
+  LocationSelectState,
+  SelectOption,
+  Service,
+  ServiceCategory,
+} from "types";
 
 type ServicesCategoriesSelectType = {
-  emitSelectedState: (type: keyof SearchFormState, obj: SelectState) => void;
+  emitSelectedState: (
+    type: "category" | "service",
+    obj: LocationSelectState
+  ) => void;
 };
 
 export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({

@@ -1,21 +1,21 @@
 "use client";
 import { Select } from "antd";
-import { useCallback, type FC, useMemo } from "react";
+import { useCallback, useEffect, type FC } from "react";
 
 import {
-  useEmitLocationsState,
   useErrorToaster,
   useLocationsState,
   useSearchParamsPopulate,
 } from "hooks";
-import { SelectOption } from "types";
-import type { SearchFormState, SelectState } from "./SearchForm";
+import type { LocationSelectState, LocationType, SelectOption } from "types";
 
-type CountryCitySelectType = {
-  emitSelectedState: (type: keyof SearchFormState, obj: SelectState) => void;
+type LocationsSelectType = {
+  selectClassNames?: string;
+  emitSelectedState: (type: LocationType, obj: LocationSelectState) => void;
 };
 
-export const CountryCitySelect: FC<CountryCitySelectType> = ({
+export const LocationsSelect: FC<LocationsSelectType> = ({
+  selectClassNames,
   emitSelectedState,
 }) => {
   const {
@@ -122,7 +122,7 @@ export const CountryCitySelect: FC<CountryCitySelectType> = ({
   );
 
   const contextHolder = useErrorToaster(
-    isErrorCities || isErrorRegions || isErrorDivisions || isErrorCities,
+    isErrorCountries || isErrorRegions || isErrorDivisions || isErrorCities,
     isSuccessCountries &&
       isSuccessRegions &&
       isSuccessDivisions &&
@@ -131,25 +131,34 @@ export const CountryCitySelect: FC<CountryCitySelectType> = ({
       ?.message ?? "Error fetching locations data"
   );
 
-  useEmitLocationsState(
-    emitSelectedState,
-    useMemo(
-      () => ({ name: selectedCountry?.name, isLoading: isFetchingCountries }),
-      [selectedCountry, isFetchingCountries]
-    ),
-    useMemo(
-      () => ({ name: selectedRegion?.name, isLoading: isFetchingRegions }),
-      [selectedRegion, isFetchingRegions]
-    ),
-    useMemo(
-      () => ({ name: selectedDivision?.name, isLoading: isFetchingDivisions }),
-      [selectedDivision, isFetchingDivisions]
-    ),
-    useMemo(
-      () => ({ name: selectedCity?.name, isLoading: isFetchingCities }),
-      [selectedCity, isFetchingCities]
-    )
-  );
+  useEffect(() => {
+    emitSelectedState("country", {
+      id: selectedCountry?.id,
+      name: selectedCountry?.name,
+      isLoading: isFetchingCountries,
+    });
+  }, [emitSelectedState, selectedCountry, isFetchingCountries]);
+  useEffect(() => {
+    emitSelectedState("region", {
+      id: selectedRegion?.id,
+      name: selectedRegion?.name,
+      isLoading: isFetchingRegions,
+    });
+  }, [emitSelectedState, selectedRegion, isFetchingRegions]);
+  useEffect(() => {
+    emitSelectedState("division", {
+      id: selectedDivision?.id,
+      name: selectedDivision?.name,
+      isLoading: isFetchingDivisions,
+    });
+  }, [emitSelectedState, selectedDivision, isFetchingDivisions]);
+  useEffect(() => {
+    emitSelectedState("city", {
+      id: selectedCity?.id,
+      name: selectedCity?.name,
+      isLoading: isFetchingCities,
+    });
+  }, [emitSelectedState, selectedCity, isFetchingCities]);
 
   useSearchParamsPopulate(
     {
@@ -176,14 +185,14 @@ export const CountryCitySelect: FC<CountryCitySelectType> = ({
   return (
     <>
       {contextHolder}
-      <div className="flex flex-row max-sm:flex-col gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <Select
           allowClear
           showSearch
           size="large"
           disabled={!isSuccessCountries}
           loading={isFetchingCountries}
-          className="w-[216px] sm:w-[246px]"
+          className={selectClassNames ?? "w-full sm:w-1/2"}
           placeholder="Country"
           optionFilterProp="children"
           filterOption={handleFilterOption}
@@ -198,7 +207,7 @@ export const CountryCitySelect: FC<CountryCitySelectType> = ({
           size="large"
           disabled={!isSuccessRegions}
           loading={isFetchingRegions}
-          className="w-[216px] sm:w-[246px]"
+          className={selectClassNames ?? "w-full sm:w-1/2"}
           placeholder="Region"
           optionFilterProp="children"
           filterOption={handleFilterOption}
@@ -208,14 +217,14 @@ export const CountryCitySelect: FC<CountryCitySelectType> = ({
           value={selectedRegion?.name}
         />
       </div>
-      <div className="flex flex-row max-sm:flex-col gap-3">
+      <div className="flex flex-col sm:flex-row gap-3">
         <Select
           allowClear
           showSearch
           size="large"
           disabled={!isSuccessDivisions}
           loading={isFetchingDivisions}
-          className="w-[216px] sm:w-[246px]"
+          className={selectClassNames ?? "w-full sm:w-1/2"}
           placeholder="Division"
           optionFilterProp="children"
           filterOption={handleFilterOption}
@@ -230,7 +239,7 @@ export const CountryCitySelect: FC<CountryCitySelectType> = ({
           size="large"
           disabled={!isSuccessCities}
           loading={isFetchingCities}
-          className="w-[216px] sm:w-[246px]"
+          className={selectClassNames ?? "w-full sm:w-1/2"}
           placeholder="City"
           optionFilterProp="children"
           filterOption={handleFilterOption}
