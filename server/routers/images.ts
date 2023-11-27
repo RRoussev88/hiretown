@@ -1,7 +1,12 @@
 import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
-import type { APIResponse, BusinessImage, ImageUploadPayload } from "types";
+import type {
+  APIResponse,
+  BusinessImage,
+  ImageAlbum,
+  ImageUploadPayload,
+} from "types";
 import { APIError, DataCollections, defaultResponse } from "utils";
 import { businessProtectedProcedure, procedure, router } from "../trpc";
 
@@ -52,8 +57,12 @@ const updateBusinessImages = async (
   deleteImages: string[]
 ) => {
   // `businessId` is passed for `businessProtectedProcedure` guard to work
+  const defaultErrorMessage = "Failed to load images data";
   if (!businessId) {
-    return defaultResponse;
+    throw new APIError(
+      '"businessId" parameter is required',
+      defaultErrorMessage
+    );
   }
   try {
     const deleted = await Promise.all(
@@ -85,7 +94,79 @@ const updateBusinessImages = async (
 
     return { deleted: deleted.length, created: created.length };
   } catch (error) {
-    throw new APIError(error, "Failed to create images");
+    throw new APIError(error, defaultErrorMessage);
+  }
+};
+
+const fetchBusinessAlbums = async (
+  pbClient: Pocketbase,
+  businessId?: string
+) => {
+  if (!businessId) {
+    return defaultResponse;
+  }
+  try {
+    const data: APIResponse<ImageAlbum[]> = await pbClient
+      .collection(DataCollections.IMAGE_ALBUMS)
+      .getList(1, 20, {
+        sort: "created",
+        filter: `business="${businessId}"`,
+      });
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, "Failed to load albums data");
+  }
+};
+
+const createImageAlbum = async (
+  pbClient: Pocketbase,
+  businessId: string,
+  albumName: string,
+  albumDescription?: string
+) => {
+  const defaultErrorMessage = "Failed to create image album";
+  if (!businessId || !albumName) {
+    throw new APIError(
+      '"businessId" and "albumName" parameters are required',
+      defaultErrorMessage
+    );
+  }
+  try {
+    const data: BusinessImage = await pbClient
+      .collection(DataCollections.IMAGE_ALBUMS)
+      .create({
+        business: businessId,
+        name: albumName,
+        description: albumDescription,
+      });
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, defaultErrorMessage);
+  }
+};
+
+const deleteImageAlbum = async (
+  pbClient: Pocketbase,
+  businessId: string,
+  albumId: string
+) => {
+  const defaultErrorMessage = "Failed to delete image album";
+  if (!businessId || !albumId) {
+    throw new APIError(
+      '"businessId" and "albumId" parameters are required',
+      defaultErrorMessage
+    );
+  }
+  try {
+    const data = await pbClient
+      .collection(DataCollections.IMAGE_ALBUMS)
+      .delete(albumId);
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, defaultErrorMessage);
   }
 };
 
@@ -119,5 +200,29 @@ export const imagesRouter = router({
         input.imagePayloads,
         input.deleteImages
       )
+    ),
+  imageAlbums: procedure
+    .input(z.string())
+    .query(({ ctx, input }) => fetchBusinessAlbums(ctx.pbClient, input)),
+  createImageAlbum: businessProtectedProcedure
+    .input(
+      z.object({
+        businessId: z.string(),
+        albumName: z.string(),
+        albumDescription: z.string().optional(),
+      })
+    )
+    .mutation(({ ctx, input }) =>
+      createImageAlbum(
+        ctx.pbClient,
+        input.businessId,
+        input.albumName,
+        input.albumDescription
+      )
+    ),
+  deleteImageAlbum: businessProtectedProcedure
+    .input(z.object({ businessId: z.string(), albumId: z.string() }))
+    .mutation(({ ctx, input }) =>
+      deleteImageAlbum(ctx.pbClient, input.businessId, input.albumId)
     ),
 });

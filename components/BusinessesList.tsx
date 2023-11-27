@@ -36,7 +36,7 @@ export const BusinessesList: FC<BusinessesListProps> = ({ searchParams }) => {
 
   const emptyText =
     searchParams.service && searchParams.service !== "undefined"
-      ? "No businesses offering that service"
+      ? "No businesses offering that service in selected area"
       : "No service is selected";
 
   return (

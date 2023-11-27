@@ -9,7 +9,7 @@ import { useEffect } from "react";
 import { trpc } from "trpc";
 import type { BusinessService, Service } from "types";
 import { EditAreas } from "./(editAreas)";
-import { EditImages } from "./(editImages)";
+import { EditAlbums } from "./(editAlbums)";
 import { EditOpeningHours } from "./(editOpeningHours)";
 import { EditServices } from "./(editServices)";
 import { EditLinks } from "./(editLinks)";
@@ -99,7 +99,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
         </Button>
       </div>
       <BusinessForm isEditing business={business} onSuccess={refetch} />
-      <EditImages
+      <EditAlbums
         businessId={business.id}
         onSuccess={refetch}
         albumImages={albumImages}
