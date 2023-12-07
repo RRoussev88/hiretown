@@ -95,6 +95,7 @@ export interface Business extends CollectionRecord {
   contactPhone: string;
   contactWebsite: string;
   description: string;
+  thumbnail?: string;
   isActive: boolean;
   name: string;
   openingHours: OpeningHours;
@@ -115,7 +116,7 @@ export type BusinessPayload = {
   contactPhone?: string;
   contactWebsite?: string;
   description?: string;
-  thumbnail?: string;
+  thumbnail?: ImageUploadPayload;
   isActive: boolean;
   name: string;
   priority: number;

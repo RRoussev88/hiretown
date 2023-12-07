@@ -4,14 +4,14 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
 } from "@ant-design/icons";
-import { Button, List, Modal, Skeleton } from "antd";
+import { Button, List, Modal } from "antd";
 import Image from "next/image";
 import { type FC } from "react";
 
+import clsx from "clsx";
 import { trpc } from "trpc";
 import type { Business } from "types";
 import { FILES_URL } from "utils";
-import clsx from "clsx";
 
 export const BusinessListItem: FC<{
   business: Business;
@@ -19,9 +19,6 @@ export const BusinessListItem: FC<{
 }> = ({ business, showActions }) => {
   const { confirm, destroyAll } = Modal;
 
-  const { data: businessImage, isFetching } = trpc.businessImage.useQuery(
-    business.id
-  );
   const { mutate: deleteBusiness, isLoading: isDeleting } =
     trpc.deleteBusiness.useMutation({ onSuccess: destroyAll });
 
@@ -77,21 +74,17 @@ export const BusinessListItem: FC<{
       }
       key={business.id}
       extra={
-        isFetching ? (
-          <Skeleton.Image style={{ width: 240, height: 208 }} />
-        ) : (
-          <Image
-            src={
-              businessImage
-                ? `${FILES_URL}/${businessImage.collectionId}/` +
-                  `${businessImage.id}/${businessImage.image}?thumb=240x208`
-                : "/mowing_guy.jpeg"
-            }
-            alt="Business logo"
-            width={240}
-            height={208}
-          />
-        )
+        <Image
+          src={
+            !!business.thumbnail
+              ? `${FILES_URL}/${business.collectionId}/` +
+                `${business.id}/${business.thumbnail}?thumb=240x208`
+              : "/mowing_guy.jpeg"
+          }
+          alt="Business logo"
+          width={240}
+          height={208}
+        />
       }
     >
       <List.Item.Meta

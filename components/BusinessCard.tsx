@@ -21,9 +21,6 @@ export const BusinessCard: FC<{
   const router = useRouter();
   const { confirm, destroyAll } = Modal;
 
-  const { data: businessImage, isFetching } = trpc.businessImage.useQuery(
-    business.id
-  );
   const { mutate: deleteBusiness, isLoading } = trpc.deleteBusiness.useMutation(
     { onSuccess: destroyAll }
   );
@@ -65,21 +62,17 @@ export const BusinessCard: FC<{
       hoverable
       style={{ width: 240 }}
       cover={
-        isFetching || isLoading ? (
-          <Skeleton.Image style={{ width: 240, height: 208 }} />
-        ) : (
-          <Image
-            src={
-              businessImage
-                ? `${FILES_URL}/${businessImage.collectionId}/` +
-                  `${businessImage.id}/${businessImage.image}?thumb=240x208`
-                : "/mowing_guy.jpeg"
-            }
-            alt="Business logo"
-            width={240}
-            height={208}
-          />
-        )
+        <Image
+          src={
+            !!business.thumbnail
+              ? `${FILES_URL}/${business.collectionId}/` +
+                `${business.id}/${business.thumbnail}?thumb=240x208`
+              : "/mowing_guy.jpeg"
+          }
+          alt="Business logo"
+          width={240}
+          height={208}
+        />
       }
       actions={
         showActions
