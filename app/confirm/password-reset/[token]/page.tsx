@@ -106,6 +106,7 @@ const ConfirmPasswordReset: NextPage<ConfirmPasswordResetProps> = ({
           Make sure it is at least 6 characters long
         </p>
         <Button
+          tabIndex={0}
           block
           disabled={isLoading || isSuccess}
           loading={isLoading}

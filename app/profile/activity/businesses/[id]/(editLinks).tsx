@@ -141,6 +141,7 @@ export const EditLinks: FC<EditLinksProps> = ({
               disabled={isLoadingDelete}
             >
               <Button
+                tabIndex={0}
                 size="large"
                 type="default"
                 htmlType="button"
@@ -154,6 +155,7 @@ export const EditLinks: FC<EditLinksProps> = ({
         ))}
       <div className="mt-4 flex max-sm:flex-wrap gap-x-3">
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           loading={isLoadingCreate}
@@ -164,6 +166,7 @@ export const EditLinks: FC<EditLinksProps> = ({
           Clear Changes
         </Button>
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           htmlType="submit"

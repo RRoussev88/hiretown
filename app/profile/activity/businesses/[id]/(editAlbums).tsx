@@ -71,6 +71,7 @@ export const EditAlbums: FC<EditAlbumsProps> = ({
           />
         </Form.Item>
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           htmlType="submit"

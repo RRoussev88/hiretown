@@ -72,6 +72,7 @@ export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
       ))}
       <div className="mt-4 flex max-sm:flex-wrap gap-x-3">
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           loading={isLoading}
@@ -82,6 +83,7 @@ export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
           Clear Changes
         </Button>
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           htmlType="submit"

@@ -110,6 +110,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
       </Upload>
       <Space.Compact size="large" className="w-full">
         <Button
+          tabIndex={0}
           type="default"
           className="bg-primary"
           onClick={handleCancelClick}
@@ -117,6 +118,7 @@ export const EditAvatar: FC<EditAvatarProps> = ({
           icon={<Cancel />}
         />
         <Button
+          tabIndex={0}
           type="default"
           className="bg-primary"
           onClick={handleSave}

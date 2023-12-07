@@ -35,6 +35,7 @@ export const BusinessCard: FC<{
       footer: [
         <div key="footer" className="pt-4 flex justify-between">
           <Button
+            tabIndex={0}
             key="back"
             className="custom-secondary-button"
             onClick={destroyAll}
@@ -42,6 +43,7 @@ export const BusinessCard: FC<{
             Cancel
           </Button>
           <Button
+            tabIndex={0}
             key="submit"
             type="default"
             className="custom-primary-button"
@@ -89,11 +91,7 @@ export const BusinessCard: FC<{
                   router.push(`/profile/activity/businesses/${business.id}`)
                 }
               />,
-              <DeleteOutlined
-                key="delete"
-                rev=""
-                onClick={showConfirm}
-              />,
+              <DeleteOutlined key="delete" rev="" onClick={showConfirm} />,
             ]
           : []
       }

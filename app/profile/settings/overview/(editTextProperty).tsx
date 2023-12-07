@@ -86,6 +86,7 @@ export const EditTextProperty: FC<EditTextPropertyProps> = ({
           />
           {inputDisabled || isLoading ? (
             <Button
+              tabIndex={0}
               type="default"
               className="bg-primary"
               onClick={handleEditClick}
@@ -99,12 +100,14 @@ export const EditTextProperty: FC<EditTextPropertyProps> = ({
           ) : (
             <>
               <Button
+                tabIndex={0}
                 type="default"
                 className="bg-primary"
                 onClick={handleCancelClick}
                 icon={<Cancel />}
               />
               <Button
+                tabIndex={0}
                 type="default"
                 className="bg-primary"
                 onClick={handleSave}

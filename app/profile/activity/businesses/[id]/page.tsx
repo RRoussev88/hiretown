@@ -90,6 +90,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
       <div className="w-full mx-auto flex flex-wrap justify-between">
         <p className="mb-5 text-2xl font-semibold">Edit Business</p>
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           className="custom-primary-button"

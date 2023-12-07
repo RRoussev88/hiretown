@@ -112,6 +112,7 @@ export const Navbar: FC = () => {
       />
       <div>
         <Button
+          tabIndex={0}
           type="text"
           size="large"
           style={{ display: "flex", fontWeight: 800, fontSize: 20 }}
@@ -151,6 +152,7 @@ export const Navbar: FC = () => {
         <div className="lg:hidden">
           <Dropdown menu={cascadingMenu}>
             <Button
+              tabIndex={0}
               type="text"
               className="grid content-center"
               icon={<MenuOutlined rev="" style={{ fontSize: 24 }} />}

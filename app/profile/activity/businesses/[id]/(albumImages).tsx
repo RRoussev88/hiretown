@@ -142,6 +142,7 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
         <div className="flex gap-2">
           <Space.Compact size="large">
             <Button
+              tabIndex={0}
               type="default"
               className="bg-primary"
               onClick={handleClear}
@@ -149,6 +150,7 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
               icon={<Cancel />}
             />
             <Button
+              tabIndex={0}
               type="default"
               className="bg-primary"
               onClick={handleSave}
@@ -167,6 +169,7 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
               disabled={isLoading}
             >
               <Button
+                tabIndex={0}
                 size="large"
                 type="default"
                 htmlType="button"

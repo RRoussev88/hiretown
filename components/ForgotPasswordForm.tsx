@@ -92,6 +92,7 @@ export const ForgotPasswordForm: FC<ForgotPasswordFormProps> = ({
           />
         </Form.Item>
         <Button
+          tabIndex={0}  
           block
           disabled={isLoading || isSuccess}
           loading={isLoading}

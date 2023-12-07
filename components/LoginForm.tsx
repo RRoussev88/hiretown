@@ -133,6 +133,7 @@ export const LoginForm: FC<LoginFormProps> = ({
           />
         </Form.Item>
         <Button
+          tabIndex={0}
           block
           disabled={isLoading}
           loading={isLoading}
@@ -145,6 +146,7 @@ export const LoginForm: FC<LoginFormProps> = ({
         </Button>
       </Form>
       <Button
+        tabIndex={0}
         type="link"
         className="custom-link-button"
         size="large"
@@ -153,6 +155,7 @@ export const LoginForm: FC<LoginFormProps> = ({
         No account yet? Click here to Sign up
       </Button>
       <Button
+        tabIndex={0}
         type="link"
         className="custom-link-button"
         size="large"

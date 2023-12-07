@@ -117,6 +117,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
         <LocationsSelect emitSelectedState={setSelectedFormState} />
       </div>
       <Button
+        tabIndex={0}
         size="large"
         type="default"
         htmlType="button"
@@ -173,6 +174,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
                 disabled={isLoading}
               >
                 <Button
+                  tabIndex={0}
                   size="large"
                   type="default"
                   htmlType="button"

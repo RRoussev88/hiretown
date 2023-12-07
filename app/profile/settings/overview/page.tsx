@@ -58,6 +58,7 @@ const ProfileOverviewPage: NextPage = () => {
               </p>
             ) : (
               <Button
+                tabIndex={0}
                 className="custom-primary-button"
                 size="large"
                 onClick={() => {
@@ -69,6 +70,7 @@ const ProfileOverviewPage: NextPage = () => {
               </Button>
             )}
             <Button
+              tabIndex={0}
               className="custom-primary-button"
               size="large"
               onClick={() => {

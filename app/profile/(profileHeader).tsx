@@ -38,9 +38,12 @@ export const ProfileHeader: FC = () => {
         )}
       </div>
       <div className="self-center text-primary-content">
-        {!!user?.name && <h3 className="text-2xl font-semibold">{user?.name}</h3>}
+        {!!user?.name && (
+          <h3 className="text-2xl font-semibold">{user?.name}</h3>
+        )}
         <p className="text-base font-semibold">{user?.email}</p>
         <Button
+          tabIndex={0}
           type="default"
           className="custom-primary-button"
           size="large"
@@ -50,6 +53,7 @@ export const ProfileHeader: FC = () => {
         </Button>
       </div>
       <Button
+        tabIndex={0}
         type="default"
         className="grid content-center mr-auto 2xl:hidden"
         icon={<MenuOutlined rev="" style={{ fontSize: 24 }} />}

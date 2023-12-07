@@ -88,6 +88,7 @@ export const SearchForm: FC = () => {
         emitSelectedState={setSelectedFormState}
       />
       <Button
+        tabIndex={0}
         type="default"
         icon={<SearchOutlined rev="" />}
         size="large"

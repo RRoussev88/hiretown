@@ -25,6 +25,7 @@ export const ProfileBusinessesHeader: FC = () => {
         My Businesses
       </p>
       <Button
+        tabIndex={0}
         onClick={() => setIsCreateOpen(true)}
         type="default"
         className="custom-primary-button"

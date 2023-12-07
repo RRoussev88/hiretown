@@ -197,6 +197,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
       </Form.Item>
       <section className="my-2 flex gap-x-3">
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           loading={isLoading}
@@ -207,6 +208,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
           Clear Changes
         </Button>
         <Button
+          tabIndex={0}
           size="large"
           type="default"
           htmlType="submit"

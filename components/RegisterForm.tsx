@@ -205,6 +205,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
           />
         </Form.Item>
         <Button
+          tabIndex={0}
           block
           disabled={isLoading}
           loading={isLoading}
@@ -217,6 +218,7 @@ export const RegisterForm: FC<RegisterFormProps> = ({
         </Button>
       </Form>
       <Button
+        tabIndex={0}
         block
         type="link"
         className="custom-link-button"

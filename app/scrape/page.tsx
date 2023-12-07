@@ -297,6 +297,7 @@ const ScrapePage: FC = () => {
               ))}
           </select>
           <button
+            tabIndex={0}
             disabled={isFetching}
             className="btn btn-square"
             onClick={onScrape}

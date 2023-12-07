@@ -32,6 +32,7 @@ export const BusinessListItem: FC<{
       footer: [
         <div key="footer" className="pt-4 flex justify-between">
           <Button
+            tabIndex={0}
             key="back"
             className="custom-secondary-button"
             onClick={destroyAll}
@@ -40,6 +41,7 @@ export const BusinessListItem: FC<{
             Cancel
           </Button>
           <Button
+            tabIndex={0}
             key="submit"
             type="default"
             className="custom-primary-button"
@@ -94,7 +96,9 @@ export const BusinessListItem: FC<{
     >
       <List.Item.Meta
         title={<p className="text-2xl font-semibold">{business.name}</p>}
-        description={<p className="text-xl font-medium">{business.description}</p>}
+        description={
+          <p className="text-xl font-medium">{business.description}</p>
+        }
       />
     </List.Item>
   );
