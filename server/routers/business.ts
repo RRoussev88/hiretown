@@ -4,11 +4,11 @@ import type {
   APIResponse,
   Area,
   Business,
-  BusinessImage,
   BusinessService,
   BusinessPayload,
   OpeningHours,
   UserBusiness,
+  ImageUploadPayload,
 } from "types";
 import {
   APIError,
@@ -45,7 +45,10 @@ const getBusiness = async (pbClient: Pocketbase, id: string) => {
 
 const createBusiness = async (
   pbClient: Pocketbase,
-  businessPayload: BusinessPayload & { openingHours?: OpeningHours }
+  businessPayload: BusinessPayload & {
+    openingHours?: OpeningHours;
+    thumbnailFile?: ImageUploadPayload;
+  }
 ) => {
   try {
     const business: Business = await pbClient
@@ -95,6 +98,7 @@ const updateBusiness = async (
   businessId: string,
   businessPayload: Partial<BusinessPayload> & {
     openingHours: Partial<OpeningHours>;
+    thumbnailFile?: ImageUploadPayload;
   }
 ) => {
   try {
@@ -107,6 +111,23 @@ const updateBusiness = async (
           ...businessPayload.openingHours,
         },
       });
+
+    if (businessPayload.thumbnailFile) {
+      const { imageBase64, imageName, imageType } =
+        businessPayload.thumbnailFile;
+      const base64Image = imageBase64.split(";base64,").pop();
+      if (!base64Image) throw new Error("Invalid image payload");
+
+      const buffer = Buffer.from(base64Image, "base64");
+      const imageBlob = new Blob([buffer], { type: imageType });
+
+      const formData = new FormData();
+      formData.append("thumbnail", imageBlob, imageName);
+
+      return await pbClient
+        .collection(DataCollections.BUSINESSES)
+        .update(businessId, formData, { $autoCancel: false });
+    }
 
     return updatedBusiness;
   } catch (error) {
@@ -123,21 +144,6 @@ const deleteBusiness = async (pbClient: Pocketbase, id: string) => {
     return data;
   } catch (error) {
     throw new APIError(error, "Failed to delete business");
-  }
-};
-
-const getBusinessImage = async (pbClient: Pocketbase, businessId: string) => {
-  try {
-    const image: BusinessImage = await pbClient
-      .collection(DataCollections.BUSINESS_IMAGES)
-      .getFirstListItem(
-        `album.business="${businessId}"&&album.name="${DEFAULT_ALBUM_NAME}"`,
-        { sort: "isSelected,created" }
-      );
-
-    return image;
-  } catch (error) {
-    throw new APIError(error, "Failed to find business image data");
   }
 };
 
@@ -278,6 +284,13 @@ export const businessRouter = router({
             Sunday: z.tuple([z.string(), z.string()]),
           })
           .optional(),
+        thumbnailFile: z
+          .object({
+            imageBase64: z.string(),
+            imageName: z.string(),
+            imageType: z.string(),
+          })
+          .optional(),
       })
     )
     .mutation(({ ctx, input }) => createBusiness(ctx.pbClient, input)),
@@ -305,6 +318,13 @@ export const businessRouter = router({
             Sunday: z.tuple([z.string(), z.string()]),
           })
           .or(z.object({})),
+        thumbnailFile: z
+          .object({
+            imageBase64: z.string(),
+            imageName: z.string(),
+            imageType: z.string(),
+          })
+          .optional(),
       })
     )
     .mutation(({ ctx, input }) =>
@@ -315,9 +335,6 @@ export const businessRouter = router({
     .mutation(({ ctx, input }) =>
       deleteBusiness(ctx.pbClient, input.businessId)
     ),
-  businessImage: procedure
-    .input(z.string())
-    .query(({ ctx, input }) => getBusinessImage(ctx.pbClient, input)),
   hasPermission: protectedProcedure
     .input(z.string())
     .query(({ ctx, input }) => userHasPermission(ctx.pbClient, input)),

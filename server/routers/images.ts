@@ -49,7 +49,7 @@ const fetchBusinessImages = async (
   }
 };
 
-const updateBusinessImages = async (
+const updateAlbumImages = async (
   pbClient: Pocketbase,
   businessId: string,
   albumId: string,
@@ -177,7 +177,7 @@ export const imagesRouter = router({
   businessImages: procedure
     .input(z.string())
     .query(({ ctx, input }) => fetchBusinessImages(ctx.pbClient, input)),
-  updateBusinessImages: businessProtectedProcedure
+  updateAlbumImages: businessProtectedProcedure
     .input(
       z.object({
         businessId: z.string(),
@@ -193,7 +193,7 @@ export const imagesRouter = router({
       })
     )
     .mutation(({ ctx, input }) =>
-      updateBusinessImages(
+      updateAlbumImages(
         ctx.pbClient,
         input.businessId,
         input.albumId,

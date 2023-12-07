@@ -115,23 +115,12 @@ export type BusinessPayload = {
   contactPhone?: string;
   contactWebsite?: string;
   description?: string;
+  thumbnail?: string;
   isActive: boolean;
   name: string;
   priority: number;
   rating: number;
 };
-
-// export interface BusinessDetails extends CollectionRecord {
-//   business: Business["id"];
-//   isActive: boolean;
-//   paidUntil: DateString;
-//   priority: number;
-//   rating: number;
-//   thumbnail: string;
-//   ...
-//   paymentData: ...
-//   adminUsers: User[]
-// } Sensitive fields that could be stored separately as One to One relation
 
 export interface BusinessService extends CollectionRecord {
   business: Business["id"];

@@ -20,3 +20,4 @@ export * from "./sections/OpeningHoursSection";
 export * from "./sections/ServicesSection";
 export * from "./sections/SocialLinksSection";
 export * from "./SvgIcons";
+export * from "./UploadImages";

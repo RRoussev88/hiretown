@@ -1,11 +1,13 @@
 "use client";
 import { Button, Form, Input } from "antd";
-import { useEffect, useState, type FC } from "react";
+import type { RcFile, UploadFile } from "antd/es/upload";
+import { useEffect, useMemo, useState, type FC } from "react";
 
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Business, BusinessPayload } from "types";
-import { PHONE_REGEX } from "utils";
+import { FILES_URL, PHONE_REGEX, getBase64 } from "utils";
+import { UploadImages } from "./UploadImages";
 
 const initialBusinessState: BusinessPayload = {
   name: "",
@@ -33,6 +35,24 @@ export const BusinessForm: FC<BusinessFormProps> = ({
   const [form] = Form.useForm<BusinessPayload>();
   const formValues = Form.useWatch([], form);
 
+  const initialImages: UploadFile[] = useMemo(
+    () =>
+      !!business?.thumbnail
+        ? [
+            {
+              uid: business.id,
+              name: business.thumbnail,
+              status: "done",
+              url: `${FILES_URL}/${business?.collectionId}/${business?.id}/${business?.thumbnail}?thumb=576x0`,
+            },
+          ]
+        : [],
+    [business]
+  );
+
+  const [isFormValid, setIsFormValid] = useState(!!formValues?.name);
+  const [fileList, setFileList] = useState<UploadFile[]>(initialImages);
+
   const {
     mutate: createBusiness,
     isLoading: isLoadingCreate,
@@ -49,13 +69,12 @@ export const BusinessForm: FC<BusinessFormProps> = ({
     error: errorUpdate,
   } = trpc.updateBusiness.useMutation({ onSuccess });
 
-  const [isFormValid, setIsFormValid] = useState(!!formValues?.name);
-
   const isLoading = isLoadingCreate || isLoadingUpdate;
 
   const trimmedFormValues = {
     name: formValues?.name?.trim(),
     description: formValues?.description?.trim(),
+    thumbnail: formValues?.thumbnail?.trim() ?? "",
     address: formValues?.address?.trim(),
     contactEmail: formValues?.contactEmail?.trim(),
     contactPhone: formValues?.contactPhone?.trim(),
@@ -65,6 +84,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
   const hasChanges =
     trimmedFormValues.name !== business?.name.trim() ||
     trimmedFormValues.description !== business?.description.trim() ||
+    (fileList[0]?.name ?? "") !== (business?.thumbnail ?? "") ||
     trimmedFormValues.address !== business?.address.trim() ||
     trimmedFormValues.contactEmail !== business?.contactEmail.trim() ||
     trimmedFormValues.contactPhone !== business?.contactPhone.trim() ||
@@ -77,6 +97,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
   );
 
   const clearChanges = () => {
+    setFileList(initialImages);
     if (isEditing) {
       !!business && form.setFieldsValue(business);
     } else {
@@ -84,7 +105,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
     }
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     if (isEditing) {
       !!business &&
         updateBusiness({
@@ -92,6 +113,15 @@ export const BusinessForm: FC<BusinessFormProps> = ({
           ...initialBusinessState,
           ...trimmedFormValues,
           openingHours: business?.openingHours,
+          thumbnailFile: fileList.length
+            ? {
+                imageBase64: await getBase64(
+                  fileList[0].originFileObj as RcFile
+                ),
+                imageName: fileList[0].name,
+                imageType: fileList[0].type ?? "",
+              }
+            : undefined,
         });
     } else {
       createBusiness({
@@ -115,6 +145,10 @@ export const BusinessForm: FC<BusinessFormProps> = ({
     );
   }, [form, formValues]);
 
+  useEffect(() => {
+    setFileList(initialImages);
+  }, [setFileList, initialImages]);
+
   return (
     <Form
       form={form}
@@ -130,6 +164,13 @@ export const BusinessForm: FC<BusinessFormProps> = ({
       </Form.Item>
       <Form.Item name="description">
         <Input.TextArea name="description" placeholder="Description" />
+      </Form.Item>
+      <Form.Item label="Thumbnail" name="thumbnail">
+        <UploadImages
+          maxCount={1}
+          fileList={fileList}
+          setFileList={setFileList}
+        />
       </Form.Item>
       <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
         Contacts

@@ -1,7 +1,7 @@
 "use client";
 import { Alert, Image, Skeleton, Space } from "antd";
 import type { NextPage } from "next";
-import { useEffect, useState } from "react";
+import NextImage from "next/image";
 
 import {
   AreasSection,
@@ -13,7 +13,6 @@ import {
 } from "@/components/.";
 import { useBusinessAlbumImages, useErrorToaster } from "hooks";
 import { trpc } from "trpc";
-import type { BusinessImage } from "types";
 import { DEFAULT_ALBUM_NAME, FILES_URL } from "utils";
 
 type BusinessDetailsPageProps = { params: { id: string } };
@@ -21,10 +20,6 @@ type BusinessDetailsPageProps = { params: { id: string } };
 const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
   params,
 }) => {
-  const [selectedImage, setSelectedImage] = useState<BusinessImage | null>(
-    null
-  );
-
   const {
     data: business,
     isFetching,
@@ -40,17 +35,6 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
     isSuccess,
     error?.message ?? "Error fetching business"
   );
-
-  useEffect(() => {
-    const defaultImages = Array.from(albumImages)?.find(
-      ([album, _]) => album.name === DEFAULT_ALBUM_NAME
-    )?.[1];
-    setSelectedImage(
-      defaultImages?.find((image) => image.isSelected) ??
-        defaultImages?.[0] ??
-        null
-    );
-  }, [albumImages]);
 
   if (!business) {
     return (
@@ -82,14 +66,15 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
     <div className="w-full max-w-4xl mx-auto text-primary-content p-3 sm:p-6">
       <h2 className="mb-6 text-primary-focus text-4xl">{business.name}</h2>
       {contextHolder}
-      <Image
+      <NextImage
         src={
-          selectedImage
-            ? `${FILES_URL}/${selectedImage.collectionId}/${selectedImage.id}/${selectedImage.image}?thumb=896x538`
+          business.thumbnail
+            ? `${FILES_URL}/${business.collectionId}/${business.id}/${business.thumbnail}?thumb=896x538`
             : "/mowing_guy.jpeg"
         }
-        preview={false}
-        className="mb-3 sm:mb-6 border border-slate-300 shadow rounded-md"
+        height={896}
+        width={538}
+        className="mb-3 mx-auto sm:mb-6 border border-slate-300 shadow rounded-md"
         alt="Business logo"
       />
       {Array.from(albumImages)

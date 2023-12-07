@@ -28,7 +28,7 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
   onSuccess,
 }) => {
   const { mutate, isLoading, isSuccess, isError, error } =
-    trpc.updateBusinessImages.useMutation({ onSuccess });
+    trpc.updateAlbumImages.useMutation({ onSuccess });
 
   const {
     mutate: deleteAlbum,
