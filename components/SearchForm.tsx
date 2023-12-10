@@ -8,6 +8,7 @@ import { useCallback, useMemo, useReducer, type FC } from "react";
 import type { LocationSelectState, LocationType } from "types";
 import { LocationsSelect } from "./LocationsSelect";
 import { ServicesCategoriesSelect } from "./ServicesCategoriesSelect";
+import { trpc } from "trpc";
 
 type SearchFormState = {
   [key in LocationType]: LocationSelectState;
@@ -33,6 +34,7 @@ const stateReducer = (
 export const SearchForm: FC = () => {
   const router = useRouter();
   const [state, dispatch] = useReducer(stateReducer, initialState);
+  const { mutate } = trpc.createBusinessSearch.useMutation({});
 
   const isLoadingData = useMemo(
     () =>
@@ -58,7 +60,15 @@ export const SearchForm: FC = () => {
     [dispatch]
   );
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    await mutate({
+      serviceName: state.service.name ?? "",
+      countryName: state.country.name ?? "",
+      regionName: state.region.name,
+      divisionName: state.division.name,
+      cityName: state.city.name,
+    });
+
     router.push(
       "/businesses?" +
         (state.category.name
@@ -73,7 +83,7 @@ export const SearchForm: FC = () => {
         (state.division.name
           ? `&division=${encodeURIComponent(state.division.name)}`
           : "") +
-        `&city=${encodeURIComponent(state.city.name!)}`
+        (state.city.name ? `&city=${encodeURIComponent(state.city.name)}` : "")
     );
   };
 
@@ -92,7 +102,7 @@ export const SearchForm: FC = () => {
         type="default"
         icon={<SearchOutlined rev="" />}
         size="large"
-        disabled={isLoadingData || !state.service.name || !state.city.name}
+        disabled={isLoadingData || !state.service.name || !state.country.name}
         loading={isLoadingData}
         onClick={handleSubmit}
         className="custom-primary-button"

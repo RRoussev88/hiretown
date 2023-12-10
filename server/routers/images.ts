@@ -18,7 +18,7 @@ const fetchImages = async (pbClient: Pocketbase, albumId?: string) => {
     const data: APIResponse<BusinessImage> = await pbClient
       .collection(DataCollections.BUSINESS_IMAGES)
       .getList(1, 20, {
-        sort: "-isSelected,image",
+        sort: "-created",
         filter: `album="${albumId}"`,
       });
 
@@ -39,7 +39,7 @@ const fetchBusinessImages = async (
     const data: APIResponse<BusinessImage> = await pbClient
       .collection(DataCollections.BUSINESS_IMAGES)
       .getList(1, 20, {
-        sort: "-isSelected,-created",
+        sort: "-created",
         filter: `album.business="${businessId}"`,
       });
 
@@ -83,7 +83,6 @@ const updateAlbumImages = async (
 
         const formData = new FormData();
         formData.append("album", albumId);
-        formData.append("isSelected", "false");
         formData.append("image", imageBlob, image.imageName);
 
         return pbClient

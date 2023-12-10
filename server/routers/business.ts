@@ -151,7 +151,7 @@ const fetchBusinesses = async (
   pbClient: Pocketbase,
   serviceName: string,
   countryName: string,
-  cityName: string,
+  cityName?: string,
   regionName?: string,
   divisionName?: string,
   searchTerm?: string,
@@ -161,7 +161,7 @@ const fetchBusinesses = async (
     !serviceName ||
     serviceName === "undefined" ||
     !countryName ||
-    !cityName
+    countryName === "undefined"
   ) {
     return defaultResponse;
   }
@@ -188,11 +188,11 @@ const fetchBusinesses = async (
               &&city.id=""`,
           })
         : [];
-    const cityAreas: Area[] = await pbClient
-      .collection(DataCollections.AREAS)
-      .getFullList(200, {
-        filter: `country.name="${countryName}"&&city.name="${cityName}"`,
-      });
+    const cityAreas: Area[] = cityName
+      ? await pbClient.collection(DataCollections.AREAS).getFullList(200, {
+          filter: `country.name="${countryName}"&&city.name="${cityName}"`,
+        })
+      : [];
 
     const bsFilter = countryAreas
       .concat(regionAreas)
@@ -241,7 +241,7 @@ export const businessRouter = router({
         country: z.string(),
         region: z.string().optional(),
         division: z.string().optional(),
-        city: z.string(),
+        city: z.string().optional(),
         searchTerm: z.string().optional(),
         page: z.number().min(1).optional(),
       })

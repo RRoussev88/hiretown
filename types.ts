@@ -139,7 +139,6 @@ export interface ImageAlbum extends CollectionRecord {
 export interface BusinessImage extends CollectionRecord {
   album: ImageAlbum["id"];
   image: string;
-  isSelected: boolean;
   expand?: { album: ImageAlbum };
 }
 export interface SocialPlatform extends CollectionRecord {
@@ -230,6 +229,15 @@ export interface BusinessPlan extends CollectionRecord {
   payment: CollectionRecord["id"];
   startsOn: DateString;
   expand?: { business: Business; payment: Payment; plan: SubscriptionPlan };
+}
+
+export interface BusinessSearch extends CollectionRecord {
+  user: CollectionRecord["id"];
+  serviceName: string;
+  countryName: string;
+  regionName?: string;
+  divisionName?: string;
+  cityName?: string;
 }
 
 export type BusinessesFilterParams = {

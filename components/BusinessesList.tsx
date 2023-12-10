@@ -20,14 +20,14 @@ export const BusinessesList: FC<BusinessesListProps> = ({ searchParams }) => {
     error,
   } = trpc.businesses.useQuery(searchParams);
 
-  if (!searchParams.service || !searchParams.country || !searchParams.city) {
+  if (!searchParams.service || !searchParams.country) {
     return (
       <Alert
         type="warning"
         message={
           !searchParams.service
             ? "No service is selected"
-            : "Please select a country and a city"
+            : "Please select a country"
         }
         showIcon
       />

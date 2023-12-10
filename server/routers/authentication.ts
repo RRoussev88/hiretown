@@ -45,6 +45,8 @@ const performSignup = async (
       .collection(DataCollections.USERS)
       .create({ email, password, passwordConfirm });
 
+    performEmailVerificationRequest(pbClient, email);
+
     return data;
   } catch (error) {
     throw new APIError(error, "Signup failed");

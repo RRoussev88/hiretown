@@ -135,6 +135,7 @@ export const DataCollections = {
   BUSINESS_IMAGES: "businessImages",
   BUSINESS_PLANS: "businessPlans",
   BUSINESS_SERVICES: "businessServices",
+  BUSINESS_SEARCHES: "businessSearches",
   CITIES: "cities",
   COUNTRIES: "countries",
   DIVISIONS: "divisions",
