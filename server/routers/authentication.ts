@@ -111,13 +111,7 @@ const performPasswordChangeRequest = async (
   try {
     const data = await pbClient
       .collection(DataCollections.USERS)
-      // SES sandbox mode will only send emails to confirmed emails
-      .requestPasswordReset(
-        "marsianeca_ss@hotmail.com"
-        // process.env.NODE_ENV === "production"
-        //   ? email
-        //   : "marsianeca_ss@hotmail.com"
-      );
+      .requestPasswordReset(email);
 
     return data;
   } catch (error) {
@@ -181,13 +175,7 @@ const performEmailVerificationRequest = async (
   try {
     const data = await pbClient
       .collection(DataCollections.USERS)
-      // SES sandbox mode will only send emails to confirmed emails
-      .requestVerification(
-        "marsianeca_ss@hotmail.com"
-        // process.env.NODE_ENV === "production"
-        //   ? email
-        //   : "marsianeca_ss@hotmail.com"
-      );
+      .requestVerification(email);
 
     return data;
   } catch (error) {

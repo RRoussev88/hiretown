@@ -20,7 +20,7 @@ const ProfileOverviewPage: NextPage = () => {
   const { mutate: requestVerification, isSuccess: isRequestSuccess } =
     trpc.requestEmailVerification.useMutation();
   const { mutate: requestPasswordChange, isSuccess: isPassRequestSuccess } =
-    trpc.requestEmailVerification.useMutation();
+    trpc.requestPasswordChange.useMutation();
   const { [StorageKeys.CURRENT_USER]: user } = useContext(AuthContext);
 
   const handleUpdate = async (

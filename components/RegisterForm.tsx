@@ -48,9 +48,6 @@ export const RegisterForm: FC<RegisterFormProps> = ({
     mutate: mutateSignin,
   } = trpc.signin.useMutation();
 
-  const { mutate: requestVerification, isSuccess: isRequestSuccess } =
-    trpc.requestEmailVerification.useMutation();
-
   const isLoading = isSignupLoading || isSigninLoading;
 
   const hasEmailError =
@@ -87,19 +84,14 @@ export const RegisterForm: FC<RegisterFormProps> = ({
     signupError?.message ?? "Error registering user"
   );
 
-  // Send verification email on successfull signup
-  useEffect(() => {
-    isSignupSuccess && !isRequestSuccess && email && requestVerification(email);
-  }, [isSignupSuccess, isRequestSuccess, email, requestVerification]);
-
   // Call signin on successfull email send
   useEffect(() => {
-    isRequestSuccess &&
+    isSignupSuccess &&
       !isSigninSuccess &&
       email &&
       password &&
       mutateSignin({ email, password });
-  }, [isRequestSuccess, isSigninSuccess, email, password, mutateSignin]);
+  }, [isSignupSuccess, isSigninSuccess, email, password, mutateSignin]);
 
   // Log user when sign in is successful
   useEffect(() => {

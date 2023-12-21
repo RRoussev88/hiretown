@@ -152,7 +152,7 @@ export const LoginForm: FC<LoginFormProps> = ({
         size="large"
         onClick={onOpenRegisterForm}
       >
-        No account yet? Click here to Sign up
+        No account yet? Click here to register
       </Button>
       <Button
         tabIndex={0}
