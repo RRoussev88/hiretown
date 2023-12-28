@@ -3,8 +3,8 @@ import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
 import type {
-  BaseRecord,
   BusinessArea,
+  BaseRecord,
   City,
   Country,
   Division,
@@ -183,7 +183,7 @@ const fetchCities = async (
 const fetchBusinessAreas = async (pbClient: Pocketbase, businessId: string) => {
   try {
     const data: BusinessArea[] = await pbClient
-      .collection(DataCollections.AREAS)
+      .collection(DataCollections.BUSINESS_AREAS)
       .getFullList(200, {
         filter: `business="${businessId}"`,
         expand: "country,region,division,city",
@@ -205,7 +205,7 @@ const createBusinessArea = async (
 ) => {
   try {
     const currentAreas: BusinessArea[] = await pbClient
-      .collection(DataCollections.AREAS)
+      .collection(DataCollections.BUSINESS_AREAS)
       .getFullList(200, {
         filter:
           `business="${businessId}"&&country="${countryId}"` +
@@ -221,7 +221,7 @@ const createBusinessArea = async (
     }
 
     const createdArea = await pbClient
-      .collection(DataCollections.AREAS)
+      .collection(DataCollections.BUSINESS_AREAS)
       .create({
         business: businessId,
         country: countryId,
@@ -243,7 +243,7 @@ const deleteBusinessArea = async (
 ) => {
   try {
     const createdArea = await pbClient
-      .collection(DataCollections.AREAS)
+      .collection(DataCollections.BUSINESS_AREAS)
       .delete(areaId, { filter: `business="${businessId}"` });
 
     return createdArea;

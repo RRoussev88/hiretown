@@ -1,20 +1,12 @@
 import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons";
 import { Button, Popconfirm, Skeleton } from "antd";
 import Image from "next/image";
-import { type FC, useCallback, useReducer, useMemo } from "react";
+import { useCallback, useMemo, useReducer, type FC } from "react";
 
 import { LocationsSelect } from "@/components/.";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
-import type {
-  BusinessArea,
-  City,
-  Country,
-  Division,
-  LocationSelectState,
-  LocationType,
-  Region,
-} from "types";
+import type { BusinessArea, Country, LocationSelectState, LocationType } from "types";
 
 type EditAreasState = {
   [key in LocationType]: LocationSelectState;
@@ -130,10 +122,10 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
       </Button>
       <Skeleton loading={isLoadingRead}>
         {businessAreas?.map((area: BusinessArea) => {
-          const country = area.expand.country as Country;
-          const region = area.expand.region as Region;
-          const division = area.expand.division as Division;
-          const city = area.expand.city as City;
+          const country = area.expand?.country as Country;
+          const region = area.expand?.region;
+          const division = area.expand?.division;
+          const city = area.expand?.city;
 
           return (
             <div key={area.id} className="pt-3 w-full flex justify-between">

@@ -2,7 +2,7 @@ import type Pocketbase from "pocketbase";
 import { z } from "zod";
 import type {
   APIResponse,
-  Area,
+  BusinessArea,
   Business,
   BusinessService,
   BusinessPayload,
@@ -98,7 +98,6 @@ const updateBusiness = async (
   businessId: string,
   businessPayload: Partial<BusinessPayload> & {
     openingHours: Partial<OpeningHours>;
-    thumbnailFile?: ImageUploadPayload;
   }
 ) => {
   try {
@@ -112,9 +111,8 @@ const updateBusiness = async (
         },
       });
 
-    if (businessPayload.thumbnailFile) {
-      const { imageBase64, imageName, imageType } =
-        businessPayload.thumbnailFile;
+    if (businessPayload.thumbnail) {
+      const { imageBase64, imageName, imageType } = businessPayload.thumbnail;
       const base64Image = imageBase64.split(";base64,").pop();
       if (!base64Image) throw new Error("Invalid image payload");
 
@@ -167,31 +165,37 @@ const fetchBusinesses = async (
   }
 
   try {
-    const countryAreas: Area[] = await pbClient
-      .collection(DataCollections.AREAS)
+    const countryAreas: BusinessArea[] = await pbClient
+      .collection(DataCollections.BUSINESS_AREAS)
       .getFullList(200, {
         filter: `country.name="${countryName}"&&region.id=""&&division.id=""&&city.id=""`,
       });
-    const regionAreas: Area[] = regionName
-      ? await pbClient.collection(DataCollections.AREAS).getFullList(200, {
-          filter: `country.name="${countryName}"
+    const regionAreas: BusinessArea[] = regionName
+      ? await pbClient
+          .collection(DataCollections.BUSINESS_AREAS)
+          .getFullList(200, {
+            filter: `country.name="${countryName}"
             &&region.name="${regionName}"
             &&division.id=""&&city.id=""`,
-        })
+          })
       : [];
-    const divisionAreas: Area[] =
+    const divisionAreas: BusinessArea[] =
       regionName && divisionName
-        ? await pbClient.collection(DataCollections.AREAS).getFullList(200, {
-            filter: `country.name="${countryName}"
+        ? await pbClient
+            .collection(DataCollections.BUSINESS_AREAS)
+            .getFullList(200, {
+              filter: `country.name="${countryName}"
               &&region.name="${regionName}"
               &&division.name="${divisionName}"
               &&city.id=""`,
-          })
+            })
         : [];
-    const cityAreas: Area[] = cityName
-      ? await pbClient.collection(DataCollections.AREAS).getFullList(200, {
-          filter: `country.name="${countryName}"&&city.name="${cityName}"`,
-        })
+    const cityAreas: BusinessArea[] = cityName
+      ? await pbClient
+          .collection(DataCollections.BUSINESS_AREAS)
+          .getFullList(200, {
+            filter: `country.name="${countryName}"&&city.name="${cityName}"`,
+          })
       : [];
 
     const bsFilter = countryAreas
@@ -318,7 +322,7 @@ export const businessRouter = router({
             Sunday: z.tuple([z.string(), z.string()]),
           })
           .or(z.object({})),
-        thumbnailFile: z
+        thumbnail: z
           .object({
             imageBase64: z.string(),
             imageName: z.string(),

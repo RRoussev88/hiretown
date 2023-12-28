@@ -3,6 +3,7 @@ import { businessRouter } from "./business";
 import { imagesRouter } from "./images";
 import { locationsRouter } from "./locations";
 import { profileRouter } from "./profile";
+import { projectsRouter } from "./projects";
 import { searchesRouter } from "./searches";
 import { servicesRouter } from "./services";
 import { socialLinksRouter } from "./socialLinks";
@@ -17,6 +18,7 @@ export const appRouter = mergeRouters(
   searchesRouter,
   servicesRouter,
   profileRouter,
+  projectsRouter,
   socialLinksRouter
 );
 

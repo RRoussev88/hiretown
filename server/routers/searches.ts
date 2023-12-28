@@ -28,7 +28,7 @@ const createBusinessSearch = async (
   pbClient: Pocketbase,
   serviceName: string,
   countryName: string,
-  regionName?: string,
+  regionName: string,
   divisionName?: string,
   cityName?: string
 ) => {
@@ -36,7 +36,7 @@ const createBusinessSearch = async (
   const userId = pbClient.authStore.model?.id;
   if (!userId || !countryName) {
     throw new APIError(
-      '"userId", "serviceName" and "countryName" parameters are required',
+      '"userId", "serviceName", "countryId" and "regionId" parameters are required',
       defaultErrorMessage
     );
   }
@@ -87,7 +87,7 @@ export const searchesRouter = router({
       z.object({
         serviceName: z.string(),
         countryName: z.string(),
-        regionName: z.string().optional(),
+        regionName: z.string(),
         divisionName: z.string().optional(),
         cityName: z.string().optional(),
       })

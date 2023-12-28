@@ -50,6 +50,27 @@ const isBusinessOwner = t.middleware(async (opts) => {
   }
 });
 
+const isProjectOwner = t.middleware(async (opts) => {
+  const { ctx } = opts;
+
+  try {
+    const user = ctx.pbClient.authStore.model;
+
+    const projects = await ctx.pbClient
+      .collection(DataCollections.PROJECTS)
+      .getFullList(200, {
+        filter: `user="${user?.id}"&&id="${(opts.rawInput as any)?.projectId}"`,
+      });
+
+    if (!projects.length) {
+      throw new TRPCError({ message: "Unauthorized", code: "UNAUTHORIZED" });
+    }
+    return opts.next();
+  } catch (error) {
+    throw new APIError(error, "Failed to fetch projects");
+  }
+});
+
 // Base router and procedure helpers
 export const router = t.router;
 export const procedure = t.procedure;
@@ -57,4 +78,7 @@ export const protectedProcedure = t.procedure.use(isAuthenticated);
 export const businessProtectedProcedure = t.procedure
   .use(isAuthenticated)
   .use(isBusinessOwner);
+export const projectProtectedProcedure = t.procedure
+  .use(isAuthenticated)
+  .use(isProjectOwner);
 export const mergeRouters = t.mergeRouters;

@@ -1,5 +1,5 @@
 "use client";
-import { Alert, List, Skeleton } from "antd";
+import { Alert, List } from "antd";
 import { type FC } from "react";
 
 import { trpc } from "trpc";
@@ -11,7 +11,6 @@ export const BusinessSearchesList: FC = () => {
     error,
   } = trpc.businessSearches.useQuery();
 
-  const emptyText = "No search results found";
   return (
     <section>
       {!isFetching && !!error && (
@@ -21,7 +20,7 @@ export const BusinessSearchesList: FC = () => {
         bordered
         itemLayout="vertical"
         loading={isFetching}
-        locale={{ emptyText }}
+        locale={{ emptyText: "No search results found" }}
         dataSource={searchesData?.items}
         renderItem={(search) => (
           <List.Item key={search.id}>

@@ -32,7 +32,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
   business,
   onSuccess,
 }) => {
-  const [form] = Form.useForm<BusinessPayload>();
+  const [form] = Form.useForm<Business>();
   const formValues = Form.useWatch([], form);
 
   const initialImages: UploadFile[] = useMemo(
@@ -113,7 +113,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
           ...initialBusinessState,
           ...trimmedFormValues,
           openingHours: business?.openingHours,
-          thumbnailFile: fileList.length
+          thumbnail: fileList.length
             ? {
                 imageBase64: await getBase64(
                   fileList[0].originFileObj as RcFile

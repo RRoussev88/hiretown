@@ -64,7 +64,7 @@ export const SearchForm: FC = () => {
     await mutate({
       serviceName: state.service.name ?? "",
       countryName: state.country.name ?? "",
-      regionName: state.region.name,
+      regionName: state.region.name ?? "",
       divisionName: state.division.name,
       cityName: state.city.name,
     });

@@ -10,6 +10,7 @@ export * from "./ForgotPasswordForm";
 export * from "./LocationsSelect";
 export { LoginForm } from "./LoginForm";
 export { Navbar } from "./Navbar";
+export * from "./ProjectForm";
 export { RegisterForm } from "./RegisterForm";
 export { SearchForm } from "./SearchForm";
 export * from "./ServicesCategoriesSelect";

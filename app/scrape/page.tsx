@@ -3,7 +3,7 @@ import PocketBase from "pocketbase";
 import { FC, useEffect, useRef, useState } from "react";
 
 import { Search } from "components";
-import { useFetchAndSelect } from "hooks";
+import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { City, Country, Division, GeoAPIResponse, Region } from "types";
 import { BACKEND_URL, DataCollections } from "utils";
@@ -21,12 +21,16 @@ const options = {
 const ScrapePage: FC = () => {
   const controllerRef = useRef<AbortController | null>();
   const [fetchedRegions, setFetchedRegions] = useState<Region[]>([]);
+  const [selected, setSelected] = useState<Country | null>(null);
 
-  const { data, isSuccess, isFetching, selected, setSelected, contextHolder } =
-    useFetchAndSelect<Country, "countries">(
-      trpc.countries.useQuery,
-      "Failed to load service countries data"
-    );
+  const { data, isSuccess, isFetching, isError, error } =
+    trpc.countries.useQuery({});
+
+  const contextHolder = useErrorToaster(
+    isError,
+    isSuccess,
+    error?.message ?? "Failed to load service countries data"
+  );
 
   // Abort data fetch if the selection is changed
   useEffect(() => {
@@ -283,14 +287,13 @@ const ScrapePage: FC = () => {
             onChange={(event) =>
               isSuccess &&
               setSelected(
-                data?.items.find(
-                  (country) => country.id === event.target.value
-                ) ?? null
+                data?.find((country) => country.id === event.target.value) ??
+                  null
               )
             }
           >
             {isSuccess &&
-              data?.items.map((country: Country) => (
+              data?.map((country: Country) => (
                 <option key={country.id} value={country.id}>
                   {country.name}
                 </option>

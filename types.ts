@@ -10,7 +10,7 @@ export type SelectOption = {
 export type BaseRecord = { name: string } & CollectionRecord;
 
 // Use Moment type in the future or at least an union of string and number.
-// Better store the timestamp as a number
+// Better store the timestamp as a number when custom BE is developed.
 type DateString = string;
 
 export interface Country extends CollectionRecord {
@@ -24,7 +24,7 @@ export interface Country extends CollectionRecord {
 }
 
 export interface Region extends CollectionRecord {
-  country: string;
+  country: CollectionRecord["id"];
   countryCode: string;
   isoCode: string;
   name: string;
@@ -35,21 +35,21 @@ export interface Region extends CollectionRecord {
 }
 
 export interface Division extends CollectionRecord {
-  country: string;
+  country: CollectionRecord["id"];
   countryCode: string;
   elevationMeters: number;
   latitude: number;
   longitude: number;
   name: string;
   population: number;
-  region: string;
+  region: CollectionRecord["id"];
   regionCode: string;
   timezone: string;
   wikiDataId: string;
 }
 
 export interface City extends Division {
-  division?: string;
+  division?: CollectionRecord["id"];
 }
 
 export interface User extends CollectionRecord {
@@ -105,7 +105,7 @@ export interface Business extends CollectionRecord {
     "businessServices(business)": BusinessService[];
     "imageAlbums(business)": ImageAlbum[];
     "offers(business)": Offer[];
-    "areas(business)": Area[];
+    "areas(business)": BusinessArea[];
     "socialLinks(business)": SocialLink[];
   }>;
 }
@@ -154,19 +154,23 @@ export interface SocialLink extends CollectionRecord {
   expand: { business: Business; platform: SocialPlatform };
 }
 
-export interface Area extends CollectionRecord {
-  business: CollectionRecord["id"];
+export interface AddressLocation {
   country: CollectionRecord["id"];
   region: CollectionRecord["id"];
-  division: CollectionRecord["id"];
+  division?: CollectionRecord["id"];
   city: CollectionRecord["id"];
-  expand?: {
-    business: Business;
-    country: Country;
-    region: Region;
-    division: Division;
-    city: City;
-  };
+}
+
+export interface AddressLocationReverse {
+  country: Country;
+  region: Region;
+  division?: Division;
+  city: City;
+}
+
+export interface BusinessArea extends CollectionRecord, AddressLocation {
+  business: CollectionRecord["id"];
+  expand?: { business: Business } & AddressLocationReverse;
 }
 
 export interface UnitOfMeasure extends CollectionRecord {
@@ -249,20 +253,34 @@ export type BusinessesFilterParams = {
   city: string;
 };
 
-export type BusinessArea = Area & {
-  expand: {
-    country: Country;
-    region?: Region;
-    division?: Division;
-    city?: City;
-  };
-};
-
 export type LocationSelectState = {
   id?: string;
   name?: string;
   isLoading: boolean;
 };
+
+export interface Project extends CollectionRecord, AddressLocation {
+  name: string;
+  isFinished: boolean;
+  user: CollectionRecord["id"];
+  description?: string;
+  expand: AddressLocationReverse;
+}
+
+export interface ProjectService extends CollectionRecord {
+  project: CollectionRecord["id"];
+  service: CollectionRecord["id"];
+  isFinished: boolean;
+  targetDate: DateString;
+  description?: string;
+  expand?: { project: Project; service: Service };
+}
+
+export interface ProjectImage extends CollectionRecord {
+  project: CollectionRecord["id"];
+  image: string;
+  expand?: { project: Project };
+}
 
 export type LocationType = "country" | "region" | "division" | "city";
 

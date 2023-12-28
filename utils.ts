@@ -4,7 +4,12 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import type { ClientResponseError } from "pocketbase";
 import { z } from "zod";
 
-import type { APIResponse, Business, OpeningHours } from "types";
+import type {
+  APIResponse,
+  AddressLocation,
+  Business,
+  OpeningHours,
+} from "types";
 
 export const Cors = cors({ methods: ["POST", "GET", "HEAD", "PUT", "PATCH"] });
 
@@ -130,7 +135,7 @@ export const notBatchedRequestPaths = [
 ];
 
 export const DataCollections = {
-  AREAS: "areas",
+  BUSINESS_AREAS: "businessAreas",
   BUSINESSES: "businesses",
   BUSINESS_IMAGES: "businessImages",
   BUSINESS_PLANS: "businessPlans",
@@ -142,6 +147,9 @@ export const DataCollections = {
   IMAGE_ALBUMS: "imageAlbums",
   OFFERS: "offers",
   PAYMENTS: "payments",
+  PROJECTS: "projects",
+  PROJECT_SERVICES: "projectServices",
+  PROJECT_IMAGES: "projectImages",
   REGIONS: "regions",
   ROLES: "roles",
   SERVICE_CATEGORIES: "serviceCategories",
@@ -187,4 +195,11 @@ export const defaultOpeningHours: OpeningHours = {
   Friday: ["", ""],
   Saturday: ["", ""],
   Sunday: ["", ""],
+};
+
+export const initialLocationState: AddressLocation = {
+  country: "",
+  region: "",
+  division: "",
+  city: "",
 };
