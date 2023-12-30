@@ -6,6 +6,7 @@ import {
 } from "@ant-design/icons";
 import { Button, List, Modal } from "antd";
 import Image from "next/image";
+import Link from "next/link";
 import { type FC } from "react";
 
 import clsx from "clsx";
@@ -60,12 +61,12 @@ export const BusinessListItem: FC<{
       actions={
         showActions
           ? [
-              <a
+              <Link
                 key="edit"
                 href={`/profile/activity/businesses/${business.id}`}
               >
                 <EditOutlined rev="" size={16} />
-              </a>,
+              </Link>,
               <a key="delete">
                 <DeleteOutlined rev="" size={16} onClick={showConfirm} />
               </a>,

@@ -6,7 +6,7 @@ import { FC } from "react";
 
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
-import type { City, Country, Division, Region } from "types";
+import type { Country } from "types";
 
 type AreasSectionProps = { businessId: string };
 
@@ -34,10 +34,10 @@ export const AreasSection: FC<AreasSectionProps> = ({ businessId }) => {
       <Skeleton loading={isLoading}>
         {!!businessAreas?.length ? (
           businessAreas?.map((area) => {
-            const country = area.expand.country as Country;
-            const region = area.expand.region as Region;
-            const division = area.expand.division as Division;
-            const city = area.expand.city as City;
+            const country = area.expand?.country as Country;
+            const region = area.expand?.region;
+            const division = area.expand?.division;
+            const city = area.expand?.city;
 
             return (
               <div key={area.id} className="my-3 w-full flex justify-between">

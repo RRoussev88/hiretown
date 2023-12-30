@@ -1,6 +1,6 @@
 "use client";
 import { Alert, List } from "antd";
-import type { FC } from "react";
+import { type FC, useEffect } from "react";
 
 import { trpc } from "trpc";
 import { BusinessesFilterParams } from "types";
@@ -19,6 +19,18 @@ export const BusinessesList: FC<BusinessesListProps> = ({ searchParams }) => {
     isError,
     error,
   } = trpc.businesses.useQuery(searchParams);
+
+  const { mutate } = trpc.createBusinessSearch.useMutation({});
+
+  useEffect(() => {
+    mutate({
+      serviceName: searchParams.service,
+      countryName: searchParams.country,
+      regionName: searchParams.region,
+      divisionName: searchParams.division,
+      cityName: searchParams.city,
+    });
+  }, [mutate, searchParams]);
 
   if (!searchParams.service || !searchParams.country) {
     return (

@@ -34,7 +34,6 @@ const stateReducer = (
 export const SearchForm: FC = () => {
   const router = useRouter();
   const [state, dispatch] = useReducer(stateReducer, initialState);
-  const { mutate } = trpc.createBusinessSearch.useMutation({});
 
   const isLoadingData = useMemo(
     () =>
@@ -61,14 +60,6 @@ export const SearchForm: FC = () => {
   );
 
   const handleSubmit = async () => {
-    await mutate({
-      serviceName: state.service.name ?? "",
-      countryName: state.country.name ?? "",
-      regionName: state.region.name ?? "",
-      divisionName: state.division.name,
-      cityName: state.city.name,
-    });
-
     router.push(
       "/businesses?" +
         (state.category.name

@@ -14,7 +14,7 @@ const fetchBusinessSearches = async (pbClient: Pocketbase) => {
     const data: APIResponse<BusinessSearch> = await pbClient
       .collection(DataCollections.BUSINESS_SEARCHES)
       .getList(1, 20, {
-        sort: "-created",
+        sort: "-updated",
         filter: `user="${userId}"`,
       });
 
@@ -28,19 +28,49 @@ const createBusinessSearch = async (
   pbClient: Pocketbase,
   serviceName: string,
   countryName: string,
-  regionName: string,
+  regionName?: string,
   divisionName?: string,
   cityName?: string
 ) => {
   const defaultErrorMessage = "Failed to create a business search record";
   const userId = pbClient.authStore.model?.id;
-  if (!userId || !countryName) {
+  if (!userId) {
     throw new APIError(
-      '"userId", "serviceName", "countryId" and "regionId" parameters are required',
+      "You have to be logged in to create a business search",
       defaultErrorMessage
     );
   }
+
+  if (!serviceName || !countryName) {
+    throw new APIError("service and country are required", defaultErrorMessage);
+  }
+
   try {
+    const filter =
+      `user="${userId}"` +
+      `&&serviceName="${serviceName}"` +
+      `&&countryName="${countryName}"` +
+      (!!regionName ? `&&regionName="${regionName}"` : "") +
+      (!!divisionName ? `&&divisionName="${divisionName}"` : "") +
+      (!!cityName ? `&&cityName="${cityName}"` : "");
+
+    const existingBusinessSearch = await pbClient
+      .collection(DataCollections.BUSINESS_SEARCHES)
+      .getList(1, 1, {
+        sort: "-updated",
+        filter,
+      });
+
+    if (existingBusinessSearch.totalItems) {
+      const updateSearchId = existingBusinessSearch.items[0].id;
+
+      const data: BusinessSearch = await pbClient
+        .collection(DataCollections.BUSINESS_SEARCHES)
+        .update(updateSearchId, {});
+
+      return data;
+    }
+
     const data: BusinessSearch = await pbClient
       .collection(DataCollections.BUSINESS_SEARCHES)
       .create({
@@ -61,12 +91,17 @@ const createBusinessSearch = async (
 const deleteBusinessSearch = async (pbClient: Pocketbase, searchId: string) => {
   const defaultErrorMessage = "Failed to delete business search record";
   const userId = pbClient.authStore.model?.id;
-  if (!userId || !searchId) {
+  if (!userId) {
     throw new APIError(
-      '"userId" and "searchId" parameters are required',
+      "You have to be logged in to delete a business search",
       defaultErrorMessage
     );
   }
+
+  if (!searchId) {
+    throw new APIError('"searchId" parameter is required', defaultErrorMessage);
+  }
+
   try {
     const data = await pbClient
       .collection(DataCollections.BUSINESS_SEARCHES)
@@ -87,7 +122,7 @@ export const searchesRouter = router({
       z.object({
         serviceName: z.string(),
         countryName: z.string(),
-        regionName: z.string(),
+        regionName: z.string().optional(),
         divisionName: z.string().optional(),
         cityName: z.string().optional(),
       })

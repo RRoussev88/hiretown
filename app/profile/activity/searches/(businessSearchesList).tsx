@@ -1,5 +1,7 @@
 "use client";
+import { EditOutlined, SearchOutlined } from "@ant-design/icons";
 import { Alert, List } from "antd";
+import Link from "next/link";
 import { type FC } from "react";
 
 import { trpc } from "trpc";
@@ -23,7 +25,25 @@ export const BusinessSearchesList: FC = () => {
         locale={{ emptyText: "No search results found" }}
         dataSource={searchesData?.items}
         renderItem={(search) => (
-          <List.Item key={search.id}>
+          <List.Item
+            key={search.id}
+            actions={[
+              <Link
+                key="edit"
+                href={
+                  `/businesses?service=${search.serviceName}` +
+                  `&country=${search.countryName}` +
+                  (search.regionName ? `&region=${search.regionName}` : "") +
+                  (search.divisionName
+                    ? `&division=${search.divisionName}`
+                    : "") +
+                  (search.cityName ? `&city=${search.cityName}` : "")
+                }
+              >
+                <SearchOutlined rev="" size={16} /> Search Again
+              </Link>,
+            ]}
+          >
             <List.Item.Meta
               title={
                 <p className="text-2xl">
