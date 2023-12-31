@@ -195,7 +195,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
       <Form.Item name="contactWebsite" rules={[{ type: "url" }]}>
         <Input type="url" name="website" placeholder="Website" />
       </Form.Item>
-      <section className="my-2 flex gap-x-3">
+      <section className="my-3 flex justify-between">
         <Button
           tabIndex={0}
           size="large"
@@ -214,7 +214,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
           htmlType="submit"
           loading={isLoading}
           disabled={!isFormValid || isLoading || !hasChanges}
-          className="custom-primary-button flex-1"
+          className="custom-primary-button w-40"
           onClick={handleSave}
         >
           Save

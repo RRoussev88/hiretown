@@ -12,7 +12,7 @@ export const ProfileProjectsHeader: FC = () => {
   return (
     <div className="mb-5 flex items-center justify-between">
       <Modal
-        title="Create business"
+        title="Create project"
         closable
         destroyOnClose
         open={isCreateOpen}

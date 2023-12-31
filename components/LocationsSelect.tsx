@@ -183,7 +183,7 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
-    <>
+    <div className="flex flex-col gap-3">
       {contextHolder}
       <div className="flex flex-col sm:flex-row gap-3">
         <Select
@@ -249,6 +249,6 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
           value={selectedCity?.name}
         />
       </div>
-    </>
+    </div>
   );
 };

@@ -129,7 +129,7 @@ export const ProjectForm: FC<ProjectFormProps> = ({
         Location
       </h4>
       <LocationsSelect emitSelectedState={setSelectedFormState} />
-      <section className="my-2 flex gap-x-3">
+      <section className="my-3 flex justify-between">
         <Button
           tabIndex={0}
           size="large"
@@ -148,7 +148,7 @@ export const ProjectForm: FC<ProjectFormProps> = ({
           htmlType="submit"
           loading={isLoading}
           disabled={!isFormValid || isLoading || !hasChanges}
-          className="custom-primary-button flex-1"
+          className="custom-primary-button w-40"
           onClick={handleSave}
         >
           Save
