@@ -7,16 +7,25 @@ import {
   useLocationsState,
   useSearchParamsPopulate,
 } from "hooks";
-import type { LocationSelectState, LocationType, SelectOption } from "types";
+import type {
+  LocationFormState,
+  LocationSelectState,
+  LocationType,
+  SelectOption,
+} from "types";
 
 type LocationsSelectType = {
+  locationsState?: LocationFormState;
   selectClassNames?: string;
   emitSelectedState: (type: LocationType, obj: LocationSelectState) => void;
+  emitIsLoadingState?: (isLoading: boolean) => void;
 };
 
 export const LocationsSelect: FC<LocationsSelectType> = ({
+  locationsState,
   selectClassNames,
   emitSelectedState,
+  emitIsLoadingState,
 }) => {
   const {
     countries: {
@@ -59,17 +68,26 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
       isError: isErrorCities,
       error: errorCities,
     },
+    isLoadingLocations,
   } = useLocationsState();
 
   const handleSelectCountry = useCallback(
-    (id: string) => {
+    (id?: string) => {
       const newSelected = countries?.find((item) => item.id === id) ?? null;
       setSelectedCountry(newSelected);
+      emitSelectedState("country", {
+        id,
+        name: newSelected?.name,
+        isLoading: false,
+      });
 
       if (selectedRegion && selectedRegion.country !== newSelected?.id) {
         setSelectedRegion(null);
         setSelectedDivision(null);
         setSelectedCity(null);
+        emitSelectedState("region", { isLoading: false });
+        emitSelectedState("division", { isLoading: false });
+        emitSelectedState("city", { isLoading: false });
       }
     },
     [
@@ -79,18 +97,26 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
       setSelectedRegion,
       setSelectedDivision,
       setSelectedCity,
+      emitSelectedState,
     ]
   );
   const handleSelectRegion = useCallback(
-    (id: string) => {
+    (id?: string) => {
       const newSelected = regions?.find((item) => item.id === id) ?? null;
       setSelectedRegion(newSelected);
+      emitSelectedState("region", {
+        id,
+        name: newSelected?.name,
+        isLoading: false,
+      });
 
       if (selectedDivision && selectedDivision.region !== newSelected?.id) {
         setSelectedDivision(null);
+        emitSelectedState("division", { isLoading: false });
       }
       if (selectedCity && selectedCity.region !== newSelected?.id) {
         setSelectedCity(null);
+        emitSelectedState("city", { isLoading: false });
       }
     },
     [
@@ -100,26 +126,47 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
       setSelectedRegion,
       setSelectedDivision,
       setSelectedCity,
+      emitSelectedState,
     ]
   );
   const handleSelectDivision = useCallback(
-    (id: string) => {
+    (id?: string) => {
       const newSelected = divisions?.find((item) => item.id === id) ?? null;
       setSelectedDivision(newSelected);
+      emitSelectedState("division", {
+        id,
+        name: newSelected?.name,
+        isLoading: false,
+      });
 
       if (selectedCity && selectedCity.division !== newSelected?.id) {
         setSelectedCity(null);
+        emitSelectedState("city", { isLoading: false });
       }
     },
-    [divisions, selectedCity, setSelectedDivision, setSelectedCity]
+    [
+      divisions,
+      selectedCity,
+      setSelectedDivision,
+      setSelectedCity,
+      emitSelectedState,
+    ]
   );
   const handleSelectCity = useCallback(
-    (id: string) => {
+    (id?: string) => {
       const newSelectedCity = cities?.find((item) => item.id === id) ?? null;
       setSelectedCity(newSelectedCity);
+      emitSelectedState("city", {
+        id,
+        name: newSelectedCity?.name,
+        isLoading: false,
+      });
     },
-    [cities, setSelectedCity]
+    [cities, setSelectedCity, emitSelectedState]
   );
+
+  const handleFilterOption = (input: string, option?: SelectOption) =>
+    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   const contextHolder = useErrorToaster(
     isErrorCountries || isErrorRegions || isErrorDivisions || isErrorCities,
@@ -132,33 +179,26 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
   );
 
   useEffect(() => {
-    emitSelectedState("country", {
-      id: selectedCountry?.id,
-      name: selectedCountry?.name,
-      isLoading: isFetchingCountries,
-    });
-  }, [emitSelectedState, selectedCountry, isFetchingCountries]);
+    if (!!locationsState) {
+      locationsState?.country?.id &&
+        handleSelectCountry(locationsState.country.id);
+      locationsState?.region?.id &&
+        handleSelectRegion(locationsState.region.id);
+      locationsState?.division?.id &&
+        handleSelectDivision(locationsState.division.id);
+      locationsState?.city?.id && handleSelectCity(locationsState.city.id);
+    }
+  }, [
+    locationsState,
+    handleSelectCountry,
+    handleSelectRegion,
+    handleSelectDivision,
+    handleSelectCity,
+  ]);
+
   useEffect(() => {
-    emitSelectedState("region", {
-      id: selectedRegion?.id,
-      name: selectedRegion?.name,
-      isLoading: isFetchingRegions,
-    });
-  }, [emitSelectedState, selectedRegion, isFetchingRegions]);
-  useEffect(() => {
-    emitSelectedState("division", {
-      id: selectedDivision?.id,
-      name: selectedDivision?.name,
-      isLoading: isFetchingDivisions,
-    });
-  }, [emitSelectedState, selectedDivision, isFetchingDivisions]);
-  useEffect(() => {
-    emitSelectedState("city", {
-      id: selectedCity?.id,
-      name: selectedCity?.name,
-      isLoading: isFetchingCities,
-    });
-  }, [emitSelectedState, selectedCity, isFetchingCities]);
+    emitIsLoadingState?.(isLoadingLocations);
+  }, [emitIsLoadingState, isLoadingLocations]);
 
   useSearchParamsPopulate(
     {
@@ -176,11 +216,12 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
       isSuccess: isSuccessDivisions,
       handleSelect: handleSelectDivision,
     },
-    { data: cities, isSuccess: isSuccessCities, handleSelect: handleSelectCity }
+    {
+      data: cities,
+      isSuccess: isSuccessCities,
+      handleSelect: handleSelectCity,
+    }
   );
-
-  const handleFilterOption = (input: string, option?: SelectOption) =>
-    (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
     <div className="flex flex-col gap-3">
@@ -197,7 +238,7 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
           optionFilterProp="children"
           filterOption={handleFilterOption}
           onSelect={handleSelectCountry}
-          onClear={() => setSelectedCountry(null)}
+          onClear={handleSelectCountry}
           options={countryOptions}
           value={selectedCountry?.name}
         />
@@ -212,7 +253,7 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
           optionFilterProp="children"
           filterOption={handleFilterOption}
           onSelect={handleSelectRegion}
-          onClear={() => setSelectedRegion(null)}
+          onClear={handleSelectRegion}
           options={regionOptions}
           value={selectedRegion?.name}
         />
@@ -229,7 +270,7 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
           optionFilterProp="children"
           filterOption={handleFilterOption}
           onSelect={handleSelectDivision}
-          onClear={() => setSelectedDivision(null)}
+          onClear={handleSelectDivision}
           options={divisionOptions}
           value={selectedDivision?.name}
         />
@@ -244,7 +285,7 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
           optionFilterProp="children"
           filterOption={handleFilterOption}
           onSelect={handleSelectCity}
-          onClear={() => setSelectedCity(null)}
+          onClear={handleSelectCity}
           options={cityOptions}
           value={selectedCity?.name}
         />

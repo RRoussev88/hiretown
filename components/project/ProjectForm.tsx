@@ -1,14 +1,17 @@
 "use client";
 import { Button, Form, Input } from "antd";
-import { useEffect, useState, type FC } from "react";
+import { useEffect, useState, type FC, useMemo, useCallback } from "react";
 
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Project } from "types";
 
-import type { LocationSelectState, LocationType, AddressLocation } from "types";
-import { LocationsSelect } from "./LocationsSelect";
-import { initialLocationState } from "utils";
+import type {
+  LocationSelectState,
+  LocationType,
+  LocationFormState,
+} from "types";
+import { LocationsSelect } from "../custom/LocationsSelect";
 
 const validateMessages = {
   required: "${name} is required!",
@@ -28,9 +31,39 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   const [form] = Form.useForm<Project>();
   const formValues = Form.useWatch([], form);
 
-  const [locationState, setLocationState] =
-    useState<AddressLocation>(initialLocationState);
+  const getInitialLocationState = useCallback(
+    () => ({
+      country: {
+        isLoading: false,
+        id: project?.expand.country.id,
+        name: project?.expand.country.name,
+      },
+      region: {
+        isLoading: false,
+        id: project?.expand.region.id,
+        name: project?.expand.region.name,
+      },
+      division: {
+        isLoading: false,
+        id: project?.expand.division?.id,
+        name: project?.expand.division?.name,
+      },
+      city: {
+        isLoading: false,
+        id: project?.expand.city.id,
+        name: project?.expand.city.name,
+      },
+    }),
+    [project]
+  );
+
+  const [locationState, setLocationState] = useState<LocationFormState>(
+    getInitialLocationState
+  );
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
   const [isFormValid, setIsFormValid] = useState(!!formValues?.name);
+
+  const passState = useMemo(() => ({ ...locationState }), [locationState]);
 
   const {
     mutate: createProject,
@@ -48,7 +81,7 @@ export const ProjectForm: FC<ProjectFormProps> = ({
     error: errorUpdate,
   } = trpc.updateProject.useMutation({ onSuccess });
 
-  const isLoading = isLoadingCreate || isLoadingUpdate;
+  const isLoading = isLoadingCreate || isLoadingUpdate || isLoadingLocations;
 
   const trimmedFormValues = {
     name: formValues?.name?.trim(),
@@ -57,7 +90,11 @@ export const ProjectForm: FC<ProjectFormProps> = ({
 
   const hasChanges =
     trimmedFormValues.name !== project?.name.trim() ||
-    trimmedFormValues.description !== project?.description?.trim();
+    trimmedFormValues.description !== project?.description?.trim() ||
+    locationState.country.id != project.country ||
+    locationState.region.id != project.region ||
+    locationState.division.id != project.division ||
+    locationState.city.id != project.city;
 
   const contextHolder = useErrorToaster(
     isErrorCreate || isErrorUpdate,
@@ -68,31 +105,33 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   const setSelectedFormState = (
     type: LocationType,
     payload: LocationSelectState
-  ) => {
-    if (
-      !payload.isLoading &&
-      payload.id &&
-      locationState[type] !== payload.id
-    ) {
-      setLocationState((prevState) => ({ ...prevState, [type]: payload.id }));
-    }
-  };
+  ) => setLocationState((prevState) => ({ ...prevState, [type]: payload }));
 
   const clearChanges = () => {
-    setLocationState(initialLocationState);
     if (isEditing) {
       !!project && form.setFieldsValue(project);
     } else {
       form.resetFields();
     }
+    setLocationState(getInitialLocationState);
   };
 
   const handleSave = async () => {
     if (isEditing) {
       !!project &&
         updateProject({ projectId: project.id, ...trimmedFormValues });
-    } else {
-      createProject({ ...trimmedFormValues, ...locationState });
+    } else if (
+      locationState.country.id &&
+      locationState.region.id &&
+      locationState.city.id
+    ) {
+      createProject({
+        ...trimmedFormValues,
+        country: locationState.country.id,
+        region: locationState.region.id,
+        division: locationState.division.id,
+        city: locationState.city.id,
+      });
     }
   };
 
@@ -128,14 +167,18 @@ export const ProjectForm: FC<ProjectFormProps> = ({
       <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
         Location
       </h4>
-      <LocationsSelect emitSelectedState={setSelectedFormState} />
+      <LocationsSelect
+        locationsState={passState}
+        emitSelectedState={setSelectedFormState}
+        emitIsLoadingState={setIsLoadingLocations}
+      />
       <section className="my-3 flex justify-between">
         <Button
           tabIndex={0}
           size="large"
           type="default"
           loading={isLoading}
-          disabled={isLoading || !hasChanges}
+          disabled={!hasChanges}
           className="custom-primary-button bg-accent"
           onClick={clearChanges}
         >
@@ -147,7 +190,7 @@ export const ProjectForm: FC<ProjectFormProps> = ({
           type="default"
           htmlType="submit"
           loading={isLoading}
-          disabled={!isFormValid || isLoading || !hasChanges}
+          disabled={!isFormValid || !hasChanges}
           className="custom-primary-button w-40"
           onClick={handleSave}
         >

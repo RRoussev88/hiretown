@@ -7,7 +7,7 @@ import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Business, BusinessPayload } from "types";
 import { FILES_URL, PHONE_REGEX, getBase64 } from "utils";
-import { UploadImages } from "./UploadImages";
+import { UploadImages } from "../custom/UploadImages";
 
 const initialBusinessState: BusinessPayload = {
   name: "",
@@ -201,7 +201,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
           size="large"
           type="default"
           loading={isLoading}
-          disabled={isLoading || !hasChanges}
+          disabled={!hasChanges}
           className="custom-primary-button bg-accent"
           onClick={clearChanges}
         >
@@ -213,7 +213,7 @@ export const BusinessForm: FC<BusinessFormProps> = ({
           type="default"
           htmlType="submit"
           loading={isLoading}
-          disabled={!isFormValid || isLoading || !hasChanges}
+          disabled={!isFormValid || !hasChanges}
           className="custom-primary-button w-40"
           onClick={handleSave}
         >

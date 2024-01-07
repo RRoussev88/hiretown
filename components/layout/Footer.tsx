@@ -1,6 +1,6 @@
 import { FC } from "react";
 import Image from "next/image";
-import { Twitter, YouTube, Facebook } from "./SvgIcons";
+import { Twitter, YouTube, Facebook } from "../SvgIcons";
 
 export const Footer: FC = () => (
   <footer className="custom-footer">

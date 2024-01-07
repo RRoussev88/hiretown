@@ -10,6 +10,20 @@ import {
   router,
 } from "../trpc";
 
+const getProject = async (pbClient: Pocketbase, id: string) => {
+  try {
+    const data: Project = await pbClient
+      .collection(DataCollections.PROJECTS)
+      .getOne(id, {
+        expand: "country,region,division,city",
+      });
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, "Failed to find project data");
+  }
+};
+
 const fetchUserProjects = async (pbClient: Pocketbase) => {
   const userId = pbClient.authStore.model?.id;
   if (!userId) {
@@ -126,7 +140,26 @@ const deleteProject = async (pbClient: Pocketbase, projectId: string) => {
   }
 };
 
+const userHasProjectPermission = async (pbClient: Pocketbase, projectId: string) => {
+  try {
+    const user = pbClient.authStore.model;
+
+    const permissions: Project[] = await pbClient
+      .collection(DataCollections.PROJECTS)
+      .getFullList(200, {
+        filter: `user="${user?.id}"&&id="${projectId}"`,
+      });
+
+    return !!permissions.length;
+  } catch (error) {
+    throw new APIError(error, "Failed to fetch permissions");
+  }
+};
+
 export const projectsRouter = router({
+  project: procedure
+    .input(z.string())
+    .query(({ ctx, input }) => getProject(ctx.pbClient, input)),
   userProjects: protectedProcedure.query(({ ctx }) =>
     fetchUserProjects(ctx.pbClient)
   ),
@@ -187,6 +220,9 @@ export const projectsRouter = router({
       updateProject(ctx.pbClient, input.projectId, input)
     ),
   deleteProject: projectProtectedProcedure
+    .input(z.object({ projectId: z.string() }))
+    .mutation(({ ctx, input }) => deleteProject(ctx.pbClient, input.projectId)),
+  hasProjectPermission: protectedProcedure
     .input(z.string())
-    .mutation(({ ctx, input }) => deleteProject(ctx.pbClient, input)),
+    .query(({ ctx, input }) => userHasProjectPermission(ctx.pbClient, input)),
 });

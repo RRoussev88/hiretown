@@ -3,20 +3,14 @@ import { Alert, Button, Skeleton, Space } from "antd";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
 
-import { BusinessForm } from "@/components/.";
-import { useBusinessAlbumImages, useErrorToaster } from "hooks";
+import { ProjectForm } from "@/components/.";
+import { useErrorToaster } from "hooks";
 import { useEffect } from "react";
 import { trpc } from "trpc";
-import type { BusinessService, Service } from "types";
-import { EditAreas } from "./(editAreas)";
-import { EditAlbums } from "./(editAlbums)";
-import { EditOpeningHours } from "./(editOpeningHours)";
-import { EditServices } from "./(editServices)";
-import { EditLinks } from "./(editLinks)";
 
-type BusinessDetailsPageProps = { params: { id: string } };
+type ProjectDetailsPageProps = { params: { id: string } };
 
-const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
+const ProfileProjectPage: NextPage<ProjectDetailsPageProps> = ({
   params,
 }) => {
   const router = useRouter();
@@ -27,32 +21,31 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
     isError: isPermissionError,
     error: permissionError,
     isSuccess: isPermissionSuccess,
-  } = trpc.hasPermission.useQuery(params.id);
+  } = trpc.hasProjectPermission.useQuery(params.id);
 
   const {
-    data: business,
+    data: project,
     isFetching,
     isError,
     error,
     isSuccess,
     refetch,
-  } = trpc.business.useQuery(params.id, { enabled: hasPermission });
-  const albumImages = useBusinessAlbumImages(business);
+  } = trpc.project.useQuery(params.id, { enabled: hasPermission });
 
   const contextHolder = useErrorToaster(
     isError || isPermissionError,
     isSuccess || isPermissionSuccess,
-    error?.message ?? permissionError?.message ?? "Error fetching business"
+    error?.message ?? permissionError?.message ?? "Error fetching project"
   );
 
   useEffect(() => {
-    // Guard for editing other user's businesses
+    // Guard for editing other user's projects
     if (isPermissionSuccess && !hasPermission) {
-      router.replace(`/businesses/${params.id}`);
+      router.replace(`/projects/${params.id}`);
     }
   }, [hasPermission, isPermissionSuccess, router, params.id]);
 
-  if (!business) {
+  if (!project) {
     return (
       <div className="w-full mx-auto my-6">
         {contextHolder}
@@ -76,7 +69,7 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
           <Alert
             showIcon
             type="info"
-            message="No business found"
+            message="No project found"
             className="max-w-xl mx-auto"
           />
         )}
@@ -88,45 +81,20 @@ const ProfileBusinessPage: NextPage<BusinessDetailsPageProps> = ({
     <section className="w-full flex flex-col text-primary-content">
       {contextHolder}
       <div className="w-full mx-auto flex flex-wrap justify-between">
-        <p className="mb-5 text-2xl font-semibold">Edit Business</p>
+        <p className="mb-5 text-2xl font-semibold">Edit Project</p>
         <Button
           tabIndex={0}
           size="large"
           type="default"
           className="custom-primary-button"
-          href={`/businesses/${params.id}`}
+          href={`/projects/${params.id}`}
         >
           Preview
         </Button>
       </div>
-      <BusinessForm isEditing business={business} onSuccess={refetch} />
-      <EditAlbums
-        businessId={business.id}
-        onSuccess={refetch}
-        albumImages={albumImages}
-      />
-      <EditOpeningHours
-        openingHours={business.openingHours}
-        businessId={business.id}
-        onSuccess={refetch}
-      />
-      <EditServices
-        services={
-          (business.expand["businessServices(business)"] ?? []).map(
-            (bs: BusinessService) => bs.expand?.service
-          ) as Service[]
-        }
-        businessId={business.id}
-        onSuccess={refetch}
-      />
-      <EditAreas businessId={business.id} onSuccess={refetch} />
-      <EditLinks
-        businessId={business.id}
-        onSuccess={refetch}
-        links={business.expand["socialLinks(business)"] ?? []}
-      />
+      <ProjectForm isEditing project={project} onSuccess={refetch} />
     </section>
   );
 };
 
-export default ProfileBusinessPage;
+export default ProfileProjectPage;

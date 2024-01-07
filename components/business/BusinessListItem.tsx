@@ -25,7 +25,7 @@ export const BusinessListItem: FC<{
 
   const showConfirm = () => {
     confirm({
-      title: `Do you Want to delete ${business.name}?`,
+      title: `Do you want to delete ${business.name}?`,
       icon: <ExclamationCircleFilled rev="" />,
       footer: [
         <div key="footer" className="pt-4 flex justify-between">
@@ -101,5 +101,5 @@ export const BusinessListItem: FC<{
     return item;
   }
 
-  return <a href={`/businesses/${business.id}`}>{item}</a>;
+  return <Link href={`/businesses/${business.id}`}>{item}</Link>;
 };

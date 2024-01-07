@@ -2,7 +2,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 import { trpc } from "trpc";
-import type { City, Country, Division, Region } from "types";
+import type {
+  City,
+  Country,
+  Division,
+  LocationSearchParams,
+  Region,
+} from "types";
 
 export const useLocationsState = () => {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
@@ -101,6 +107,11 @@ export const useLocationsState = () => {
       setSelected: setSelectedCity,
       options: cityOptions,
     },
+    isLoadingLocations:
+      countriesData.isFetching ||
+      regionsData.isFetching ||
+      divisionsData.isFetching ||
+      citiesData.isFetching,
   };
 };
 

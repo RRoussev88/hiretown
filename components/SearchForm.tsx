@@ -5,17 +5,9 @@ import clsx from "clsx";
 import { useRouter } from "next/navigation";
 import { useCallback, useMemo, useReducer, type FC } from "react";
 
-import type { LocationSelectState, LocationType } from "types";
-import { LocationsSelect } from "./LocationsSelect";
-import { ServicesCategoriesSelect } from "./ServicesCategoriesSelect";
-import { trpc } from "trpc";
-
-type SearchFormState = {
-  [key in LocationType]: LocationSelectState;
-} & {
-  category: LocationSelectState;
-  service: LocationSelectState;
-};
+import type { LocationSelectState, SearchFormState } from "types";
+import { LocationsSelect } from "./custom/LocationsSelect";
+import { ServicesCategoriesSelect } from "./custom/ServicesCategoriesSelect";
 
 const initialState: SearchFormState = {
   category: { isLoading: false },

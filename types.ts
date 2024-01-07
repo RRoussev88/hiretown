@@ -244,19 +244,31 @@ export interface BusinessSearch extends CollectionRecord {
   cityName?: string;
 }
 
-export type BusinessesFilterParams = {
-  category: string;
-  service: string;
+export type LocationSearchParams = {
   country: string;
   region?: string;
   division?: string;
   city: string;
 };
 
+export type BusinessesFilterParams = {
+  category: string;
+  service: string;
+} & LocationSearchParams;
+
 export type LocationSelectState = {
   id?: string;
   name?: string;
   isLoading: boolean;
+};
+
+export type LocationFormState = {
+  [key in LocationType]: LocationSelectState;
+}
+
+export type SearchFormState = LocationFormState & {
+  category: LocationSelectState;
+  service: LocationSelectState;
 };
 
 export interface Project extends CollectionRecord, AddressLocation {
