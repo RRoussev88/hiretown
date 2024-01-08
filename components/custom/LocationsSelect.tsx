@@ -179,22 +179,20 @@ export const LocationsSelect: FC<LocationsSelectType> = ({
   );
 
   useEffect(() => {
-    if (!!locationsState) {
-      locationsState?.country?.id &&
-        handleSelectCountry(locationsState.country.id);
-      locationsState?.region?.id &&
-        handleSelectRegion(locationsState.region.id);
-      locationsState?.division?.id &&
-        handleSelectDivision(locationsState.division.id);
-      locationsState?.city?.id && handleSelectCity(locationsState.city.id);
-    }
-  }, [
-    locationsState,
-    handleSelectCountry,
-    handleSelectRegion,
-    handleSelectDivision,
-    handleSelectCity,
-  ]);
+    handleSelectCountry(locationsState?.country?.id);
+  }, [locationsState?.country?.id, handleSelectCountry]);
+
+  useEffect(() => {
+    handleSelectRegion(locationsState?.region?.id);
+  }, [locationsState?.region?.id, handleSelectRegion]);
+
+  useEffect(() => {
+    handleSelectDivision(locationsState?.division?.id);
+  }, [locationsState?.division?.id, handleSelectDivision]);
+
+  useEffect(() => {
+    handleSelectCity(locationsState?.city?.id);
+  }, [locationsState?.city?.id, handleSelectCity]);
 
   useEffect(() => {
     emitIsLoadingState?.(isLoadingLocations);

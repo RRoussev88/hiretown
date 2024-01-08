@@ -1,6 +1,6 @@
 "use client";
 import { Button, Form, Input } from "antd";
-import { useEffect, useState, type FC, useMemo, useCallback } from "react";
+import { useEffect, useState, type FC, useCallback } from "react";
 
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
@@ -32,29 +32,37 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   const formValues = Form.useWatch([], form);
 
   const getInitialLocationState = useCallback(
-    () => ({
-      country: {
-        isLoading: false,
-        id: project?.expand.country.id,
-        name: project?.expand.country.name,
-      },
-      region: {
-        isLoading: false,
-        id: project?.expand.region.id,
-        name: project?.expand.region.name,
-      },
-      division: {
-        isLoading: false,
-        id: project?.expand.division?.id,
-        name: project?.expand.division?.name,
-      },
-      city: {
-        isLoading: false,
-        id: project?.expand.city.id,
-        name: project?.expand.city.name,
-      },
-    }),
-    [project]
+    () =>
+      isEditing
+        ? {
+            country: {
+              isLoading: false,
+              id: project?.expand.country.id,
+              name: project?.expand.country.name,
+            },
+            region: {
+              isLoading: false,
+              id: project?.expand.region.id,
+              name: project?.expand.region.name,
+            },
+            division: {
+              isLoading: false,
+              id: project?.expand.division?.id,
+              name: project?.expand.division?.name,
+            },
+            city: {
+              isLoading: false,
+              id: project?.expand.city.id,
+              name: project?.expand.city.name,
+            },
+          }
+        : {
+            country: { isLoading: false },
+            region: { isLoading: false },
+            division: { isLoading: false },
+            city: { isLoading: false },
+          },
+    [isEditing, project]
   );
 
   const [locationState, setLocationState] = useState<LocationFormState>(
@@ -62,8 +70,6 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   );
   const [isLoadingLocations, setIsLoadingLocations] = useState(false);
   const [isFormValid, setIsFormValid] = useState(!!formValues?.name);
-
-  const passState = useMemo(() => ({ ...locationState }), [locationState]);
 
   const {
     mutate: createProject,
@@ -91,10 +97,10 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   const hasChanges =
     trimmedFormValues.name !== project?.name.trim() ||
     trimmedFormValues.description !== project?.description?.trim() ||
-    locationState.country.id != project.country ||
-    locationState.region.id != project.region ||
-    locationState.division.id != project.division ||
-    locationState.city.id != project.city;
+    locationState.country.id != project?.country ||
+    locationState.region.id != project?.region ||
+    locationState.division.id != project?.division ||
+    locationState.city.id != project?.city;
 
   const contextHolder = useErrorToaster(
     isErrorCreate || isErrorUpdate,
@@ -102,10 +108,11 @@ export const ProjectForm: FC<ProjectFormProps> = ({
     (errorCreate || errorUpdate)?.message ?? "Error saving a project"
   );
 
-  const setSelectedFormState = (
-    type: LocationType,
-    payload: LocationSelectState
-  ) => setLocationState((prevState) => ({ ...prevState, [type]: payload }));
+  const setSelectedFormState = useCallback(
+    (type: LocationType, payload: LocationSelectState) =>
+      setLocationState((prevState) => ({ ...prevState, [type]: payload })),
+    [setLocationState]
+  );
 
   const clearChanges = () => {
     if (isEditing) {
@@ -136,17 +143,20 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   };
 
   useEffect(() => {
-    if (!!project) {
-      form.setFieldsValue(project);
-    }
+    !!project && form.setFieldsValue(project);
   }, [project, form]);
 
   useEffect(() => {
     form.validateFields({ validateOnly: true }).then(
-      () => setIsFormValid(true),
+      () =>
+        setIsFormValid(
+          !!locationState.country.id &&
+            !!locationState.region.id &&
+            !!locationState.city.id
+        ),
       () => setIsFormValid(false)
     );
-  }, [form, formValues]);
+  }, [form, formValues, locationState]);
 
   return (
     <Form
@@ -168,7 +178,7 @@ export const ProjectForm: FC<ProjectFormProps> = ({
         Location
       </h4>
       <LocationsSelect
-        locationsState={passState}
+        locationsState={locationState}
         emitSelectedState={setSelectedFormState}
         emitIsLoadingState={setIsLoadingLocations}
       />

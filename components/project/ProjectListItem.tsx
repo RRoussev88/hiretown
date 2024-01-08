@@ -15,11 +15,17 @@ import type { Project } from "types";
 export const ProjectListItem: FC<{
   project: Project;
   showActions?: boolean;
-}> = ({ project, showActions }) => {
+  onSuccess?: () => void;
+}> = ({ project, showActions, onSuccess }) => {
   const { confirm, destroyAll } = Modal;
 
   const { mutate: deleteProject, isLoading: isDeleting } =
-    trpc.deleteProject.useMutation({ onSuccess: destroyAll });
+    trpc.deleteProject.useMutation({
+      onSuccess: () => {
+        destroyAll();
+        onSuccess?.();
+      },
+    });
 
   const showConfirm = () => {
     confirm({

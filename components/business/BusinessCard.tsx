@@ -4,7 +4,7 @@ import {
   EditOutlined,
   ExclamationCircleFilled,
 } from "@ant-design/icons";
-import { Button, Card, Modal, Skeleton } from "antd";
+import { Button, Card, Modal } from "antd";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";

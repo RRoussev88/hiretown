@@ -132,6 +132,8 @@ export const notBatchedRequestPaths = [
   "business",
   "businesses",
   "businessAreas",
+  "projects",
+  "userProjects",
 ];
 
 export const DataCollections = {

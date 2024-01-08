@@ -23,7 +23,7 @@
     "cors": "^2.8.5",
     "eslint": "8.28.0",
     "eslint-config-next": "13.0.5",
-    "next": "^13.5.4",
+    "next": "^14.0.4",
     "pocketbase": "^0.18.0",
     "postcss": "^8.4.31",
     "react": "18.2.0",
