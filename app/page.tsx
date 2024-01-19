@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import Image from "next/image";
+import { Suspense } from "react";
 
 import { SearchForm } from "components";
 import backgroundImage from "public/trimming.jpeg";
@@ -22,7 +23,9 @@ const Home: NextPage = () => (
       <p className="mb-5 text-secondary text-xl sm:text-2xl font-semibold">
         Start by searching a Hire near you
       </p>
-      <SearchForm />
+      <Suspense>
+        <SearchForm />
+      </Suspense>
     </div>
   </article>
 );

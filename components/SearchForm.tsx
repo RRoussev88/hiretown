@@ -3,7 +3,7 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useCallback, type FC, useState } from "react";
+import { useCallback, useState, type FC } from "react";
 
 import type {
   LocationFormState,
