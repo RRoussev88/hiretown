@@ -1,7 +1,7 @@
 import type Pocketbase from "pocketbase";
 import { z } from "zod";
 
-import type { APIResponse, Project } from "types";
+import type { APIResponse, Project, ProjectService } from "types";
 import { APIError, DataCollections, defaultResponse } from "utils";
 import {
   procedure,
@@ -15,7 +15,7 @@ const getProject = async (pbClient: Pocketbase, id: string) => {
     const data: Project = await pbClient
       .collection(DataCollections.PROJECTS)
       .getOne(id, {
-        expand: "country,region,division,city",
+        expand: "country,region,division,city,projectServices(project).service",
       });
 
     return data;
@@ -140,7 +140,10 @@ const deleteProject = async (pbClient: Pocketbase, projectId: string) => {
   }
 };
 
-const userHasProjectPermission = async (pbClient: Pocketbase, projectId: string) => {
+const userHasProjectPermission = async (
+  pbClient: Pocketbase,
+  projectId: string
+) => {
   try {
     const user = pbClient.authStore.model;
 
@@ -153,6 +156,90 @@ const userHasProjectPermission = async (pbClient: Pocketbase, projectId: string)
     return !!permissions.length;
   } catch (error) {
     throw new APIError(error, "Failed to fetch permissions");
+  }
+};
+
+const createProjectService = async (
+  pbClient: Pocketbase,
+  projectId: string,
+  serviceId: string,
+  description: string,
+  targetDate?: Date,
+  maxPrice?: number,
+  isFinished?: boolean
+) => {
+  const defaultErrorMessage = "Failed to create a project service record";
+  if (!projectId) {
+    throw new APIError(
+      '"projectId" parameter is required',
+      defaultErrorMessage
+    );
+  }
+
+  try {
+    const data: ProjectService = await pbClient
+      .collection(DataCollections.PROJECT_SERVICES)
+      .create({
+        project: projectId,
+        service: serviceId,
+        description,
+        targetDate,
+        maxPrice,
+        isFinished,
+      });
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, defaultErrorMessage);
+  }
+};
+
+const updateProjectService = async (
+  pbClient: Pocketbase,
+  projectId: string,
+  projectServiceId: string,
+  projectServicePayload: Partial<ProjectService>
+) => {
+  const defaultErrorMessage = "Failed to update a project service record";
+  if (!projectId || !projectServiceId) {
+    throw new APIError(
+      '"projectId" and "projectServiceId" parameters are required',
+      defaultErrorMessage
+    );
+  }
+
+  try {
+    const updatedProject: ProjectService = await pbClient
+      .collection(DataCollections.PROJECT_SERVICES)
+      .update(projectServiceId, { ...projectServicePayload });
+
+    return updatedProject;
+  } catch (error) {
+    throw new APIError(error, "Failed to update project");
+  }
+};
+
+const deleteProjectService = async (
+  pbClient: Pocketbase,
+  projectId: string,
+  projectServiceId: string
+) => {
+  const defaultErrorMessage = "Failed to delete project service record";
+  if (!projectId || !projectServiceId) {
+    throw new APIError(
+      '"projectId" and "projectServiceId" parameters are required',
+      defaultErrorMessage
+    );
+  }
+
+  try {
+    const data = await pbClient
+      .collection(DataCollections.PROJECT_SERVICES)
+      .delete(projectServiceId);
+
+    return data;
+  } catch (error) {
+    throw new APIError(error, defaultErrorMessage);
   }
 };
 
@@ -225,4 +312,65 @@ export const projectsRouter = router({
   hasProjectPermission: protectedProcedure
     .input(z.string())
     .query(({ ctx, input }) => userHasProjectPermission(ctx.pbClient, input)),
+  createProjectService: projectProtectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        serviceId: z.string(),
+        description: z.string().trim(),
+        targetDate: z
+          .date()
+          .transform((date) => {
+            date.setHours(23, 59, 59, 999);
+            return date;
+          })
+          .optional(),
+        maxPrice: z.onumber(),
+        isFinished: z.oboolean(),
+      })
+    )
+    .mutation(({ ctx, input }) =>
+      createProjectService(
+        ctx.pbClient,
+        input.projectId,
+        input.serviceId,
+        input.description,
+        input.targetDate,
+        input.maxPrice,
+        input.isFinished
+      )
+    ),
+  updateProjectService: projectProtectedProcedure
+    .input(
+      z.object({
+        projectId: z.string(),
+        projectServiceId: z.string(),
+        projectServicePayload: z
+          .object({
+            serviceId: z.string(),
+            description: z.string().trim(),
+            targetDate: z.string().datetime(),
+            maxPrice: z.number(),
+            isFinished: z.boolean(),
+          })
+          .partial(),
+      })
+    )
+    .mutation(({ ctx, input }) =>
+      updateProjectService(
+        ctx.pbClient,
+        input.projectId,
+        input.projectServiceId,
+        input.projectServicePayload
+      )
+    ),
+  deleteProjectService: projectProtectedProcedure
+    .input(z.object({ projectId: z.string(), projectServiceId: z.string() }))
+    .mutation(({ ctx, input }) =>
+      deleteProjectService(
+        ctx.pbClient,
+        input.projectId,
+        input.projectServiceId
+      )
+    ),
 });

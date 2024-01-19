@@ -1,28 +1,25 @@
-import { ArrowRightOutlined, DeleteOutlined } from "@ant-design/icons";
-import { Button, Popconfirm, Skeleton } from "antd";
+import { ArrowRightOutlined } from "@ant-design/icons";
+import { Button, Skeleton } from "antd";
 import Image from "next/image";
-import { useCallback, useMemo, useReducer, type FC } from "react";
+import { useCallback, useMemo, useState, type FC } from "react";
 
-import { LocationsSelect } from "@/components/.";
+import { LocationsSelect, PopConfirmDelete } from "@/components/.";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
-import type { BusinessArea, Country, LocationSelectState, LocationType } from "types";
+import type {
+  BusinessArea,
+  Country,
+  LocationFormState,
+  LocationSelectState,
+  LocationType,
+} from "types";
 
-type EditAreasState = {
-  [key in LocationType]: LocationSelectState;
-};
-
-const initialState: EditAreasState = {
+const initialState: LocationFormState = {
   country: { isLoading: false },
   region: { isLoading: false },
   division: { isLoading: false },
   city: { isLoading: false },
 };
-
-const stateReducer = (
-  state: EditAreasState,
-  action: { type: keyof EditAreasState; payload: LocationSelectState }
-) => ({ ...state, [action.type]: action.payload });
 
 type EditAreasProps = {
   businessId: string;
@@ -30,7 +27,9 @@ type EditAreasProps = {
 };
 
 export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
-  const [state, dispatch] = useReducer(stateReducer, initialState);
+  const [locationState, setLocationState] =
+    useState<LocationFormState>(initialState);
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
 
   const {
     data: businessAreas,
@@ -58,22 +57,8 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
 
   const isLoading = useMemo(
     () =>
-      isLoadingRead ||
-      isLoadingCreate ||
-      isLoadingDelete ||
-      state.country.isLoading ||
-      state.region.isLoading ||
-      state.division.isLoading ||
-      state.city.isLoading,
-    [
-      isLoadingRead,
-      isLoadingCreate,
-      isLoadingDelete,
-      state.country.isLoading,
-      state.region.isLoading,
-      state.division.isLoading,
-      state.city.isLoading,
-    ]
+      isLoadingRead || isLoadingCreate || isLoadingDelete || isLoadingLocations,
+    [isLoadingRead, isLoadingCreate, isLoadingDelete, isLoadingLocations]
   );
 
   const contextHolder = useErrorToaster(
@@ -84,18 +69,18 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
 
   const setSelectedFormState = useCallback(
     (type: LocationType, payload: LocationSelectState) =>
-      dispatch({ type, payload }),
-    [dispatch]
+      setLocationState((prevState) => ({ ...prevState, [type]: payload })),
+    [setLocationState]
   );
 
   const handleSave = () =>
-    state.country.id &&
+    !!locationState.country.id &&
     updateBusinessAreas({
       businessId,
-      countryId: state.country.id,
-      regionId: state.region?.id,
-      divisionId: state.division?.id,
-      cityId: state.city?.id,
+      countryId: locationState.country.id,
+      regionId: locationState.region?.id,
+      divisionId: locationState.division?.id,
+      cityId: locationState.city?.id,
     });
 
   const handleDelete = (areaId: string) =>
@@ -106,7 +91,11 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
       <h4 className="section-title">Areas</h4>
       {contextHolder}
       <div className="flex flex-col gap-3">
-        <LocationsSelect emitSelectedState={setSelectedFormState} />
+        <LocationsSelect
+          locationsState={locationState}
+          emitSelectedState={setSelectedFormState}
+          emitIsLoadingState={setIsLoadingLocations}
+        />
       </div>
       <Button
         tabIndex={0}
@@ -114,7 +103,7 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
         type="default"
         htmlType="button"
         loading={isLoading}
-        disabled={!businessId || isLoading || !state.country.id}
+        disabled={!businessId || isLoading || !locationState.country.id}
         className="custom-primary-button w-full my-3"
         onClick={handleSave}
       >
@@ -157,26 +146,12 @@ export const EditAreas: FC<EditAreasProps> = ({ businessId, onSuccess }) => {
                   </span>
                 )}
               </div>
-              <Popconfirm
+              <PopConfirmDelete
                 title="Delete area"
                 description="Are you sure to delete this area?"
-                onConfirm={() => handleDelete(area.id)}
-                okText="Yes"
-                cancelText="No"
-                disabled={isLoading}
-              >
-                <Button
-                  tabIndex={0}
-                  size="large"
-                  type="default"
-                  htmlType="button"
-                  loading={isLoadingDelete}
-                  disabled={isLoading}
-                  className="custom-button bg-error"
-                >
-                  {!isLoadingDelete && <DeleteOutlined rev="" />}
-                </Button>
-              </Popconfirm>
+                isLoading={isLoading}
+                onDelete={() => handleDelete(area.id)}
+              />
             </div>
           );
         })}

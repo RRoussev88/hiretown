@@ -264,7 +264,7 @@ export type LocationSelectState = {
 
 export type LocationFormState = {
   [key in LocationType]: LocationSelectState;
-}
+};
 
 export type SearchFormState = LocationFormState & {
   category: LocationSelectState;
@@ -276,15 +276,18 @@ export interface Project extends CollectionRecord, AddressLocation {
   isFinished: boolean;
   user: CollectionRecord["id"];
   description?: string;
-  expand: AddressLocationReverse;
+  expand: AddressLocationReverse & {
+    "projectServices(project)": ProjectService[];
+  };
 }
 
 export interface ProjectService extends CollectionRecord {
   project: CollectionRecord["id"];
   service: CollectionRecord["id"];
+  description: string;
   isFinished: boolean;
-  targetDate: DateString;
-  description?: string;
+  targetDate?: DateString;
+  maxPrice?: number;
   expand?: { project: Project; service: Service };
 }
 

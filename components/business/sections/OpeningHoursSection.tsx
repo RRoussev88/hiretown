@@ -1,7 +1,7 @@
 import { FC } from "react";
 
-import type { OpeningHours } from "../../types";
-import { weekDays } from "../../utils";
+import type { OpeningHours } from "../../../types";
+import { weekDays } from "../../../utils";
 
 type OpeningHoursSectionProps = { openingHours: OpeningHours };
 

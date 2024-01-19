@@ -52,7 +52,7 @@ const isBusinessOwner = t.middleware(async (opts) => {
 
 const isProjectOwner = t.middleware(async (opts) => {
   const { ctx } = opts;
-
+  // Consider creating USER_PROJECT collection to allow projects to be managed by multiple users
   try {
     const user = ctx.pbClient.authStore.model;
 

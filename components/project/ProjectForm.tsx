@@ -69,7 +69,12 @@ export const ProjectForm: FC<ProjectFormProps> = ({
     getInitialLocationState
   );
   const [isLoadingLocations, setIsLoadingLocations] = useState(false);
-  const [isFormValid, setIsFormValid] = useState(!!formValues?.name);
+  const [isFormValid, setIsFormValid] = useState(
+    !!formValues?.name &&
+      !!locationState.country.id &&
+      !!locationState.region.id &&
+      !!locationState.city.id
+  );
 
   const {
     mutate: createProject,
@@ -99,7 +104,7 @@ export const ProjectForm: FC<ProjectFormProps> = ({
     trimmedFormValues.description !== project?.description?.trim() ||
     locationState.country.id != project?.country ||
     locationState.region.id != project?.region ||
-    locationState.division.id != project?.division ||
+    (locationState.division.id ?? "") != project?.division ||
     locationState.city.id != project?.city;
 
   const contextHolder = useErrorToaster(
@@ -147,16 +152,13 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   }, [project, form]);
 
   useEffect(() => {
-    form.validateFields({ validateOnly: true }).then(
-      () =>
-        setIsFormValid(
-          !!locationState.country.id &&
-            !!locationState.region.id &&
-            !!locationState.city.id
-        ),
-      () => setIsFormValid(false)
+    setIsFormValid(
+      !!formValues?.name &&
+        !!locationState.country.id &&
+        !!locationState.region.id &&
+        !!locationState.city.id
     );
-  }, [form, formValues, locationState]);
+  }, [formValues, locationState]);
 
   return (
     <Form

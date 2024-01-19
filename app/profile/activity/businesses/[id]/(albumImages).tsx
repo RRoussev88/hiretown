@@ -1,10 +1,10 @@
-import { DeleteOutlined, UploadOutlined } from "@ant-design/icons";
-import { Button, Modal, Popconfirm, Space, Upload } from "antd";
+import { UploadOutlined } from "@ant-design/icons";
+import { Button, Modal, Space, Upload } from "antd";
 import type { RcFile, UploadFile, UploadProps } from "antd/es/upload";
 import Image from "next/image";
 import { useEffect, useMemo, useState, type FC } from "react";
 
-import { Cancel, Save } from "components";
+import { Cancel, PopConfirmDelete, Save } from "components";
 import { useBeforeUpload, useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import { BusinessImage, ImageAlbum, ImageUploadPayload } from "types";
@@ -160,26 +160,12 @@ export const AlbumImages: FC<AlbumImagesProps> = ({
             />
           </Space.Compact>
           {album.name !== DEFAULT_ALBUM_NAME && (
-            <Popconfirm
+            <PopConfirmDelete
               title="Delete album"
               description="Are you sure to delete this image album?"
-              onConfirm={handleAlbumDelete}
-              okText="Yes"
-              cancelText="No"
-              disabled={isLoading}
-            >
-              <Button
-                tabIndex={0}
-                size="large"
-                type="default"
-                htmlType="button"
-                loading={isLoadingDelete}
-                disabled={isLoading}
-                className="custom-button bg-error"
-              >
-                {!isLoadingDelete && <DeleteOutlined rev="" />}
-              </Button>
-            </Popconfirm>
+              isLoading={isLoading || isLoadingDelete}
+              onDelete={handleAlbumDelete}
+            />
           )}
         </div>
       </div>

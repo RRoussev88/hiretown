@@ -2,17 +2,16 @@
 import { Alert, Button, Skeleton, Space } from "antd";
 import type { NextPage } from "next";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 import { ProjectForm } from "@/components/.";
 import { useErrorToaster } from "hooks";
-import { useEffect } from "react";
 import { trpc } from "trpc";
+import { EditProjectServices } from "./(editServices)";
 
 type ProjectDetailsPageProps = { params: { id: string } };
 
-const ProfileProjectPage: NextPage<ProjectDetailsPageProps> = ({
-  params,
-}) => {
+const ProfileProjectPage: NextPage<ProjectDetailsPageProps> = ({ params }) => {
   const router = useRouter();
 
   const {
@@ -55,13 +54,10 @@ const ProfileProjectPage: NextPage<ProjectDetailsPageProps> = ({
             <Skeleton.Input active size="large" block />
             <Skeleton.Input active size="large" block />
             <br />
-            <br />
             <Skeleton.Input active size="large" block />
             <Skeleton.Input active size="large" block />
-            <Skeleton.Input active size="large" block />
-            <Skeleton.Input active size="large" block />
-            <Space size="large">
-              <Skeleton.Button active size="large" />
+            <Space size="large" className="flex justify-between">
+              <Skeleton.Button size="large" />
               <Skeleton.Button active size="large" />
             </Space>
           </div>
@@ -93,6 +89,11 @@ const ProfileProjectPage: NextPage<ProjectDetailsPageProps> = ({
         </Button>
       </div>
       <ProjectForm isEditing project={project} onSuccess={refetch} />
+      <EditProjectServices
+        projectId={params.id}
+        services={project.expand["projectServices(project)"]}
+        onSuccess={refetch}
+      />
     </section>
   );
 };

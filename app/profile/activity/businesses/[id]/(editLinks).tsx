@@ -1,8 +1,8 @@
-import { DeleteOutlined } from "@ant-design/icons";
-import { Button, Input, Popconfirm, Select } from "antd";
+import { Button, Input, Select } from "antd";
 import Link from "next/link";
 import { useState, type FC } from "react";
 
+import { PopConfirmDelete } from "components";
 import { iconsMap } from "@/components/SvgIcons";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
@@ -119,40 +119,6 @@ export const EditLinks: FC<EditLinksProps> = ({
           />
         </div>
       </div>
-      {!!links.length &&
-        links.map((link) => (
-          <p className="pt-3 w-full flex justify-between" key={link.id}>
-            <span className="truncate">
-              {iconsMap[link.expand.platform.key] ??
-                link.expand.platform.title.slice(0, 5).toUpperCase() + ":"}
-              <Link
-                className="link ml-2 visited:text-neutral-content underline underline-offset-4 hover:opacity-60"
-                href={link.link}
-              >
-                {link.link}
-              </Link>
-            </span>
-            <Popconfirm
-              title="Delete link"
-              description="Are you sure to delete this link?"
-              onConfirm={() => deleteLink({ businessId, linkId: link.id })}
-              okText="Yes"
-              cancelText="No"
-              disabled={isLoadingDelete}
-            >
-              <Button
-                tabIndex={0}
-                size="large"
-                type="default"
-                htmlType="button"
-                loading={isLoadingDelete}
-                className="custom-button bg-error"
-              >
-                {!isLoadingDelete && <DeleteOutlined rev="" />}
-              </Button>
-            </Popconfirm>
-          </p>
-        ))}
       <div className="mt-4 flex max-sm:flex-wrap gap-x-3">
         <Button
           tabIndex={0}
@@ -180,6 +146,27 @@ export const EditLinks: FC<EditLinksProps> = ({
           Save
         </Button>
       </div>
+      {!!links?.length &&
+        links.map((link) => (
+          <p className="pt-3 w-full flex justify-between" key={link.id}>
+            <span className="truncate">
+              {iconsMap[link.expand.platform.key] ??
+                link.expand.platform.title.slice(0, 5).toUpperCase() + ":"}
+              <Link
+                className="link ml-2 visited:text-neutral-content underline underline-offset-4 hover:opacity-60"
+                href={link.link}
+              >
+                {link.link}
+              </Link>
+            </span>
+            <PopConfirmDelete
+              title="Delete link"
+              description="Are you sure to delete this link?"
+              isLoading={isLoadingDelete}
+              onDelete={() => deleteLink({ businessId, linkId: link.id })}
+            />
+          </p>
+        ))}
     </section>
   );
 };

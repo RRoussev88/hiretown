@@ -20,6 +20,7 @@ import type {
 } from "types";
 
 type ServicesCategoriesSelectType = {
+  selectClassNames?: string;
   emitSelectedState: (
     type: "category" | "service",
     obj: LocationSelectState
@@ -27,6 +28,7 @@ type ServicesCategoriesSelectType = {
 };
 
 export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
+  selectClassNames,
   emitSelectedState,
 }) => {
   const searchParams = useSearchParams();
@@ -109,6 +111,7 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
 
   useEffect(() => {
     emitSelectedState("category", {
+      id: selectedCategory?.id,
       name: selectedCategory?.name,
       isLoading: isFetchingCategories,
     });
@@ -116,6 +119,7 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
 
   useEffect(() => {
     emitSelectedState("service", {
+      id: selectedService?.id,
       name: selectedService?.name,
       isLoading: isFetchingServices,
     });
@@ -164,7 +168,7 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
         size="large"
         disabled={!isSuccessCategories}
         loading={isFetchingCategories}
-        className="w-[216px] sm:w-[246px]"
+        className={selectClassNames ?? "w-full sm:w-1/2"}
         placeholder="Service Category"
         optionFilterProp="children"
         filterOption={handleFilterOption}
@@ -179,7 +183,7 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
         size="large"
         disabled={!isSuccessServices}
         loading={isFetchingServices}
-        className="w-[216px] sm:w-[246px]"
+        className={selectClassNames ?? "w-full sm:w-1/2"}
         placeholder="Service"
         optionFilterProp="children"
         filterOption={handleFilterOption}

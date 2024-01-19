@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import type { BusinessService, Service, ServiceCategory } from "../../types";
+import type { BusinessService, Service, ServiceCategory } from "../../../types";
 
 type ServicesSectionProps = { businessServices: BusinessService[] };
 

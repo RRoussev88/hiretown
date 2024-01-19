@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import type { Offer, UnitOfMeasure } from "../../types";
+import type { Offer, UnitOfMeasure } from "../../../types";
 
 type OffersSectionProps = { offers: Offer[] };
 

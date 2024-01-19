@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { FC } from "react";
 
-import { AtSign, Globe, MapMarker, Phone } from "..";
-import type { Business } from "../../types";
+import { AtSign, Globe, MapMarker, Phone } from "../..";
+import type { Business } from "../../../types";
 
 type ContactsSectionProps = { business: Business };
 

@@ -1,7 +1,7 @@
 import { FC } from "react";
 import Link from "next/link";
 
-import { iconsMap } from "..";
+import { iconsMap } from "../..";
 import { SocialLink } from "types";
 
 type SocialLinksSectionProps = { businessLinks: SocialLink[] };

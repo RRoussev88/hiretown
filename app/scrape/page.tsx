@@ -279,35 +279,34 @@ const ScrapePage: FC = () => {
   return (
     <main className="p-6">
       {contextHolder}
-      <h2 className="mb-3">Scrape</h2>
-      <div className="form-control">
-        <div className="input-group">
-          <select
-            className="select select-bordered truncate w-40"
-            onChange={(event) =>
-              isSuccess &&
-              setSelected(
-                data?.find((country) => country.id === event.target.value) ??
-                  null
-              )
-            }
-          >
-            {isSuccess &&
-              data?.map((country: Country) => (
-                <option key={country.id} value={country.id}>
-                  {country.name}
-                </option>
-              ))}
-          </select>
-          <button
-            tabIndex={0}
-            disabled={isFetching}
-            className="btn btn-square"
-            onClick={onScrape}
-          >
-            <Search />
-          </button>
-        </div>
+      <h2 className="mb-3 text-primary-content text-xl">
+        Scrape country regions with cities and divisions
+      </h2>
+      <div>
+        <select
+          className="text-primary-content w-64 h-10 border-2 border-primary"
+          onChange={(event) =>
+            isSuccess &&
+            setSelected(
+              data?.find((country) => country.id === event.target.value) ?? null
+            )
+          }
+        >
+          {isSuccess &&
+            data?.map((country: Country) => (
+              <option key={country.id} value={country.id}>
+                {country.name}
+              </option>
+            ))}
+        </select>
+        <button
+          tabIndex={0}
+          disabled={isFetching}
+          className="bg-primary rounded-md p-2"
+          onClick={onScrape}
+        >
+          <Search />
+        </button>
       </div>
       <div className="divider" />
       <section className="mt-6">
@@ -318,7 +317,7 @@ const ScrapePage: FC = () => {
             </p>
           ))
         ) : (
-          <p>No Regions fetched yet</p>
+          <p className="text-primary-content">No Regions fetched yet</p>
         )}
       </section>
     </main>

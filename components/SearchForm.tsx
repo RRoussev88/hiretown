@@ -3,70 +3,68 @@ import { SearchOutlined } from "@ant-design/icons";
 import { Button } from "antd";
 import clsx from "clsx";
 import { useRouter } from "next/navigation";
-import { useCallback, useMemo, useReducer, type FC } from "react";
+import { useCallback, type FC, useState } from "react";
 
-import type { LocationSelectState, SearchFormState } from "types";
+import type {
+  LocationFormState,
+  LocationSelectState,
+  LocationType,
+} from "types";
 import { LocationsSelect } from "./custom/LocationsSelect";
 import { ServicesCategoriesSelect } from "./custom/ServicesCategoriesSelect";
 
-const initialState: SearchFormState = {
-  category: { isLoading: false },
-  service: { isLoading: false },
+const initialState: LocationFormState = {
   country: { isLoading: false },
   region: { isLoading: false },
   division: { isLoading: false },
   city: { isLoading: false },
 };
 
-const stateReducer = (
-  state: SearchFormState,
-  action: { type: keyof SearchFormState; payload: LocationSelectState }
-) => ({ ...state, [action.type]: action.payload });
-
 export const SearchForm: FC = () => {
   const router = useRouter();
-  const [state, dispatch] = useReducer(stateReducer, initialState);
 
-  const isLoadingData = useMemo(
-    () =>
-      state.category.isLoading ||
-      state.service.isLoading ||
-      state.country.isLoading ||
-      state.region.isLoading ||
-      state.division.isLoading ||
-      state.city.isLoading,
-    [
-      state.category.isLoading,
-      state.service.isLoading,
-      state.country.isLoading,
-      state.region.isLoading,
-      state.division.isLoading,
-      state.city.isLoading,
-    ]
-  );
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedService, setSelectedService] = useState<string | null>(null);
+  const [locationState, setLocationState] =
+    useState<LocationFormState>(initialState);
+  const [isLoadingLocations, setIsLoadingLocations] = useState(false);
+
+  const setSelectedServiceState = (
+    type: "category" | "service",
+    obj: LocationSelectState
+  ) => {
+    if (type === "category") {
+      setSelectedCategory(obj?.name ?? null);
+    }
+    if (type === "service") {
+      setSelectedService(obj?.name ?? null);
+    }
+  };
 
   const setSelectedFormState = useCallback(
-    (type: keyof SearchFormState, payload: LocationSelectState) =>
-      dispatch({ type, payload }),
-    [dispatch]
+    (type: LocationType, payload: LocationSelectState) =>
+      setLocationState((prevState) => ({ ...prevState, [type]: payload })),
+    [setLocationState]
   );
 
   const handleSubmit = async () => {
     router.push(
       "/businesses?" +
-        (state.category.name
-          ? `category=${encodeURIComponent(state.category.name)}`
+        (selectedCategory
+          ? `category=${encodeURIComponent(selectedCategory)}`
           : "") +
-        clsx({ "&": state.category.name }) +
-        `service=${encodeURIComponent(state.service.name!)}` +
-        `&country=${encodeURIComponent(state.country.name!)}` +
-        (state.region.name
-          ? `&region=${encodeURIComponent(state.region.name)}`
+        clsx({ "&": selectedCategory }) +
+        `service=${encodeURIComponent(selectedService!)}` +
+        `&country=${encodeURIComponent(locationState.country.name!)}` +
+        (locationState.region.name
+          ? `&region=${encodeURIComponent(locationState.region.name)}`
           : "") +
-        (state.division.name
-          ? `&division=${encodeURIComponent(state.division.name)}`
+        (locationState.division.name
+          ? `&division=${encodeURIComponent(locationState.division.name)}`
           : "") +
-        (state.city.name ? `&city=${encodeURIComponent(state.city.name)}` : "")
+        (locationState.city.name
+          ? `&city=${encodeURIComponent(locationState.city.name)}`
+          : "")
     );
   };
 
@@ -75,18 +73,23 @@ export const SearchForm: FC = () => {
       className="rounded-md mx-auto p-4 bg-base-100 shadow-xl flex
                   flex-col gap-3 max-w-[248px] sm:max-w-[536px]"
     >
-      <ServicesCategoriesSelect emitSelectedState={setSelectedFormState} />
+      <ServicesCategoriesSelect
+        selectClassNames="w-[216px] sm:w-[246px]"
+        emitSelectedState={setSelectedServiceState}
+      />
       <LocationsSelect
+        locationsState={locationState}
         selectClassNames="w-[216px] sm:w-[246px]"
         emitSelectedState={setSelectedFormState}
+        emitIsLoadingState={setIsLoadingLocations}
       />
       <Button
         tabIndex={0}
         type="default"
         icon={<SearchOutlined rev="" />}
         size="large"
-        disabled={isLoadingData || !state.service.name || !state.country.name}
-        loading={isLoadingData}
+        disabled={!selectedService || !locationState.country.name}
+        loading={isLoadingLocations}
         onClick={handleSubmit}
         className="custom-primary-button"
       >

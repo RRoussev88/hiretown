@@ -2,13 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { useSearchParams } from "next/navigation";
 import { trpc } from "trpc";
-import type {
-  City,
-  Country,
-  Division,
-  LocationSearchParams,
-  Region,
-} from "types";
+import type { City, Country, Division, Region } from "types";
 
 export const useLocationsState = () => {
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
