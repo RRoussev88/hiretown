@@ -1,17 +1,18 @@
 "use client";
-import { Button, Form, Input } from "antd";
-import { useEffect, useState, type FC, useCallback } from "react";
+import { Form, Input } from "antd";
+import { useCallback, useEffect, useState, type FC } from "react";
 
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Project } from "types";
 
 import type {
+  LocationFormState,
   LocationSelectState,
   LocationType,
-  LocationFormState,
 } from "types";
 import { LocationsSelect } from "../custom/LocationsSelect";
+import { SaveAndClearButtons } from "../custom/SaveAndClearButtons";
 
 const validateMessages = {
   required: "${name} is required!",
@@ -97,15 +98,19 @@ export const ProjectForm: FC<ProjectFormProps> = ({
   const trimmedFormValues = {
     name: formValues?.name?.trim(),
     description: formValues?.description?.trim(),
+    country: locationState.country.id,
+    region: locationState.region.id,
+    division: locationState.division.id ?? "",
+    city: locationState.city.id,
   };
 
   const hasChanges =
     trimmedFormValues.name !== project?.name.trim() ||
     trimmedFormValues.description !== project?.description?.trim() ||
-    locationState.country.id != project?.country ||
-    locationState.region.id != project?.region ||
-    (locationState.division.id ?? "") != project?.division ||
-    locationState.city.id != project?.city;
+    trimmedFormValues.country != project?.country ||
+    trimmedFormValues.region != project?.region ||
+    trimmedFormValues.division != project?.division ||
+    trimmedFormValues.city != project?.city;
 
   const contextHolder = useErrorToaster(
     isErrorCreate || isErrorUpdate,
@@ -179,36 +184,20 @@ export const ProjectForm: FC<ProjectFormProps> = ({
       <h4 className="text-lg font-bold text-primary my-6 border-b-2 border-slate-300">
         Location
       </h4>
-      <LocationsSelect
-        locationsState={locationState}
-        emitSelectedState={setSelectedFormState}
-        emitIsLoadingState={setIsLoadingLocations}
-      />
-      <section className="my-3 flex justify-between">
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          loading={isLoading}
-          disabled={!hasChanges}
-          className="custom-primary-button bg-accent"
-          onClick={clearChanges}
-        >
-          Clear Changes
-        </Button>
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={!isFormValid || !hasChanges}
-          className="custom-primary-button w-40"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </section>
+      <article className="flex flex-col gap-3">
+        <LocationsSelect
+          locationsState={locationState}
+          emitSelectedState={setSelectedFormState}
+          emitIsLoadingState={setIsLoadingLocations}
+        />
+        <SaveAndClearButtons
+          isLoading={isLoading}
+          isClearDisabled={!hasChanges}
+          isSaveDisabled={!isFormValid || !hasChanges}
+          onClear={clearChanges}
+          onSave={handleSave}
+        />
+      </article>
     </Form>
   );
 };

@@ -12,6 +12,7 @@ export * from "./custom/CustomSelect";
 export * from "./custom/HoursInputRow";
 export * from "./custom/LocationsSelect";
 export * from "./custom/PopConfirmDelete";
+export * from "./custom/SaveAndClearButtons";
 export * from "./custom/ServicesCategoriesSelect";
 export * from "./layout/BaseHead";
 export * from "./layout/Footer";

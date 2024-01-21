@@ -1,7 +1,7 @@
-import { Button, Transfer } from "antd";
-import { type FC, useState } from "react";
+import { Transfer } from "antd";
+import { useState, type FC } from "react";
 
-import { CustomSelect } from "@/components/.";
+import { CustomSelect, SaveAndClearButtons } from "@/components/.";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { Service } from "types";
@@ -83,10 +83,10 @@ export const EditServices: FC<EditServicesProps> = ({
   };
 
   return (
-    <section className="w-full pt-12">
+    <section className="w-full pt-12 flex flex-col gap-3">
       <h4 className="section-title">Services</h4>
       {contextHolder}
-      <div className="flex justify-between mb-2">
+      <div className="flex justify-between">
         <CustomSelect
           selectorName="Service Categories"
           optionsName="serviceCategories"
@@ -115,31 +115,13 @@ export const EditServices: FC<EditServicesProps> = ({
         onSelectChange={onSelectChange}
         render={(service) => service.name}
       />
-      <div className="mt-4 flex max-sm:flex-wrap gap-x-3">
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          loading={isLoading}
-          disabled={!businessId || isLoading || !hasChanges}
-          className="custom-primary-button bg-accent max-sm:mb-4 max-sm:flex-1"
-          onClick={clearChanges}
-        >
-          Clear Changes
-        </Button>
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={!businessId || isLoading || !hasChanges}
-          className="custom-primary-button flex-1"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </div>
+      <SaveAndClearButtons
+        isLoading={isLoading}
+        isClearDisabled={!businessId || isLoading || !hasChanges}
+        isSaveDisabled={!businessId || isLoading || !hasChanges}
+        onClear={clearChanges}
+        onSave={handleSave}
+      />
     </section>
   );
 };

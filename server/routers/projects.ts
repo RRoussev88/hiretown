@@ -243,6 +243,11 @@ const deleteProjectService = async (
   }
 };
 
+const setLastSecondToDate = (date: Date) => {
+  date.setHours(23, 59, 59, 999);
+  return date;
+};
+
 export const projectsRouter = router({
   project: procedure
     .input(z.string())
@@ -300,7 +305,7 @@ export const projectsRouter = router({
         country: z.string().optional(),
         region: z.string().optional(),
         division: z.string().optional(),
-        cityId: z.string().optional(),
+        city: z.string().optional(),
       })
     )
     .mutation(({ ctx, input }) =>
@@ -318,13 +323,7 @@ export const projectsRouter = router({
         projectId: z.string(),
         serviceId: z.string(),
         description: z.string().trim(),
-        targetDate: z
-          .date()
-          .transform((date) => {
-            date.setHours(23, 59, 59, 999);
-            return date;
-          })
-          .optional(),
+        targetDate: z.date().transform(setLastSecondToDate).optional(),
         maxPrice: z.onumber(),
         isFinished: z.oboolean(),
       })
@@ -347,11 +346,11 @@ export const projectsRouter = router({
         projectServiceId: z.string(),
         projectServicePayload: z
           .object({
-            serviceId: z.string(),
-            description: z.string().trim(),
-            targetDate: z.string().datetime(),
-            maxPrice: z.number(),
-            isFinished: z.boolean(),
+            serviceId: z.ostring(),
+            description: z.string().trim().optional(),
+            targetDate: z.date().transform(setLastSecondToDate).optional(),
+            maxPrice: z.onumber(),
+            isFinished: z.oboolean(),
           })
           .partial(),
       })

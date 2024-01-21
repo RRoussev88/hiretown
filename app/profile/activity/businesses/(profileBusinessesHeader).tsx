@@ -9,6 +9,8 @@ export const ProfileBusinessesHeader: FC = () => {
 
   const handleCloseModal = () => setIsCreateOpen(false);
 
+  // TODO: Test if the businesses list is always refetched after cteate!
+  // If not - move this component into the list component, like it is done for projects
   return (
     <div className="mb-5 flex items-center justify-between">
       <Modal

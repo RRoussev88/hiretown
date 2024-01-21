@@ -1,7 +1,6 @@
-import { Button } from "antd";
 import { type FC, useMemo, useState } from "react";
 
-import { HoursInputRow } from "@/components/.";
+import { HoursInputRow, SaveAndClearButtons } from "@/components/.";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { OpeningHours } from "types";
@@ -54,47 +53,31 @@ export const EditOpeningHours: FC<EditOpeningHoursProps> = ({
     });
 
   return (
-    <section className="w-full pt-12">
+    <section className="w-full pt-12 flex flex-col gap-3">
       <h4 className="section-title">Opening hours</h4>
       {contextHolder}
-      {weekDays.map((day) => (
-        <HoursInputRow
-          key={day}
-          day={day}
-          hoursState={openingHoursState[day]}
-          setHoursState={(timeString) =>
-            setHoursState((prevState) => ({
-              ...prevState,
-              [day]: timeString,
-            }))
-          }
-        />
-      ))}
-      <div className="mt-4 flex max-sm:flex-wrap gap-x-3">
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          loading={isLoading}
-          disabled={!businessId || isLoading || !hasChanges}
-          className="custom-primary-button bg-accent max-sm:mb-4 max-sm:flex-1"
-          onClick={clearChanges}
-        >
-          Clear Changes
-        </Button>
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={!businessId || isLoading || !hasChanges}
-          className="custom-primary-button flex-1"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
+      <div>
+        {weekDays.map((day) => (
+          <HoursInputRow
+            key={day}
+            day={day}
+            hoursState={openingHoursState[day]}
+            setHoursState={(timeString) =>
+              setHoursState((prevState) => ({
+                ...prevState,
+                [day]: timeString,
+              }))
+            }
+          />
+        ))}
       </div>
+      <SaveAndClearButtons
+        isLoading={isLoading}
+        isClearDisabled={!businessId || !hasChanges}
+        isSaveDisabled={!businessId || !hasChanges}
+        onClear={clearChanges}
+        onSave={handleSave}
+      />
     </section>
   );
 };

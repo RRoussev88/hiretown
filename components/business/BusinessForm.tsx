@@ -1,5 +1,5 @@
 "use client";
-import { Button, Form, Input } from "antd";
+import { Form, Input } from "antd";
 import type { RcFile, UploadFile } from "antd/es/upload";
 import { useEffect, useMemo, useState, type FC } from "react";
 
@@ -8,6 +8,7 @@ import { trpc } from "trpc";
 import type { Business, BusinessPayload } from "types";
 import { FILES_URL, PHONE_REGEX, getBase64 } from "utils";
 import { UploadImages } from "../custom/UploadImages";
+import { SaveAndClearButtons } from "../custom/SaveAndClearButtons";
 
 const initialBusinessState: BusinessPayload = {
   name: "",
@@ -195,31 +196,13 @@ export const BusinessForm: FC<BusinessFormProps> = ({
       <Form.Item name="contactWebsite" rules={[{ type: "url" }]}>
         <Input type="url" name="website" placeholder="Website" />
       </Form.Item>
-      <section className="my-3 flex justify-between">
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          loading={isLoading}
-          disabled={!hasChanges}
-          className="custom-primary-button bg-accent"
-          onClick={clearChanges}
-        >
-          Clear Changes
-        </Button>
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={!isFormValid || !hasChanges}
-          className="custom-primary-button w-40"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </section>
+      <SaveAndClearButtons
+        isLoading={isLoading}
+        isClearDisabled={!hasChanges}
+        isSaveDisabled={!isFormValid || !hasChanges}
+        onClear={clearChanges}
+        onSave={handleSave}
+      />
     </Form>
   );
 };

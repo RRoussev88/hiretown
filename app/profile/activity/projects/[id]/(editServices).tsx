@@ -1,10 +1,11 @@
 "use client";
-import { Button, DatePicker, Input, List } from "antd";
+import { DatePicker, Input, List } from "antd";
 import type { Dayjs } from "dayjs";
 import { useState, type FC } from "react";
 
 import {
   ProjectServiceListItem,
+  SaveAndClearButtons,
   ServicesCategoriesSelect,
 } from "@/components/index";
 import { useErrorToaster } from "hooks";
@@ -107,31 +108,13 @@ export const EditProjectServices: FC<EditProjectServicesProps> = ({
           onChange={(date) => setTargetDate(date)}
         />
       </div>
-      <div className="flex justify-between max-sm:flex-wrap">
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          loading={isLoading}
-          disabled={!projectId || !hasChanges}
-          className="custom-primary-button bg-accent"
-          onClick={clearChanges}
-        >
-          Clear Changes
-        </Button>
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          htmlType="submit"
-          loading={isLoading}
-          disabled={!projectId || !selectedServiceId || !workDescription}
-          className="custom-primary-button w-40"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </div>
+      <SaveAndClearButtons
+        isLoading={isLoading}
+        isClearDisabled={!projectId || !hasChanges}
+        isSaveDisabled={!projectId || !selectedServiceId || !workDescription}
+        onClear={clearChanges}
+        onSave={handleSave}
+      />
       <List
         bordered
         itemLayout="horizontal"

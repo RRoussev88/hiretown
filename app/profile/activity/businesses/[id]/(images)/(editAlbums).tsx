@@ -42,7 +42,7 @@ export const EditAlbums: FC<EditAlbumsProps> = ({
     });
 
   return (
-    <section className="w-full pt-12">
+    <section className="w-full pt-12  flex flex-col gap-3">
       <h4 className="section-title">Image Albums</h4>
       {contextHolder}
       <Form
@@ -77,7 +77,7 @@ export const EditAlbums: FC<EditAlbumsProps> = ({
           htmlType="submit"
           loading={isLoading}
           disabled={!formValues?.albumName || isLoading}
-          className="custom-primary-button mb-6"
+          className="custom-primary-button"
           onClick={handleAlbumSave}
         >
           Create Album

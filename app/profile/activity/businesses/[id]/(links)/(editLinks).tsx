@@ -1,12 +1,11 @@
-import { Button, Input, Select } from "antd";
-import Link from "next/link";
+import { Input, List, Select } from "antd";
 import { useState, type FC } from "react";
 
-import { PopConfirmDelete } from "components";
-import { iconsMap } from "@/components/SvgIcons";
+import { SaveAndClearButtons } from "components";
 import { useErrorToaster } from "hooks";
 import { trpc } from "trpc";
 import type { SelectOption, SocialLink } from "types";
+import { PlatformLinkListItem } from "./(platformLinkListItem)";
 
 type EditLinksProps = {
   businessId: string;
@@ -50,19 +49,10 @@ export const EditLinks: FC<EditLinksProps> = ({
     },
   });
 
-  const {
-    mutate: deleteLink,
-    isLoading: isLoadingDelete,
-    isError: isDeleteError,
-    isSuccess: isDeleteSuccess,
-    error: deleteError,
-  } = trpc.deleteLink.useMutation({ onSuccess });
-
   const contextHolder = useErrorToaster(
-    isPlatformsError || isCreateError || isDeleteError,
-    isPlatformsSuccess || isCreateSuccess || isDeleteSuccess,
-    (platformsError || createError || deleteError)?.message ??
-      "Error saving links"
+    isPlatformsError || isCreateError,
+    isPlatformsSuccess || isCreateSuccess,
+    (platformsError || createError)?.message ?? "Error saving links"
   );
 
   const handleSave = () => {
@@ -89,7 +79,7 @@ export const EditLinks: FC<EditLinksProps> = ({
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
   return (
-    <section className="w-full pt-12">
+    <section className="w-full pt-12 flex flex-col gap-3">
       <h4 className="section-title">Links</h4>
       {contextHolder}
       <div className="flex flex-col sm:flex-row gap-3">
@@ -119,54 +109,28 @@ export const EditLinks: FC<EditLinksProps> = ({
           />
         </div>
       </div>
-      <div className="mt-4 flex max-sm:flex-wrap gap-x-3">
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          loading={isLoadingCreate}
-          disabled={!businessId || isLoadingPlatforms || !hasChanges}
-          className="custom-primary-button bg-accent max-sm:mb-4 max-sm:flex-1"
-          onClick={clearChanges}
-        >
-          Clear Changes
-        </Button>
-        <Button
-          tabIndex={0}
-          size="large"
-          type="default"
-          htmlType="submit"
-          loading={isLoadingCreate}
-          disabled={
-            !businessId || isLoadingPlatforms || !selectedPlatformId || !newLink
-          }
-          className="custom-primary-button flex-1"
-          onClick={handleSave}
-        >
-          Save
-        </Button>
-      </div>
-      {!!links?.length &&
-        links.map((link) => (
-          <p className="pt-3 w-full flex justify-between" key={link.id}>
-            <span className="truncate">
-              {iconsMap[link.expand.platform.key] ??
-                link.expand.platform.title.slice(0, 5).toUpperCase() + ":"}
-              <Link
-                className="link ml-2 visited:text-neutral-content underline underline-offset-4 hover:opacity-60"
-                href={link.link}
-              >
-                {link.link}
-              </Link>
-            </span>
-            <PopConfirmDelete
-              title="Delete link"
-              description="Are you sure to delete this link?"
-              isLoading={isLoadingDelete}
-              onDelete={() => deleteLink({ businessId, linkId: link.id })}
-            />
-          </p>
-        ))}
+      <SaveAndClearButtons
+        isLoading={isLoadingCreate}
+        isClearDisabled={!businessId || isLoadingPlatforms || !hasChanges}
+        isSaveDisabled={
+          !businessId || isLoadingPlatforms || !selectedPlatformId || !newLink
+        }
+        onClear={clearChanges}
+        onSave={handleSave}
+      />
+      <List
+        bordered
+        itemLayout="horizontal"
+        locale={{ emptyText: "No social media links created yet" }}
+        dataSource={links}
+        renderItem={(link) => (
+          <PlatformLinkListItem
+            businessId={businessId}
+            link={link}
+            onSuccess={onSuccess}
+          />
+        )}
+      />
     </section>
   );
 };

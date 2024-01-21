@@ -20,8 +20,9 @@ export const PopConfirmDelete: FC<PopConfirmDeleteProps> = ({
     description={description ?? "Are you sure to delete this record?"}
     onConfirm={onDelete}
     okText="Yes"
-    cancelText="No"
+    cancelText={<span className="font-semibold">NO</span>}
     disabled={isLoading}
+    okButtonProps={{ type: "default", className: "custom-primary-button" }}
   >
     <Button
       tabIndex={0}

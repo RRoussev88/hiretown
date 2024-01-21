@@ -286,7 +286,7 @@ export interface ProjectService extends CollectionRecord {
   service: CollectionRecord["id"];
   description: string;
   isFinished: boolean;
-  targetDate?: DateString;
+  targetDate?: Date;
   maxPrice?: number;
   expand?: { project: Project; service: Service };
 }
