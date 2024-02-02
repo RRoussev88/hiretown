@@ -13,6 +13,7 @@ import {
 
 import { trpc } from "trpc";
 import type {
+  CategoryServiceState,
   LocationSelectState,
   SelectOption,
   Service,
@@ -20,6 +21,7 @@ import type {
 } from "types";
 
 type ServicesCategoriesSelectType = {
+  servicesCategoriesState?: CategoryServiceState;
   selectClassNames?: string;
   emitSelectedState: (
     type: "category" | "service",
@@ -28,6 +30,7 @@ type ServicesCategoriesSelectType = {
 };
 
 export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
+  servicesCategoriesState,
   selectClassNames,
   emitSelectedState,
 }) => {
@@ -110,6 +113,16 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
   );
 
   useEffect(() => {
+    !!servicesCategoriesState?.category?.id &&
+      handleSelectCategory(servicesCategoriesState.category.id);
+  }, [servicesCategoriesState?.category?.id, handleSelectCategory]);
+
+  useEffect(() => {
+    servicesCategoriesState?.service?.id &&
+      handleSelectService(servicesCategoriesState.service.id);
+  }, [servicesCategoriesState?.service?.id, handleSelectService]);
+
+  useEffect(() => {
     emitSelectedState("category", {
       id: selectedCategory?.id,
       name: selectedCategory?.name,
@@ -159,6 +172,13 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
   const handleFilterOption = (input: string, option?: SelectOption) =>
     (option?.label ?? "").toLowerCase().includes(input.toLowerCase());
 
+  const handleClearService = () => setSelectedService(null);
+
+  const handleClearCategory = () => {
+    handleClearService();
+    setSelectedCategory(null);
+  };
+
   return (
     <div className="flex flex-row max-sm:flex-col gap-3">
       {contextHolder}
@@ -173,7 +193,7 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
         optionFilterProp="children"
         filterOption={handleFilterOption}
         onSelect={handleSelectCategory}
-        onClear={() => setSelectedCategory(null)}
+        onClear={handleClearCategory}
         options={categoryOptions}
         value={selectedCategory?.name}
       />

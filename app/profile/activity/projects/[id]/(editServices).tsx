@@ -1,7 +1,7 @@
 "use client";
 import { DatePicker, Input, List } from "antd";
 import type { Dayjs } from "dayjs";
-import { useState, type FC } from "react";
+import { useState, type FC, useCallback } from "react";
 
 import {
   ProjectServiceListItem,
@@ -70,14 +70,14 @@ export const EditProjectServices: FC<EditProjectServicesProps> = ({
 
   const hasChanges = !!selectedServiceId || !!workDescription;
 
-  const setSelectedService = (
-    type: "category" | "service",
-    obj: LocationSelectState
-  ) => {
-    if (type === "service") {
-      setSelectedServiceId(obj?.id ?? null);
-    }
-  };
+  const setSelectedService = useCallback(
+    (type: "category" | "service", obj: LocationSelectState) => {
+      if (type === "service") {
+        setSelectedServiceId(obj?.id ?? null);
+      }
+    },
+    [setSelectedServiceId]
+  );
 
   return (
     <section className="w-full pt-6 flex flex-col gap-3">
@@ -105,7 +105,8 @@ export const EditProjectServices: FC<EditProjectServicesProps> = ({
           size="large"
           className="w-full sm:w-1/2"
           value={targetDate}
-          onChange={(date) => setTargetDate(date)}
+          placeholder="Select deadline date"
+          onChange={setTargetDate}
         />
       </div>
       <SaveAndClearButtons
@@ -121,7 +122,10 @@ export const EditProjectServices: FC<EditProjectServicesProps> = ({
         locale={{ emptyText: "No project services found" }}
         dataSource={services}
         renderItem={(service) => (
-          <ProjectServiceListItem projectService={service} />
+          <ProjectServiceListItem
+            projectService={service}
+            onSuccess={onSuccess}
+          />
         )}
       />
     </section>

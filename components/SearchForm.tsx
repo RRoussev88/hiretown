@@ -29,17 +29,17 @@ export const SearchForm: FC = () => {
     useState<LocationFormState>(initialState);
   const [isLoadingLocations, setIsLoadingLocations] = useState(false);
 
-  const setSelectedServiceState = (
-    type: "category" | "service",
-    obj: LocationSelectState
-  ) => {
-    if (type === "category") {
-      setSelectedCategory(obj?.name ?? null);
-    }
-    if (type === "service") {
-      setSelectedService(obj?.name ?? null);
-    }
-  };
+  const setSelectedServiceState = useCallback(
+    (type: "category" | "service", obj: LocationSelectState) => {
+      if (type === "category") {
+        setSelectedCategory(obj?.name ?? null);
+      }
+      if (type === "service") {
+        setSelectedService(obj?.name ?? null);
+      }
+    },
+    [setSelectedCategory, setSelectedService]
+  );
 
   const setSelectedFormState = useCallback(
     (type: LocationType, payload: LocationSelectState) =>

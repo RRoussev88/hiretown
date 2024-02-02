@@ -266,10 +266,12 @@ export type LocationFormState = {
   [key in LocationType]: LocationSelectState;
 };
 
-export type SearchFormState = LocationFormState & {
+export type CategoryServiceState = {
   category: LocationSelectState;
   service: LocationSelectState;
 };
+
+export type SearchFormState = LocationFormState & CategoryServiceState;
 
 export interface Project extends CollectionRecord, AddressLocation {
   name: string;

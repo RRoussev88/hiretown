@@ -15,7 +15,9 @@ const getProject = async (pbClient: Pocketbase, id: string) => {
     const data: Project = await pbClient
       .collection(DataCollections.PROJECTS)
       .getOne(id, {
-        expand: "country,region,division,city,projectServices(project).service",
+        expand:
+          "country,region,division,city," +
+          "projectServices(project).service.category",
       });
 
     return data;
@@ -207,7 +209,7 @@ const updateProjectService = async (
       defaultErrorMessage
     );
   }
-
+  
   try {
     const updatedProject: ProjectService = await pbClient
       .collection(DataCollections.PROJECT_SERVICES)
@@ -241,6 +243,11 @@ const deleteProjectService = async (
   } catch (error) {
     throw new APIError(error, defaultErrorMessage);
   }
+};
+
+const transformToDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date;
 };
 
 const setLastSecondToDate = (date: Date) => {
@@ -346,11 +353,14 @@ export const projectsRouter = router({
         projectServiceId: z.string(),
         projectServicePayload: z
           .object({
-            serviceId: z.ostring(),
+            service: z.ostring(),
             description: z.string().trim().optional(),
-            targetDate: z.date().transform(setLastSecondToDate).optional(),
-            maxPrice: z.onumber(),
-            isFinished: z.oboolean(),
+            targetDate: z
+              .date()
+              .or(z.string().transform(transformToDate))
+              .transform(setLastSecondToDate),
+            maxPrice: z.number(),
+            isFinished: z.boolean(),
           })
           .partial(),
       })

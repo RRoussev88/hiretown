@@ -5,6 +5,7 @@ type SaveAndClearButtonsProps = Partial<{
   isLoading: boolean;
   isClearDisabled: boolean;
   isSaveDisabled: boolean;
+  className: string;
   onClear: () => void;
   onSave: () => void;
 }>;
@@ -13,10 +14,11 @@ export const SaveAndClearButtons: FC<SaveAndClearButtonsProps> = ({
   isLoading,
   isClearDisabled,
   isSaveDisabled,
+  className,
   onClear,
   onSave,
 }) => (
-  <div className="flex justify-between max-sm:flex-wrap gap-3">
+  <div className={className + " flex justify-between max-sm:flex-wrap gap-3"}>
     <Button
       tabIndex={0}
       size="large"
