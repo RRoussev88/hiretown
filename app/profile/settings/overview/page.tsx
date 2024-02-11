@@ -52,7 +52,7 @@ const ProfileOverviewPage: NextPage = () => {
         <div className="flex justify-between flex-wrap gap-6">
           <div className="text-base sm:text-lg flex flex-col gap-6">
             {user?.verified ? (
-              <p className="flex gap-3 items-baseline">
+              <p className="flex gap-3 items-center">
                 <span>Email&nbsp;verified</span>
                 <CheckCircleOutlined className="text-success text-3xl" rev="" />
               </p>

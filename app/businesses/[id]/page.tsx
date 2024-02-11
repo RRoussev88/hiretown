@@ -116,7 +116,7 @@ const BusinessDetailsPage: NextPage<BusinessDetailsPageProps> = ({
       {!!business.expand["offers(business)"]?.length && (
         <OffersSection offers={business.expand["offers(business)"]} />
       )}
-      {!!business.expand["areas(business)"]?.length && (
+      {!!business.expand["businessAreas(business)"]?.length && (
         <AreasSection businessId={business.id} />
       )}
       <div className="w-full flex flex-col md:flex-row gap-3">

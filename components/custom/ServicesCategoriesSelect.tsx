@@ -13,7 +13,6 @@ import {
 
 import { trpc } from "trpc";
 import type {
-  CategoryServiceState,
   LocationSelectState,
   SelectOption,
   Service,
@@ -21,7 +20,7 @@ import type {
 } from "types";
 
 type ServicesCategoriesSelectType = {
-  servicesCategoriesState?: CategoryServiceState;
+  initialServiceId?: string;
   selectClassNames?: string;
   emitSelectedState: (
     type: "category" | "service",
@@ -30,7 +29,7 @@ type ServicesCategoriesSelectType = {
 };
 
 export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
-  servicesCategoriesState,
+  initialServiceId,
   selectClassNames,
   emitSelectedState,
 }) => {
@@ -89,9 +88,10 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
   const handleSelectCategory = useCallback(
     (id: string) => {
       const newSelected = categories?.find((item) => item.id === id) ?? null;
-      setSelectedCategory(newSelected);
       if (selectedService && selectedService.category !== newSelected?.id) {
         setSelectedService(null);
+      } else {
+        setSelectedCategory(newSelected);
       }
     },
     [categories, selectedService]
@@ -113,14 +113,9 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
   );
 
   useEffect(() => {
-    !!servicesCategoriesState?.category?.id &&
-      handleSelectCategory(servicesCategoriesState.category.id);
-  }, [servicesCategoriesState?.category?.id, handleSelectCategory]);
-
-  useEffect(() => {
-    servicesCategoriesState?.service?.id &&
-      handleSelectService(servicesCategoriesState.service.id);
-  }, [servicesCategoriesState?.service?.id, handleSelectService]);
+    (initialServiceId || initialServiceId === "") &&
+      handleSelectService(initialServiceId);
+  }, [initialServiceId, handleSelectService]);
 
   useEffect(() => {
     emitSelectedState("category", {
@@ -208,7 +203,7 @@ export const ServicesCategoriesSelect: FC<ServicesCategoriesSelectType> = ({
         optionFilterProp="children"
         filterOption={handleFilterOption}
         onSelect={handleSelectService}
-        onClear={() => setSelectedService(null)}
+        onClear={handleClearService}
         options={serviceOptions}
         value={selectedService?.name}
       />

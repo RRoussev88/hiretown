@@ -1,25 +1,29 @@
 "use client";
-import { Button, DatePicker, Input, List, Space } from "antd";
+import { CheckCircleOutlined, CloseCircleOutlined } from "@ant-design/icons";
+import { Button, DatePicker, Input, List, Space, Switch } from "antd";
 import dayjs from "dayjs";
-import { type FC, useState, useCallback, useMemo } from "react";
+import { useCallback, useState, type FC } from "react";
 
+import { Cancel, Edit, Save } from "components";
+import { useErrorToaster } from "hooks";
+import { trpc } from "trpc";
 import { LocationSelectState, ProjectService } from "types";
 import { PopConfirmDelete, ServicesCategoriesSelect } from "..";
-import { Cancel, Edit, Save } from "components";
-import { trpc } from "trpc";
-import { useErrorToaster } from "hooks";
 
 type ProjectServiceListItemProps = {
   projectService: ProjectService;
+  showActions?: boolean;
   onSuccess?: () => void;
 };
 
 export const ProjectServiceListItem: FC<ProjectServiceListItemProps> = ({
   projectService,
+  showActions,
   onSuccess,
 }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [projectState, setProjectState] = useState(projectService);
+  const [projectServiceState, setProjectServiceState] =
+    useState(projectService);
 
   const {
     mutate: updateProjectService,
@@ -51,7 +55,7 @@ export const ProjectServiceListItem: FC<ProjectServiceListItemProps> = ({
   const handleEditClick = () => setIsEditing(true);
 
   const handleCancelClick = () => {
-    setProjectState(projectService);
+    setProjectServiceState(projectService);
     setIsEditing(false);
   };
 
@@ -59,7 +63,7 @@ export const ProjectServiceListItem: FC<ProjectServiceListItemProps> = ({
     updateProjectService({
       projectId: projectService.project,
       projectServiceId: projectService.id,
-      projectServicePayload: projectState,
+      projectServicePayload: projectServiceState,
     });
   };
 
@@ -72,104 +76,100 @@ export const ProjectServiceListItem: FC<ProjectServiceListItemProps> = ({
   const setSelectedService = useCallback(
     (type: "category" | "service", obj: LocationSelectState) => {
       if (type === "service") {
-        setProjectState((prevState) => ({
+        setProjectServiceState((prevState) => ({
           ...prevState,
           service: obj?.id ?? "",
         }));
       }
     },
-    [setProjectState]
+    [setProjectServiceState]
   );
 
   const isLoadingProjectService = isLoadingDelete || isLoadingUpdate;
 
-  const servicesCategoriesState = useMemo(
-    () => ({
-      category: { isLoading: false },
-      service: { id: projectService.service, isLoading: false },
-    }),
-    [projectService.service]
-  );
-
   return (
     <List.Item
-      actions={[
-        <Space.Compact
-          key={`btns-${projectService.id}`}
-          size="large"
-          className="hidden sm:inline-flex"
-        >
-          {isEditing ? (
-            <>
-              <Button
-                tabIndex={0}
-                type="default"
-                className="bg-primary"
-                onClick={handleCancelClick}
-                loading={isLoadingProjectService}
-                icon={<Cancel />}
-              />
-              <Button
-                tabIndex={0}
-                type="default"
-                className="bg-primary"
-                onClick={handleSave}
-                loading={isLoadingProjectService}
-                icon={<Save />}
-              />
-            </>
-          ) : (
-            <>
-              <Button
-                key={`edit-${projectService.id}`}
-                tabIndex={0}
-                type="default"
-                className="bg-primary"
-                onClick={handleEditClick}
-                loading={isLoadingProjectService}
-                icon={<Edit />}
-              />
-              <PopConfirmDelete
-                key={`del-${projectService.id}`}
-                title="Delete service"
-                description="Are you sure to delete this service?"
-                isLoading={isLoadingProjectService}
-                onDelete={handleDelete}
-              />
-            </>
-          )}
-        </Space.Compact>,
-      ]}
+      actions={
+        showActions
+          ? [
+              <Space.Compact
+                key={`btns-${projectService.id}`}
+                size="large"
+                className="hidden sm:inline-flex"
+              >
+                {isEditing ? (
+                  <>
+                    <Button
+                      tabIndex={0}
+                      type="default"
+                      className="bg-primary"
+                      onClick={handleCancelClick}
+                      loading={isLoadingProjectService}
+                      icon={<Cancel />}
+                    />
+                    <Button
+                      tabIndex={0}
+                      type="default"
+                      className="bg-primary"
+                      onClick={handleSave}
+                      loading={isLoadingProjectService}
+                      icon={<Save />}
+                    />
+                  </>
+                ) : (
+                  <>
+                    <Button
+                      key={`edit-${projectService.id}`}
+                      tabIndex={0}
+                      type="default"
+                      className="bg-primary"
+                      onClick={handleEditClick}
+                      loading={isLoadingProjectService}
+                      icon={<Edit />}
+                    />
+                    <PopConfirmDelete
+                      key={`del-${projectService.id}`}
+                      title="Delete service"
+                      description="Are you sure to delete this service?"
+                      isLoading={isLoadingProjectService}
+                      onDelete={handleDelete}
+                    />
+                  </>
+                )}
+              </Space.Compact>,
+            ]
+          : []
+      }
     >
       {contextHolder}
       {isEditing ? (
         <div className="w-full flex flex-col gap-3">
           <ServicesCategoriesSelect
             emitSelectedState={setSelectedService}
-            servicesCategoriesState={servicesCategoriesState}
+            initialServiceId={projectService.service}
           />
           <Input.TextArea
             size="middle"
             name="description"
             placeholder="Work Description"
-            value={projectState.description}
+            value={projectServiceState.description}
             onChange={(event) =>
-              setProjectState((prevState) => ({
+              setProjectServiceState((prevState) => ({
                 ...prevState,
                 description: event.target.value,
               }))
             }
           />
-          <div className="flex flex-row max-sm:flex-col gap-3">
+          <div className="flex flex-row max-sm:flex-col gap-3 items-center">
             <Input
               name="maxPrice"
               type="number"
               size="large"
               className="w-full sm:w-1/2"
-              value={projectState.maxPrice}
+              value={projectServiceState.maxPrice}
               placeholder="Maximum price"
               onChange={(event) =>
-                setProjectState((prevState) => ({
+                setProjectServiceState((prevState) => ({
                   ...prevState,
                   maxPrice: Number(event.target.value),
                 }))
@@ -179,12 +179,24 @@ export const ProjectServiceListItem: FC<ProjectServiceListItemProps> = ({
               name="targetDate"
               size="large"
               className="w-full sm:w-1/2"
-              value={dayjs(projectState.targetDate)}
+              value={dayjs(projectServiceState.targetDate)}
               placeholder="Select deadline date"
               onChange={(pickedDate) =>
-                setProjectState((prevState) => ({
+                setProjectServiceState((prevState) => ({
                   ...prevState,
                   targetDate: pickedDate?.toDate(),
+                }))
+              }
+            />
+            <Switch
+              className="bg-primary"
+              checkedChildren="Finished"
+              unCheckedChildren={<span className="pr-5">Unfinished</span>}
+              value={projectServiceState.isFinished}
+              onChange={() =>
+                setProjectServiceState((prevState) => ({
+                  ...prevState,
+                  isFinished: !prevState.isFinished,
                 }))
               }
             />
@@ -220,29 +232,35 @@ export const ProjectServiceListItem: FC<ProjectServiceListItemProps> = ({
                 <p className="text-accent font-semibold tracking-wide">
                   {projectService.expand?.service.expand?.category.name}
                 </p>
-                <p className="font-bold">
+                <p className="text-lg font-bold">
                   {projectService.expand?.service.name}
                 </p>
               </div>
             }
             description={projectService.description}
           />
-          {(!!projectService.targetDate || !!projectService.maxPrice) && (
-            <div className="flex flex-col gap-2">
-              {!!projectService.maxPrice && (
-                <div>
-                  <span className="font-semibold">Maximum cost:</span>
-                  &nbsp;&euro;&nbsp;{projectService.maxPrice}
-                </div>
-              )}
-              {!!projectService.targetDate && (
-                <div>
-                  <span className="font-semibold">Deadline:</span>&nbsp;
-                  {new Date(projectService.targetDate).toLocaleDateString()}
-                </div>
+          <div className="flex flex-col gap-2">
+            {!!projectService.maxPrice && (
+              <div>
+                <span className="font-semibold">Maximum cost:</span>
+                &nbsp;&euro;&nbsp;{projectService.maxPrice}
+              </div>
+            )}
+            {!!projectService.targetDate && (
+              <div>
+                <span className="font-semibold">Deadline:</span>&nbsp;
+                {new Date(projectService.targetDate).toLocaleDateString()}
+              </div>
+            )}
+            <div className="flex items-center">
+              <span className="font-semibold">Finished:</span>&nbsp;
+              {projectService.isFinished ? (
+                <CheckCircleOutlined className="text-success text-xl" rev="" />
+              ) : (
+                <CloseCircleOutlined className="text-error text-xl" rev="" />
               )}
             </div>
-          )}
+          </div>
           <div className="flex justify-between gap-3 sm:hidden">
             <Button
               key={`edit-${projectService.id}`}

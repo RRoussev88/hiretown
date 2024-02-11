@@ -51,15 +51,37 @@ const fetchProjects = async (
   countryName: string,
   regionName: string,
   divisionName?: string,
-  cityName?: string
+  cityName?: string,
+  serviceName?: string
 ) => {
-  const filter =
-    `isFinished="true"` +
-    (cityName ? `&&city.name="${cityName}"` : "") +
-    (divisionName ? `&&division.name="${divisionName}"` : "") +
-    `&&region.name="${regionName}"&&country.name="${countryName}"`;
-  // TODO: Add filter by services
   try {
+    let bsFilter = "";
+    if (!!serviceName) {
+      const serviceFilter =
+        `project.isFinished="true"` +
+        `&&project.country.name=${countryName}` +
+        `&&project.region.name=${regionName}` +
+        (divisionName ? `&&project.division.name=${divisionName}` : "") +
+        (cityName ? `&&project.city.name=${cityName}` : "") +
+        (serviceName ? `&&service.name="${serviceName}"` : "");
+
+      const projectServices: ProjectService[] = await pbClient
+        .collection(DataCollections.PROJECT_SERVICES)
+        .getFullList(200, { filter: serviceFilter });
+
+      bsFilter = projectServices
+        .map((projectService) => `id='${projectService.project}'`)
+        .join("||");
+    }
+
+    const filter =
+      `isFinished="true"` +
+      `&&country.name="${countryName}"` +
+      `&&region.name="${regionName}"` +
+      (divisionName ? `&&division.name="${divisionName}"` : "") +
+      (cityName ? `&&city.name="${cityName}"` : "") +
+      (bsFilter ? `&&(${bsFilter})` : "");
+
     const data: APIResponse<Project> = await pbClient
       .collection(DataCollections.PROJECTS)
       .getList(1, 20, { sort: "-created", filter });
@@ -209,7 +231,7 @@ const updateProjectService = async (
       defaultErrorMessage
     );
   }
-  
+
   try {
     const updatedProject: ProjectService = await pbClient
       .collection(DataCollections.PROJECT_SERVICES)
@@ -269,6 +291,7 @@ export const projectsRouter = router({
         regionName: z.string(),
         divisionName: z.string().optional(),
         cityName: z.string().optional(),
+        serviceName: z.string().optional(),
       })
     )
     .query(({ ctx, input }) =>
@@ -277,7 +300,8 @@ export const projectsRouter = router({
         input.countryName,
         input.regionName,
         input.divisionName,
-        input.cityName
+        input.cityName,
+        input.serviceName,
       )
     ),
   createProject: protectedProcedure

@@ -1,19 +1,13 @@
 "use client";
-import { Alert, Button, List, Modal } from "antd";
-import { type FC, useState } from "react";
+import { Button, Modal } from "antd";
+import { useState, type FC } from "react";
 
-import { ProjectListItem, ProjectForm } from "components";
-import { trpc } from "trpc";
+import { ProjectForm, ProjectList } from "components";
 
 export const ProfileProjectsList: FC = () => {
-  const { data, isFetching, error, refetch } = trpc.userProjects.useQuery();
-
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
-  const handleCloseModal = () => {
-    setIsCreateOpen(false);
-    refetch();
-  };
+  const handleCloseModal = () => setIsCreateOpen(false);
 
   return (
     <>
@@ -41,26 +35,7 @@ export const ProfileProjectsList: FC = () => {
           Create
         </Button>
       </div>
-      <section>
-        {!isFetching && !!error && (
-          <Alert message={error.message} type="error" showIcon />
-        )}
-        <List
-          bordered
-          itemLayout="vertical"
-          loading={isFetching}
-          locale={{ emptyText: "No projects found" }}
-          dataSource={data?.items}
-          renderItem={(project) => (
-            <ProjectListItem
-              key={project.id}
-              project={project}
-              onSuccess={refetch}
-              showActions
-            />
-          )}
-        />
-      </section>
+      <ProjectList />
     </>
   );
 };

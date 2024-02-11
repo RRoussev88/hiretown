@@ -1,10 +1,10 @@
 "use client";
-import { DatePicker, Input, List } from "antd";
+import { DatePicker, Input } from "antd";
 import type { Dayjs } from "dayjs";
-import { useState, type FC, useCallback } from "react";
+import { useCallback, useState, type FC } from "react";
 
 import {
-  ProjectServiceListItem,
+  ProjectServiceList,
   SaveAndClearButtons,
   ServicesCategoriesSelect,
 } from "@/components/index";
@@ -83,7 +83,10 @@ export const EditProjectServices: FC<EditProjectServicesProps> = ({
     <section className="w-full pt-6 flex flex-col gap-3">
       <h4 className="section-title">Services</h4>
       {contextHolder}
-      <ServicesCategoriesSelect emitSelectedState={setSelectedService} />
+      <ServicesCategoriesSelect
+        emitSelectedState={setSelectedService}
+        initialServiceId={selectedServiceId ?? ""}
+      />
       <Input.TextArea
         name="description"
         placeholder="Work Description"
@@ -116,18 +119,7 @@ export const EditProjectServices: FC<EditProjectServicesProps> = ({
         onClear={clearChanges}
         onSave={handleSave}
       />
-      <List
-        bordered
-        itemLayout="horizontal"
-        locale={{ emptyText: "No project services found" }}
-        dataSource={services}
-        renderItem={(service) => (
-          <ProjectServiceListItem
-            projectService={service}
-            onSuccess={onSuccess}
-          />
-        )}
-      />
+      <ProjectServiceList services={services} onSuccess={onSuccess} />
     </section>
   );
 };

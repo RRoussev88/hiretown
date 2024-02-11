@@ -105,7 +105,7 @@ export interface Business extends CollectionRecord {
     "businessServices(business)": BusinessService[];
     "imageAlbums(business)": ImageAlbum[];
     "offers(business)": Offer[];
-    "areas(business)": BusinessArea[];
+    "businessAreas(business)": BusinessArea[];
     "socialLinks(business)": SocialLink[];
   }>;
 }

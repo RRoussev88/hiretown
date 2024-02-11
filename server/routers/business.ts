@@ -34,7 +34,7 @@ const getBusiness = async (pbClient: Pocketbase, id: string) => {
           "imageAlbums(business)," +
           "offers(business).unitOfMeasure," +
           "socialLinks(business).platform," +
-          "areas(business)",
+          "businessAreas(business)",
       });
 
     return data;
