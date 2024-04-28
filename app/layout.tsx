@@ -1,3 +1,5 @@
+import { Analytics } from "@vercel/analytics/react";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "antd/dist/reset.css";
 import { Footer, Navbar } from "components";
 import { AuthProvider } from "context/AuthContext";
@@ -19,6 +21,8 @@ export default function RootLayout({
             <AuthProvider>
               <Navbar />
               <main className="bg-base-200 flex-auto shrink-0">{children}</main>
+              <Analytics />
+              <SpeedInsights />
             </AuthProvider>
           </GlobalProvider>
           <Footer />
